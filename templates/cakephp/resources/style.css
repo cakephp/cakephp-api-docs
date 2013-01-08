@@ -4,88 +4,11 @@
  * Copyright (c) 2010-2011 David Grudl (http://davidgrudl.com)
  * Copyright (c) 2011-2012 Jaroslav Hanslík (https://github.com/kukulich)
  * Copyright (c) 2011-2012 Ondřej Nešpor (https://github.com/Andrewsville)
+ * Copyright (c) 2012-2013 Mark Story (https://github.com/markstory)
  *
  * For the full copyright and license information, please view
  * the file LICENSE.md that was distributed with this source code.
  */
-
-body {
-	font: 13px/1.5 Verdana, 'Geneva CE', lucida, sans-serif;
-	margin: 0;
-	padding: 0;
-	background: #ffffff;
-	color: #333333;
-}
-
-h1, h2, h3, h4, caption {
-	font-family: 'Trebuchet MS', 'Geneva CE', lucida, sans-serif;
-	color: #BD8A5D;
-}
-
-h1 {
-	color: #C92434;
-	font-size: 230%;
-	font-weight: normal;
-	margin: .3em 0;
-}
-
-h2 {
-	color: #C92434;
-	font-size: 150%;
-	font-weight: normal;
-	margin: -.3em 0 .3em 0;
-}
-
-h3 {
-	font-size: 1.6em;
-	font-weight: normal;
-	margin-bottom: 2px;
-}
-
-h4 {
-	font-size: 100%;
-	font-weight: bold;
-	padding: 0;
-	margin: 0;
-}
-
-caption {
-	border: 1px solid #cccccc;
-	background: #ecede5;
-	font-weight: bold;
-	font-size: 1.2em;
-	padding: 3px 5px;
-	text-align: left;
-	margin-bottom: 0;
-}
-
-p {
-	margin: .7em 0 1em;
-	padding: 0;
-}
-
-hr {
-	margin: 2em 0 1em;
-	border: none;
-	border-top: 1px solid #cccccc;
-	height: 0;
-}
-
-a {
-	color: #417282;
-	padding: 3px 1px;
-	text-decoration: none;
-}
-
-h1 a {
-	color: #417282;
-}
-
-a:hover, a:active, a:focus, a:hover b, a:hover var {
-	background-color: #417282;
-	color: #ffffff !important;
-}
-
 code, var, pre {
 	font-family: monospace;
 }
@@ -104,6 +27,40 @@ code a b {
 	color: #000000;
 }
 
+/* Header and menu */
+.header-backing {
+	height: 250%;
+}
+.navigation-header {
+	background: #BD8A5D;
+	padding: 5px;
+}
+.navigation-header a,
+.navigation-header {
+	font-family: MuseoSlab500, Helvetica, Arial;
+	color: #fff;
+	font-size: 16px;
+	font-size: 1.6rem;
+}
+.navigation-header ul {
+	list-style: none;
+	margin: 0;
+}
+.navigation-header li {
+	display: inline;
+}
+.navigation-header a {
+	padding: 5px 10px;
+	margin: 0 5px 0 0;
+}
+
+#logo {
+	width: 70px;
+}
+
+/**
+ * API docs content
+ */
 .description code {
 	background: rgba(100, 100, 100, 0.15);
 	color: #003D4C;
@@ -119,15 +76,6 @@ code a b {
 
 .hidden {
 	display: none;
-}
-
-/* Left side */
-#left {
-	overflow: auto;
-	width: 270px;
-	position: fixed;
-	top: 32px;
-	bottom: 0;
 }
 
 /* Menu */
@@ -165,7 +113,9 @@ code a b {
 	color: #e71818;
 }
 
-#menu .active > a:hover, #menu .active > a:active, #menu .active > a:focus {
+#menu .active > a:hover,
+#menu .active > a:active,
+#menu .active > a:focus {
 	background-color: #417282;
 }
 
@@ -196,16 +146,6 @@ code a b {
 	display: none;
 }
 
-/* Right side */
-#right {
-	overflow: auto;
-	margin-left: 275px;
-	position: fixed;
-	top: 32px;
-	left: 0;
-	right: 0;
-	bottom: 0;
-}
 
 #rightInner {
 	max-width: 1000px;
@@ -213,10 +153,21 @@ code a b {
 }
 
 /* Search */
-#search input.text {
-	padding: 3px 5px;
-	width: 230px;
+.search-input {
+	width: 80%;
+	font-size: 16px;
+	padding: 5px 0;
+	margin:  0 3% 0 0;
+	height: 32px;
+	border: none;
+	-webkit-appearance: textfield;
+	vertical-align: top;
+
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
 }
+
 
 /* Autocomplete */
 .ac_results {
@@ -263,60 +214,6 @@ code a b {
 	color: #ffffff;
 }
 
-/* Navigation */
-#navigation {
-	padding: 3px 8px 3px 35px;
-	background-color: #BD8A5D;
-	height: 26px;
-}
-
-#logo {
-	width: 25px;
-	position: absolute;
-	left: 5px;
-}
-
-#navigation ul {
-	list-style: none;
-	margin: 0 8px 4px 0;
-	padding: 0;
-	overflow: hidden;
-	float: left;
-}
-
-#navigation ul + ul {
-	border-left: 1px solid #ffffff;
-	padding-left: 8px;
-}
-
-#navigation ul li {
-	float: left;
-	margin: 2px;
-	padding: 0 3px;
-	font-family: Verdana, 'Geneva CE', lucida, sans-serif;
-	color: #ffffff;
-}
-
-#navigation ul li.active {
-	background-color: #417282;
-	color: #ffffff;
-	font-weight: bold;
-}
-
-#navigation ul li a {
-	color: #ffffff;
-	font-weight: bold;
-	padding: 0;
-}
-
-#navigation ul li span {
-	float: left;
-	padding: 0 3px;
-}
-
-#navigation ul li a:hover span, #navigation ul li a:active span, #navigation ul li a:focus span {
-	background-color: #417282;
-}
 
 /* Content */
 #content {
@@ -327,12 +224,6 @@ code a b {
 .description pre {
 	padding: .6em;
 	background: #fcfcf7;
-}
-
-#content > .description {
-	background: #ecede5;
-	padding: 1px 8px;
-	margin: 1.2em 0;
 }
 
 #content > .description pre {
@@ -462,21 +353,6 @@ div.invalid {
 	padding: 10px;
 }
 
-/* Splitter */
-#splitter {
-	width: 5px;
-	left: 270px;
-	background: #417282 url('resize.png') left center no-repeat;
-	cursor: e-resize;
-	position: fixed;
-	top: 32px;
-	bottom: 0;
-}
-
-#splitter.active {
-	opacity: .5;
-}
-
 /* Footer */
 #footer {
 	border-top: 1px solid #e9eeef;
@@ -602,16 +478,4 @@ span.l a.l:hover, span.l a.l:active, span.l a.l:focus {
 
 #rightInner.medium .name, #rightInner.medium .attributes {
 	white-space: normal;
-}
-
-#rightInner.small #search {
-	float: left;
-}
-
-#rightInner.small #navigation {
-	height: 78px;
-}
-
-#rightInner.small #navigation ul:first-child {
-	clear: both;
 }
