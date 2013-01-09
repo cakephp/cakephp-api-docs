@@ -295,16 +295,21 @@ dl.tree dd {
 	margin: 1.2em 0;
 }
 
+/**
+ * Class & other summary tables.
+ */
 .summary {
 	border-collapse: collapse;
 	width: 100%;
-	margin: 1.2em 0 2.4em;
+	border: none;
 }
-
-
+/* revert styles from foundation */
+.summary tr:nth-child(even) {
+	background: none;
+}
 .summary td {
 	margin: 0;
-	padding: 3px 10px;
+	padding: 0.5em 10px;
 	font-size: 1em;
 	vertical-align: top;
 }
@@ -318,10 +323,6 @@ dl.tree dd {
 .inherited.summary td:first-child, 
 .used.summary td:first-child {
 	text-align: left;
-}
-
-.summary tr:hover td {
-	background: #f6f6f4;
 }
 
 .summary .description pre {
