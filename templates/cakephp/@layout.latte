@@ -175,19 +175,19 @@ the file LICENSE.md that was distributed with this source code.
 	<div id="right" class="columns nine">
 		<ul class="breadcrumbs">
 			<li n:if="$package">
-				<a href="{$package|packageUrl}" title="Summary of {$package}"><span>Package</span></a>
+				<a href="{$package|packageUrl}" title="Summary of {$package}">Package</a>
 			</li>
 			<li n:if="$namespace">
-				<a href="{$namespace|namespaceUrl}" title="Summary of {$namespace}"><span>Namespace</span></a>
+				<a href="{$namespace|namespaceUrl}" title="Summary of {$namespace}">Namespace</a>
 			</li>
 			<li n:if="$class && !$function && !$constant">
-				<a href="{$class|classUrl}" title="Summary of {$class->name}"><span>Class</span></a>
+				<a href="{$class|classUrl}" title="Summary of {$class->name}">Class</a>
 			</li>
 			<li n:if="$function">
-				<a href="{$function|functionUrl}" title="Summary of {$function->name}"><span>Function</span></a>
+				<a href="{$function|functionUrl}" title="Summary of {$function->name}">Function</a>
 			</li>
 			<li n:if="$constant">
-				<a href="{$constant|constantUrl}" title="Summary of {$constant->name}"><span>Constant</span></a>
+				<a href="{$constant|constantUrl}" title="Summary of {$constant->name}">Constant</a>
 			</li>
 		</ul>
 
