@@ -37,40 +37,46 @@ the file LICENSE.md that was distributed with this source code.
 
 	{var $annotations = $function->annotations}
 
-	<table class="summary" id="parameters" n:if="$function->numberOfParameters">
-	<caption>Parameters summary</caption>
-	<tr n:foreach="$function->parameters as $parameter" id="${$parameter->name}">
-		<td class="name"><code>{!$parameter->typeHint|typeLinks:$function}</code></td>
-		<td class="value"><code>{block|strip}
-			<var>{if $parameter->passedByReference}&amp; {/if}${$parameter->name}</var>{if $parameter->defaultValueAvailable} = {!$parameter->defaultValueDefinition|highlightPHP:$function}{elseif $parameter->unlimited},…{/if}
-		{/block}</code></td>
-		<td>{$parameter->description|description:$function}</td>
-	</tr>
-	</table>
+	<div class="section" n:if="$function->numberOfParameters">
+		<h3>Parameters summary</h3>
+		<table class="summary">
+		<tr n:foreach="$function->parameters as $parameter" id="${$parameter->name}">
+			<td class="name"><code>{!$parameter->typeHint|typeLinks:$function}</code></td>
+			<td class="value"><code>{block|strip}
+				<var>{if $parameter->passedByReference}&amp; {/if}${$parameter->name}</var>{if $parameter->defaultValueAvailable} = {!$parameter->defaultValueDefinition|highlightPHP:$function}{elseif $parameter->unlimited},…{/if}
+			{/block}</code></td>
+			<td>{$parameter->description|description:$function}</td>
+		</tr>
+		</table>
+	</div>
 
-	<table class="summary" id="returns" n:if="isset($annotations['return']) && 'void' !== $annotations['return'][0]">
-	<caption>Return value summary</caption>
-	<tr>
-		<td class="name"><code>
-			{!$annotations['return'][0]|typeLinks:$function}
-		</code></td>
-		<td>
-			{!$annotations['return'][0]|description:$function}
-		</td>
-	</tr>
-	</table>
+	<div class="section" n:if="isset($annotations['return']) && 'void' !== $annotations['return'][0]">
+		<h3>Return value summary</h3>
+		<ul>
+			<li>
+				<span class="name"><code>
+					{!$annotations['return'][0]|typeLinks:$function}
+				</code></span>
+				<span>
+					{!$annotations['return'][0]|description:$function}
+				</span>
+			</li>
+		</ul>
+	</div>
 
-	<table class="summary" id="throws" n:ifset="$annotations['throws']">
-	<caption>Thrown exceptions summary</caption>
-	<tr n:foreach="$annotations['throws'] as $throws">
-		<td class="name"><code>
-			{!$throws|typeLinks:$function}
-		</code></td>
-		<td>
-			{!$throws|description:$function}
-		</td>
-	</tr>
-	</table>
+	<div class="section" n:ifset="$annotations['throws']">
+		<h3>Thrown exceptions summary</h3>
+		<ul>
+			<li n:foreach="$annotations['throws'] as $throws">
+				<span class="name"><code>
+					{!$throws|typeLinks:$function}
+				</code></span>
+				<span>
+					{!$throws|description:$function}
+				</span>
+			</li>
+		</ul>
+	</div>
 
 	{else}
 		<div class="invalid">
