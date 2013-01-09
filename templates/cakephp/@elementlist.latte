@@ -15,32 +15,44 @@ the file LICENSE.md that was distributed with this source code.
 </tr>
 {/define}
 
-<table class="summary" id="classes" n:if="$classes">
-<caption>Classes summary</caption>
-{include #elements, elements => $classes}
-</table>
+<div class="section" n:if="$classes">
+	<h3>Class summary</h3>
+	<table class="summary">
+	{include #elements, elements => $classes}
+	</table>
+</div>
 
-<table class="summary" id="interfaces" n:if="$interfaces">
-<caption>Interfaces summary</caption>
-{include #elements, elements => $interfaces}
-</table>
+<div class="section" n:if="$interfaces">
+	<h3>Interface summary</h3>
+	<table class="summary">
+	{include #elements, elements => $interfaces}
+	</table>
+</div>
 
-<table class="summary" id="traits" n:if="$traits">
-<caption>Traits summary</caption>
-{include #elements, elements => $traits}
-</table>
+<div class="section" n:if="$traits">
+	<h3>Traits summary</h3>
+	<table class="summary">
+	{include #elements, elements => $traits}
+	</table>
+</div>
 
-<table class="summary" id="exceptions" n:if="$exceptions">
-<caption>Exceptions summary</caption>
-{include #elements, elements => $exceptions}
-</table>
+<div class="section" n:if="$exceptions">
+	<h3>Exception summary</h3>
+	<table class="summary">
+	{include #elements, elements => $exceptions}
+	</table>
+</div>
 
-<table class="summary" id="constants" n:if="$constants">
-<caption>Constants summary</caption>
-{include #elements, elements => $constants}
-</table>
+<div class="section" n:if="$constants">
+	<h3>Constant summary</h3>
+	<table class="summary">
+	{include #elements, elements => $constants}
+	</table>
+</div>
 
-<table class="summary" id="functions" n:if="$functions">
-<caption>Functions summary</caption>
-{include #elements, elements => $functions}
-</table>
+<div class="section" n:if="$functions">
+	<h3>Function summary</h3>
+	<table class="summary">
+	{include #elements, elements => $functions}
+	</table>
+</div>

@@ -296,24 +296,13 @@ dl.tree dd {
 }
 
 .summary {
-	border: 1px solid #cccccc;
 	border-collapse: collapse;
-	font-size: 1em;
 	width: 100%;
 	margin: 1.2em 0 2.4em;
 }
 
-.summary caption {
-	border-width: 1px 1px 0;
-}
-
-.summary caption.switchable {
-	background: #ecede5 url('sort.png') no-repeat center right;
-	cursor: pointer;
-}
 
 .summary td {
-	border: 1px solid #cccccc;
 	margin: 0;
 	padding: 3px 10px;
 	font-size: 1em;
@@ -324,7 +313,10 @@ dl.tree dd {
 	text-align: right;
 }
 
-#packages.summary td:first-child, #namespaces.summary td:first-child, .inherited.summary td:first-child, .used.summary td:first-child {
+#packages.summary td:first-child,
+#namespaces.summary td:first-child,
+.inherited.summary td:first-child, 
+.used.summary td:first-child {
 	text-align: left;
 }
 
@@ -340,7 +332,8 @@ dl.tree dd {
 	margin: 0;
 }
 
-.summary .description p + p, .summary .description ul {
+.summary .description p + p,
+.summary .description ul {
 	margin: 3px 0 0 0;
 }
 
@@ -405,18 +398,6 @@ div.invalid {
 	padding: 10px;
 }
 
-/* Footer */
-#footer {
-	border-top: 1px solid #e9eeef;
-	clear: both;
-	color: #a7a7a7;
-	font-size: 8pt;
-	text-align: center;
-	padding: 20px 0 0;
-	margin: 3em 0 0;
-	height: 90px;
-	background: #ffffff url('footer.png') no-repeat center top;
-}
 
 /* Tree */
 div.tree ul {

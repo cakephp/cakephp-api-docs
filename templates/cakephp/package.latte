@@ -17,12 +17,14 @@ the file LICENSE.md that was distributed with this source code.
 <div id="content" class="package">
 	<h1>{if $package != 'None'}Package {!$package|packageLinks:false}{else}No package{/if}</h1>
 
-	<table class="summary" id="packages" n:if="$subpackages">
-	<caption>Packages summary</caption>
-	<tr n:foreach="$subpackages as $package">
-		<td class="name"><a href="{$package|packageUrl}">{$package}</a></td>
-	</tr>
-	</table>
+	<div class="section" n:if="$subpackages">
+		<h3>Package summary</h3>
+		<ul class="summary">
+		<li n:foreach="$subpackages as $package">
+			<a href="{$package|packageUrl}">{$package}</a>
+		</li>
+		</ul>
+	</div>
 
 	{include '@elementlist.latte'}
 </div>
