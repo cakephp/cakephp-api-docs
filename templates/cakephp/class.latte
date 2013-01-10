@@ -94,30 +94,41 @@ the file LICENSE.md that was distributed with this source code.
 	{var $ownMethods = $class->ownMethods}
 	{var $ownMagicMethods = $class->ownMagicMethods}
 
-	{define #method}
-	<tr data-order="{$method->name}" id="{if $method->magic}m{/if}_{$method->name}">
-		{var $annotations = $method->annotations}
+	{define #method_visibility}
+	{var $annotations = $method->annotations}
+	<code>
+		{if !$class->interface && $method->abstract}abstract{elseif $method->final}final{/if} {if $method->protected}protected{elseif $method->private}private{else}public{/if} {if $method->static}static{/if}
+		{ifset $annotations['return']}{!$annotations['return'][0]|typeLinks:$method}{/ifset}
+		{if $method->returnsReference()}&amp;{/if}
+	</code>
+	{/define}
 
-		<td class="attributes"><code>
-			{if !$class->interface && $method->abstract}abstract{elseif $method->final}final{/if} {if $method->protected}protected{elseif $method->private}private{else}public{/if} {if $method->static}static{/if}
-			{ifset $annotations['return']}{!$annotations['return'][0]|typeLinks:$method}{/ifset}
-			{if $method->returnsReference()}&amp;{/if}
-			</code>
+	{define #method_signature}
+	{block|strip}
+		{if $class->internal}
+			<a href="{$method|manualUrl}" title="Go to PHP documentation">{$method->name}</a>(
+		{else}
+			<a n:tag-if="$config->sourceCode" href="{$method|sourceUrl}" title="Go to source code">{$method->name}</a>(
+		{/if}
+		{foreach $method->parameters as $parameter}
+			<span>{!$parameter->typeHint|typeLinks:$method}
+			<var>{if $parameter->passedByReference}&amp; {/if}${$parameter->name}</var>{if $parameter->defaultValueAvailable} = {!$parameter->defaultValueDefinition|highlightPHP:$class}{elseif $parameter->unlimited},…{/if}</span>{sep}, {/sep}
+		{/foreach}
+	){/block}
+	{/define}
+
+	{define #method}
+	{var $annotations = $method->annotations}
+	<tr data-order="{$method->name}" id="{if $method->magic}m{/if}_{$method->name}">
+		<td class="attributes">
+		<code>
+			{include #method_visibility, method => $method}
+		</code>
 		</td>
 
 		<td class="name"><div>
 		<a class="anchor" href="#{if $method->magic}m{/if}_{$method->name}">#</a>
-		<code>{block|strip}
-			{if $class->internal}
-				<a href="{$method|manualUrl}" title="Go to PHP documentation">{$method->name}</a>(
-			{else}
-				<a n:tag-if="$config->sourceCode" href="{$method|sourceUrl}" title="Go to source code">{$method->name}</a>(
-			{/if}
-			{foreach $method->parameters as $parameter}
-				<span>{!$parameter->typeHint|typeLinks:$method}
-				<var>{if $parameter->passedByReference}&amp; {/if}${$parameter->name}</var>{if $parameter->defaultValueAvailable} = {!$parameter->defaultValueDefinition|highlightPHP:$class}{elseif $parameter->unlimited},…{/if}</span>{sep}, {/sep}
-			{/foreach}
-		){/block}</code>
+		{include #method_signature, method => $method}
 
 		{if $config->template['options']['elementDetailsCollapsed']}
 		<div class="description short">
@@ -197,11 +208,39 @@ the file LICENSE.md that was distributed with this source code.
 	{/define}
 
 	<div class="section" n:if="$ownMethods">
-		<h3>Methods summary</h3>
+		<h3>Method summary</h3>
 		<table class="summary methods" id="methods">
-		{foreach $ownMethods as $method}
+		<tr n:foreach="$ownMethods as $method">
+			<td class="name">
+				{include #method_visibility, method => $method}
+			</td>
+			<td>
+				<a href="#{if $method->magic}_{/if}{$method->name}">
+				{$method->name}
+				</a>(
+				{foreach $method->parameters as $parameter}
+					<span>{!$parameter->typeHint|typeLinks:$method}
+					<var>
+					{if $parameter->passedByReference}&amp; {/if}${$parameter->name}</var>
+					{if $parameter->defaultValueAvailable} = {!$parameter->defaultValueDefinition}
+					{elseif $parameter->unlimited}
+					,…
+					{/if}
+					</span>{sep}, {/sep}
+				{/foreach}
+				)
+				<p>{$method|shortDescription}</p>
+			</td>
+		</tr>
+		</table>
+	</div>
+
+	<div class="section" n:if="$ownMethods">
+		<h3>Method Detail</h3>
+		<table class="summary methods" id="methods">
+		<tr n:foreach="$ownMethods as $method">
 			{include #method, method => $method}
-		{/foreach}
+		</tr>
 		</table>
 	</div>
 
