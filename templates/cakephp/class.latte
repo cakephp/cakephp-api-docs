@@ -118,25 +118,17 @@ the file LICENSE.md that was distributed with this source code.
 	{/define}
 
 	{define #method}
-	{var $annotations = $method->annotations}
-	<tr data-order="{$method->name}" id="{if $method->magic}m{/if}_{$method->name}">
-		<td class="attributes">
+		{var $annotations = $method->annotations}
+		<a id="{if $method->magic}m{/if}_{$method->name}"></a>
+		<h3>
 		<code>
 			{include #method_visibility, method => $method}
 		</code>
-		</td>
 
-		<td class="name"><div>
-		<a class="anchor" href="#{if $method->magic}m{/if}_{$method->name}">#</a>
 		{include #method_signature, method => $method}
+		</h3>
 
-		{if $config->template['options']['elementDetailsCollapsed']}
-		<div class="description short">
-			{!$method|shortDescription:true}
-		</div>
-		{/if}
-
-		<div n:class="description, detailed, $config->template['options']['elementDetailsCollapsed'] ? hidden">
+		<div class="description detailed">
 			{!$method|longDescription}
 
 			{if !$class->deprecated && $method->deprecated}
@@ -203,8 +195,6 @@ the file LICENSE.md that was distributed with this source code.
 				<div class="list"><code><a n:tag-if="$template->getClass($implementedMethod->declaringClassName)" href="{$implementedMethod|methodUrl}">{$implementedMethod->prettyName}</a></code></div>
 			{/if}
 		</div>
-		</div></td>
-	</tr>
 	{/define}
 
 	<div class="section" n:if="$ownMethods">
@@ -237,11 +227,9 @@ the file LICENSE.md that was distributed with this source code.
 
 	<div class="section" n:if="$ownMethods">
 		<h3>Method Detail</h3>
-		<table class="summary methods" id="methods">
-		<tr n:foreach="$ownMethods as $method">
+		<div class="method-detail" n:foreach="$ownMethods as $method">
 			{include #method, method => $method}
-		</tr>
-		</table>
+		</div>
 	</div>
 
 	<div class="section" n:foreach="$class->inheritedMethods as $parentName => $methods">
