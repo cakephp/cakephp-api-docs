@@ -110,22 +110,15 @@ the file LICENSE.md that was distributed with this source code.
 		{else}
 			<a n:tag-if="$config->sourceCode" href="{$method|sourceUrl}" title="Go to source code">{$method->name}</a>(
 		{/if}
-		{foreach $method->parameters as $parameter}
-			<span>{!$parameter->typeHint|typeLinks:$method}
-			<var>{if $parameter->passedByReference}&amp; {/if}${$parameter->name}</var>{if $parameter->defaultValueAvailable} = {!$parameter->defaultValueDefinition|highlightPHP:$class}{elseif $parameter->unlimited},…{/if}</span>{sep}, {/sep}
-		{/foreach}
 	){/block}
 	{/define}
 
 	{define #method}
 		{var $annotations = $method->annotations}
 		<a id="{if $method->magic}m{/if}_{$method->name}"></a>
-		<h3>
-		<code>
+		<h3 class="method-name">
 			{include #method_visibility, method => $method}
-		</code>
-
-		{include #method_signature, method => $method}
+			{include #method_signature, method => $method}
 		</h3>
 
 		<div class="description detailed">
@@ -146,12 +139,23 @@ the file LICENSE.md that was distributed with this source code.
 
 			{if $method->parameters && isset($annotations['param'])}
 				<h6>Parameters</h6>
-				<div class="list"><dl>
+				<div class="parameter-list list">
+				<dl>
 				{foreach $method->parameters as $parameter}
-					<dt><var>${$parameter->name}</var>{if $parameter->unlimited},…{/if}</dt>
+					<dt>
+						<var>${$parameter->name}</var>
+						{if $parameter->defaultValueAvailable}
+						<span class="label">optional</span>
+						{/if}
+						{if $parameter->defaultValueAvailable}
+						{!$parameter->defaultValueDefinition|highlightPHP:$class}
+						{/if}
+						{if $parameter->unlimited},…{/if}
+					</dt>
 					<dd>{$parameter->description|description:$method}</dd>
 				{/foreach}
-				</dl></div>
+				</dl>
+				</div>
 			{/if}
 
 			{if isset($annotations['return']) && 'void' !== $annotations['return'][0]}
