@@ -362,33 +362,13 @@ td.attributes {
 	width: 1%;
 }
 
-.class .methods .name, .class .properties .name, .class .constants .name {
+.class .methods .name,
+.class .properties .name,
+.class .constants .name {
 	width: auto;
 	white-space: normal;
 }
 
-.class .methods .name > div > code {
-	white-space: pre-wrap;
-}
-
-.class .methods .name > div > code span, .function .value > code {
-	white-space: nowrap;
-}
-
-.class .methods td.name > div, .class td.value > div {
-	position: relative;
-	padding-right: 1em;
-}
-
-.anchor {
-	position: absolute;
-	top: 0;
-	right: 0;
-	line-height: 1;
-	font-size: 85%;
-	margin: 0;
-	color: #417282 !important;
-}
 
 .list {
 	margin: 0 0 5px 25px;
@@ -500,16 +480,3 @@ span.l a.l:hover, span.l a.l:active, span.l a.l:focus {
 	color: #c0c0c0 !important;
 }
 
-#rightInner.medium #navigation {
-	height: 52px;
-}
-
-#rightInner.medium #navigation ul:first-child + ul {
-	clear: left;
-	border: none;
-	padding: 0;
-}
-
-#rightInner.medium .name, #rightInner.medium .attributes {
-	white-space: normal;
-}
