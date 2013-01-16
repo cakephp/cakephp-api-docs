@@ -96,11 +96,30 @@ the file LICENSE.md that was distributed with this source code.
 
 	{define #method_visibility}
 	{var $annotations = $method->annotations}
-	<code>
-		{if !$class->interface && $method->abstract}abstract{elseif $method->final}final{/if} {if $method->protected}protected{elseif $method->private}private{else}public{/if} {if $method->static}static{/if}
-		{ifset $annotations['return']}{!$annotations['return'][0]|typeLinks:$method}{/ifset}
-		{if $method->returnsReference()}&amp;{/if}
-	</code>
+		{if !$class->interface && $method->abstract}
+			<span class="label">abstract</span>
+		{elseif $method->final}
+			<span class="label">final</span>
+		{/if}
+
+		<span class="label">
+		{if $method->protected}
+			protected
+		{elseif $method->private}
+			private
+		{else}
+			public
+		{/if}
+		</span>
+
+		<span class="label">
+		{if $method->static}static{/if}
+		</span>
+
+		<span class="label">
+			{ifset $annotations['return']}{!$annotations['return'][0]|typeLinks:$method}{/ifset}
+			{if $method->returnsReference()}&amp;{/if}
+		</span>
 	{/define}
 
 	{define #method_signature}
@@ -117,8 +136,8 @@ the file LICENSE.md that was distributed with this source code.
 		{var $annotations = $method->annotations}
 		<a id="{if $method->magic}m{/if}_{$method->name}"></a>
 		<h3 class="method-name">
-			{include #method_visibility, method => $method}
 			{include #method_signature, method => $method}
+			{include #method_visibility, method => $method}
 		</h3>
 
 		<div class="description detailed">
