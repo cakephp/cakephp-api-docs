@@ -353,7 +353,7 @@ the file LICENSE.md that was distributed with this source code.
 	</div>
 
 	{define #property}
-	<tr data-order="{$property->name}" id="{if $property->magic}m{/if}${$property->name}">
+	<tr id="{if $property->magic}m{/if}${$property->name}">
 		<td class="attributes"><code>
 			{if $property->protected}protected{elseif $property->private}private{else}public{/if} {if $property->static}static{/if} {if $property->readOnly}read-only{elseif $property->writeOnly}write-only{/if}
 			{!$property->typeHint|typeLinks:$property}
@@ -366,11 +366,7 @@ the file LICENSE.md that was distributed with this source code.
 				<a n:tag-if="$config->sourceCode" href="{$property|sourceUrl}" title="Go to source code"><var>${$property->name}</var></a>
 			{/if}
 
-			<div n:if="$config->template->options->elementDetailsCollapsed" class="description short">
-				{!$property|shortDescription:true}
-			</div>
-
-			<div n:class="description, detailed, $config->template->options->elementDetailsCollapsed ? hidden">
+			<div class="description detailed">
 				{!$property|longDescription}
 
 				{foreach $template->annotationSort($template->annotationFilter($property->annotations, array('var'))) as $annotation => $descriptions}
@@ -384,8 +380,12 @@ the file LICENSE.md that was distributed with this source code.
 					</div>
 				{/foreach}
 			</div>
+
 		</td>
-		<td n:if="!$property->magic" class="value"><div><a href="#{if $property->magic}m{/if}${$property->name}" class="anchor">#</a><code>{!$property->defaultValueDefinition|highlightValue:$class}</code></div></td>
+
+		<td n:if="!$property->magic" class="value">
+		<code>{!$property->defaultValueDefinition|highlightValue:$class}</code>
+		</td>
 	</tr>
 	{/define}
 
