@@ -407,10 +407,10 @@ the file LICENSE.md that was distributed with this source code.
 					{/foreach}
 					</div>
 				{/foreach}
-			</div>
 
-			<div n:if="!$property->magic" class="default-value">
-				<pre>{!$property->defaultValueDefinition|highlightValue:$class}</pre>
+				<div n:if="!$property->magic && $property->defaultValueDefinition" class="default-value">
+					<pre>{!$property->defaultValueDefinition|highlightValue:$class}</pre>
+				</div>
 			</div>
 
 		</td>

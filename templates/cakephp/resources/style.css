@@ -322,11 +322,8 @@ ul.breadcrumbs li.unavailable a:focus {
 
 .description pre {
 	padding: .6em;
+	margin-bottom: 18px;
 	background: #fcfcf7;
-}
-
-#content > .description pre {
-	margin: .5em 0;
 }
 
 dl.tree {
@@ -370,19 +367,6 @@ dl.tree dd {
 .inherited.summary td:first-child, 
 .used.summary td:first-child {
 	text-align: left;
-}
-
-.summary .description pre {
-	border: .5em solid #ecede5;
-}
-
-.summary .description p {
-	margin: 0;
-}
-
-.summary .description p + p,
-.summary .description ul {
-	margin: 3px 0 0 0;
 }
 
 .summary .description.detailed h4 {
