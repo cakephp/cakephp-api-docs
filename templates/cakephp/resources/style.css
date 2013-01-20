@@ -139,12 +139,17 @@ ul.breadcrumbs li.unavailable a:focus {
  * API docs content
  */
 .method-detail {
-	margin-bottom: 36px;
+	padding-bottom: 18px;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 18px;
 }
+.method-detail:last-child {
+	border-bottom: none;
+}
+
 .method-name code,
 .method-detail .method-name {
 	color: #C92434;
-	margin-left: -36px;
 }
 
 .label {

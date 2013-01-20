@@ -368,10 +368,24 @@ the file LICENSE.md that was distributed with this source code.
 
 	{define #property}
 	<tr id="{if $property->magic}m{/if}${$property->name}">
-		<td class="attributes"><code>
-			{if $property->protected}protected{elseif $property->private}private{else}public{/if} {if $property->static}static{/if} {if $property->readOnly}read-only{elseif $property->writeOnly}write-only{/if}
+		<td class="attributes">
+			{if $property->protected}
+			<span class="label">protected</span>
+			{elseif $property->private}
+			<span class="label">private</span>
+			{else}
+			<span class="label">public</span>
+			{/if}
+			{if $property->static}
+			<span class="label">static</span>
+			{/if}
+			{if $property->readOnly}
+			<span class="label">read-only</span>
+			{elseif $property->writeOnly}
+			<span class="label">write-only</span>
+			{/if}
 			{!$property->typeHint|typeLinks:$property}
-		</code></td>
+		</td>
 
 		<td class="name">
 			{if $class->internal}
@@ -395,11 +409,12 @@ the file LICENSE.md that was distributed with this source code.
 				{/foreach}
 			</div>
 
+			<div n:if="!$property->magic" class="default-value">
+				<pre>{!$property->defaultValueDefinition|highlightValue:$class}</pre>
+			</div>
+
 		</td>
 
-		<td n:if="!$property->magic" class="value">
-		<code>{!$property->defaultValueDefinition|highlightValue:$class}</code>
-		</td>
 	</tr>
 	{/define}
 
