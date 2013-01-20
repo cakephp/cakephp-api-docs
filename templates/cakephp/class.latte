@@ -112,14 +112,9 @@ the file LICENSE.md that was distributed with this source code.
 		{/if}
 		</span>
 
-		<span class="label">
-		{if $method->static}static{/if}
-		</span>
-
-		<span class="label">
-			{ifset $annotations['return']}{!$annotations['return'][0]|typeLinks:$method}{/ifset}
-			{if $method->returnsReference()}&amp;{/if}
-		</span>
+		{if $method->static}
+		<span class="label">static</span>
+		{/if}
 	{/define}
 
 	{define #method_signature}
