@@ -201,14 +201,17 @@ ul.breadcrumbs li.unavailable a:focus {
 #menu li {
 	white-space: nowrap;
 	position: relative;
+	margin-bottom: 0;
 }
 
 #menu a {
 	display: block;
 	padding: 0 2px;
+	margin-bottom: 5px;
 }
 
-#menu .active > a, #menu > span {
+#menu .active > a,
+#menu > span {
 	color: #C92434;
 	background: none;
 	font-weight: bold;
@@ -221,7 +224,7 @@ ul.breadcrumbs li.unavailable a:focus {
 #menu .active > a:hover,
 #menu .active > a:active,
 #menu .active > a:focus {
-	background-color: #417282;
+	text-decoration: underline;
 }
 
 #menu #groups span {
