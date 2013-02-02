@@ -77,6 +77,23 @@ code {
 	margin: 0 5px 0 0;
 }
 
+/**
+ * Version picker in the nav bar.
+ */
+.version-picker {
+	float: right;
+}
+.version-picker label,
+.version-picker select,
+.version-picker form {
+	margin: 0;
+}
+.version-picker select,
+.version-picker label {
+	display: inline;
+}
+
+
 #logo {
 	width: 70px;
 }

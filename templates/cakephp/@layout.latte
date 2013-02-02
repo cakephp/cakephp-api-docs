@@ -78,6 +78,17 @@ the file LICENSE.md that was distributed with this source code.
 		</div>
 
 		<div class="columns nine phone-three">
+			<div class="version-picker">
+				{var $versions = ['2.1', '2.2', '2.3', '2.4']}
+				<form method="get">
+					<label for="versions">Versions:</label>
+					<select name="versions" id="versions">
+						{foreach $versions as $ver}
+						<option name="{$ver}">{$ver}</option>
+						{/foreach}
+					</select>
+				</form>
+			</div>
 			<ul class="navigation">
 				<li n:class="'overview' === $active ? active">
 					<a n:tag-if="'overview' !== $active" href="index.html" title="Overview"><span>Overview</span></a>
