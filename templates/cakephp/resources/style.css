@@ -135,6 +135,10 @@ ul.breadcrumbs li.unavailable a:focus {
 	cursor: default;
 }
 
+.section {
+	margin-bottom: 9px;
+}
+
 /**
  * API docs content
  */
@@ -362,9 +366,7 @@ dl.tree dd {
 	text-align: right;
 }
 
-#packages.summary td:first-child,
-#namespaces.summary td:first-child,
-.inherited.summary td:first-child, 
+.inherited.summary td:first-child,
 .used.summary td:first-child {
 	text-align: left;
 }
@@ -380,6 +382,14 @@ dl.tree dd {
 .summary dd {
 	margin: 0 0 0 25px;
 }
+
+/**
+ * Summary lists on overview pages.
+ */
+.summary-list h5 {
+	font-size: 1.8rem
+}
+
 
 .name, .attributes {
 	white-space: nowrap;

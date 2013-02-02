@@ -9,50 +9,50 @@ For the full copyright and license information, please view
 the file LICENSE.md that was distributed with this source code.
 *}
 {define #elements}
-<tr n:foreach="$elements as $element">
-	<td class="name"><a href="{$element|elementUrl}" n:class="$element->deprecated ? deprecated, !$element->valid ? invalid">{if $namespace}{$element->shortName}{else}{$element->name}{/if}</a></td>
-	<td>{!$element|shortDescription}</td>
-</tr>
+<li n:foreach="$elements as $element">
+	<h5><a href="{$element|elementUrl}" n:class="$element->deprecated ? deprecated, !$element->valid ? invalid">{if $namespace}{$element->shortName}{else}{$element->name}{/if}</a></h5>
+	<p>{!$element|shortDescription}</p>
+</li>
 {/define}
 
 <div class="section" n:if="$classes">
 	<h3>Class summary</h3>
-	<table class="summary">
+	<ul class="summary-list">
 	{include #elements, elements => $classes}
-	</table>
+	</ul>
 </div>
 
 <div class="section" n:if="$interfaces">
 	<h3>Interface summary</h3>
-	<table class="summary">
+	<ul class="summary-list">
 	{include #elements, elements => $interfaces}
-	</table>
+	</ul>
 </div>
 
 <div class="section" n:if="$traits">
 	<h3>Traits summary</h3>
-	<table class="summary">
+	<ul class="summary-list">
 	{include #elements, elements => $traits}
-	</table>
+	</ul>
 </div>
 
 <div class="section" n:if="$exceptions">
 	<h3>Exception summary</h3>
-	<table class="summary">
+	<ul class="summary-list">
 	{include #elements, elements => $exceptions}
-	</table>
+	</ul>
 </div>
 
 <div class="section" n:if="$constants">
 	<h3>Constant summary</h3>
-	<table class="summary">
+	<ul class="summary-list">
 	{include #elements, elements => $constants}
-	</table>
+	</ul>
 </div>
 
 <div class="section" n:if="$functions">
 	<h3>Function summary</h3>
-	<table class="summary">
+	<ul class="summary-list">
 	{include #elements, elements => $functions}
-	</table>
+	</ul>
 </div>

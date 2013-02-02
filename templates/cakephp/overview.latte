@@ -21,31 +21,35 @@ the file LICENSE.md that was distributed with this source code.
 
 	{if $namespaces}
 	{if}
-	<table class="summary" id="namespaces">
-	<caption>Namespaces summary</caption>
-	{foreach $namespaces as $namespace}
-	{continueIf $config->main && 0 !== strpos($namespace, $config->main)}
-	<tr>
-		{var $group = true}
-		<td class="name"><a href="{$namespace|namespaceUrl}">{$namespace}</a></td>
-	</tr>
-	{/foreach}
-	</table>
+	<div class="section" id="namespaces">
+		<h3>Namespaces summary</caption>
+		<ul class="summary-list">
+		{foreach $namespaces as $namespace}
+		{continueIf $config->main && 0 !== strpos($namespace, $config->main)}
+		<li>
+			{var $group = true}
+			<a href="{$namespace|namespaceUrl}">{$namespace}</a>
+		</li>
+		{/foreach}
+		</ul>
+	</div>
 	{/if $iterations}
 	{/if}
 
 	{if $packages}
 	{if}
-	<table class="summary" id="packages">
-	<caption>Packages summary</caption>
-	{foreach $packages as $package}
-	{continueIf $config->main && 0 !== strpos($package, $config->main)}
-	<tr>
-		{var $group = true}
-		<td class="name"><a href="{$package|packageUrl}">{$package}</a></td>
-	</tr>
-	{/foreach}
-	</table>
+	<div class="section" id="packages">
+		<h3>Packages summary</h3>
+		<ul>
+		{foreach $packages as $package}
+		{continueIf $config->main && 0 !== strpos($package, $config->main)}
+		<li>
+			{var $group = true}
+			<a href="{$package|packageUrl}">{$package}</a>
+		</li>
+		{/foreach}
+		</ul>
+	</div>
 	{/if $iterations}
 	{/if}
 
