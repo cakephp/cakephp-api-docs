@@ -75,6 +75,7 @@ code {
 .navigation-header a {
 	padding: 5px 10px;
 	margin: 0 5px 0 0;
+	display: inline-block;
 }
 
 /**
