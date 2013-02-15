@@ -12,8 +12,8 @@ skipDocPath: /Users/markstory/Sites/cake_dev/lib/Cake/Test
 skipDocPrefix:
 # Character set of source files
 charset: auto
-# Main project name prefix
-main: CakePHP
+# Main project namespace/package prefix
+main: Cake
 
 # Title of generated documentation
 title: CakePHP

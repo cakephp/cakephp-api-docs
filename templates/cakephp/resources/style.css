@@ -59,6 +59,7 @@ code {
 	padding: 5px;
 }
 .navigation-header a,
+.navigation-header span,
 .navigation-header {
 	font-family: MuseoSlab500, Helvetica, Arial;
 	color: #fff;
@@ -71,11 +72,7 @@ code {
 }
 .navigation-header li {
 	display: inline;
-}
-.navigation-header a {
-	padding: 5px 10px;
-	margin: 0 5px 0 0;
-	display: inline-block;
+	padding: 0 10px 0 0;
 }
 
 /**
@@ -87,7 +84,7 @@ code {
 }
 .version-picker a {
 	display: block;
-	width: 100px;
+	width: 115px;
 	margin: 0;
 }
 /* Active link for button */
@@ -98,6 +95,7 @@ code {
 	display: none;
 	position: absolute;
 	top: 100%;
+	left: -5px;
 	background: #BD8A5D;
 	z-index: 10;
 }
@@ -108,6 +106,12 @@ code {
 	display: block;
 	margin: 0;
 	padding: 0;
+}
+.version-picker li a {
+	display: block;
+	padding: 5px 20px 5px 5px;
+	text-align: right;
+	width: 85px;
 }
 
 
