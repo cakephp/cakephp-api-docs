@@ -5,7 +5,8 @@ BUILD_DIR='../apigen_build'
 .PHONY: build-all
 
 # Versions that can be built.
-VERSIONS = 1.2 1.3 2.0 2.1 2.2 2.3 2.4
+# VERSIONS = 1.2 1.3 2.0 2.1 2.2 2.3 2.4
+VERSIONS = 2.0 2.1 2.2 2.3 2.4
 
 clean:
 	rm -rf $(BUILD_DIR)
