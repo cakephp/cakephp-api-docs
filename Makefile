@@ -1,7 +1,7 @@
 SOURCE_DIR='../cakephp'
 BUILD_DIR='../apigen_build'
 
-.PHONY: help
+.PHONY: clean
 .PHONY: build-all
 
 # Versions that can be built.
@@ -23,7 +23,8 @@ build-$(VERSION):
 	php apigen.php --source $(SOURCE_DIR)/lib \
 		--exclude $(SOURCE_DIR)/lib/Cake/Test \
 		--skip-doc-path $(SOURCE_DIR)/lib/Cake/Test \
-		--destination $(BUILD_DIR)/$(VERSION)
+		--destination $(BUILD_DIR)/$(VERSION) \
+		--template-config ./templates/cakephp/config.neon
 endef
 
 define build1x
@@ -38,7 +39,8 @@ build-$(VERSION):
 	php apigen.php --source $(SOURCE_DIR)/cake \
 		--exclude $(SOURCE_DIR)/cake/tests \
 		--skip-doc-path $(SOURCE_DIR)/cake/tests \
-		--destination $(BUILD_DIR)/$(VERSION)
+		--destination $(BUILD_DIR)/$(VERSION) \
+		--template-config ./templates/cakephp/config.neon
 endef
 
 # Build all the versions in a loop.

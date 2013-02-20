@@ -1,19 +1,25 @@
 # Source file or directory to parse
-source: /Users/markstory/Sites/cake_dev/lib
-# Directory where to save the generated documentation
-destination: /Users/markstory/Sites/cake_apigen
+# This should be set in the CLI options
+source: 
 
-# List of allowed file extensions
-extensions: [php]
+# Directory where to save the generated documentation
+# This should be set in the cli options
+destination: 
 
 # Mask to exclude file or directory from processing
-exclude: ./lib/Cake/Test
+# This should be set in the cli options
+exclude: 
 
 # Don't generate documentation for classes from file or directory with this mask
-skipDocPath: ./lib/Cake/Test
+# This should be set in the cli options
+skipDocPath: 
 
 # Don't generate documentation for classes with this name prefix
 skipDocPrefix:
+
+
+# List of allowed file extensions
+extensions: [php]
 
 # Character set of source files
 charset: auto
@@ -23,9 +29,6 @@ main: Cake
 
 # Title of generated documentation
 title: CakePHP
-
-# Documentation base URL
-baseUrl: cake_apigen
 
 # Google Custom Search ID
 googleCseId:
@@ -37,7 +40,7 @@ googleCseLabel:
 googleAnalytics:
 
 # Template config file
-templateConfig: './templates/cakephp/config.neon'
+templateConfig: '../templates/cakephp/config.neon'
 
 # Grouping of classes
 groups: auto
