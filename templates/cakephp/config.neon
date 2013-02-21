@@ -8,6 +8,7 @@ templates:
 	common:
 		overview.latte: index.html
 		combined.js.latte: resources/combined.js
+		combined.css.latte: resources/styles.css
 		elementlist.js.latte: elementlist.js
 		404.latte: 404.html
 
