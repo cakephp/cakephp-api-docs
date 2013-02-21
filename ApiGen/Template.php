@@ -274,6 +274,12 @@ class Template extends Nette\Templating\FileTemplate
 
 		$this->registerHelper('urlize', array($this, 'urlize'));
 
+		$this->registerHelper('slugify', function ($input) {
+			// Convert CamelCase to under_scores
+			$input = strtolower(preg_replace('/(?<=\\w)([A-Z])/', '_\\1', $input));
+			return str_replace('_', '-', $input);
+		});
+
 		$this->registerHelper('relativePath', array($generator, 'getRelativePath'));
 		$this->registerHelper('resolveElement', array($generator, 'resolveElement'));
 		$this->registerHelper('getClass', array($generator, 'getClass'));
