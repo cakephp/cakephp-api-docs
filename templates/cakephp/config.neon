@@ -11,6 +11,7 @@ templates:
 		combined.css.latte: resources/styles.css
 		elementlist.js.latte: elementlist.js
 		404.latte: 404.html
+		rewrite.latte: rewrite.php
 
 	main:
 		package:

@@ -1,0 +1,16 @@
+{* Hack around latte, not allowing open php in the file. *}
+{var $open = '<?php'}
+{!$open}
+/**
+ * Rewrite rules for the old to new-docs.
+ */
+$rewrites = array(
+{foreach $classes as $class}
+	"class/{$class->name|slugify}" => "class-{$class->name}.html",
+{/foreach}
+);
+
+$uri = isset($_GET['url']) ? $_GET['url'] : '';
+if ($uri && isset($rewrites[$uri])) {
+	header("Location: /{$config->template->options->activeVersion}/" . $rewrites[$uri]);
+}
