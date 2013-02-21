@@ -10,7 +10,12 @@ $rewrites = array(
 {/foreach}
 );
 
+header('HTTP/1.0 301 Moved Permanently');
+header('Status: 301');
+
 $uri = isset($_GET['url']) ? $_GET['url'] : '';
+
 if ($uri && isset($rewrites[$uri])) {
 	header("Location: /{$config->template->options->activeVersion}/" . $rewrites[$uri]);
 }
+header('Location: /{$config->template->options->activeVersion}/404.html');
