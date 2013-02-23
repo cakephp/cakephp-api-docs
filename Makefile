@@ -1,5 +1,5 @@
 SOURCE_DIR='../cakephp'
-BUILD_DIR='../apigen_build'
+BUILD_DIR='./build/api'
 
 .PHONY: clean
 .PHONY: build-all
