@@ -41,8 +41,8 @@ build-$(VERSION):
 	# Run Apigen
 	php apigen.php --source $(SOURCE_DIR)/cake \
 		--exclude $(SOURCE_DIR)/cake/tests \
+		--exclude $(SOURCE_DIR)/cake/console/libs/templates \
 		--skip-doc-path $(SOURCE_DIR)/cake/tests \
-		--skip-doc-path $(SOURCE_DIR)/cake/console/libs/templates \
 		--destination $(BUILD_DIR)/$(VERSION) \
 		--template-config ./templates/cakephp/config.neon
 	# Fix rewirites file to have a opening php tag at the start
