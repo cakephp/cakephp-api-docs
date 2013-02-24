@@ -1,6 +1,4 @@
-{* Hack around latte, not allowing open php in the file. *}
-{var $open = '<?php'}
-{!$open}
+
 /**
  * Rewrite rules for the old to new-docs.
  */
@@ -13,9 +11,10 @@ $rewrites = array(
 header('HTTP/1.0 301 Moved Permanently');
 header('Status: 301');
 
-$uri = isset($_GET['url']) ? $_GET['url'] : '';
+$uri = substr($_SERVER['REQUEST_URI'], 5);
 
 if ($uri && isset($rewrites[$uri])) {
 	header("Location: /{$config->template->options->activeVersion}/" . $rewrites[$uri]);
+	exit;
 }
 header('Location: /{$config->template->options->activeVersion}/404.html');

@@ -15,7 +15,7 @@ define build2x
 build-$(VERSION):
 	cd $(SOURCE_DIR) && git checkout $(TAG)
 	# Update the config file, Remove sed crap
-	sed -i.bak -E -e "s#(\s*activeVersion\:)[ ]*\'[0-9]\.[0-9]\'#\1 '$(VERSION)'#" templates/cakephp/config.neon
+	sed -i.bak "s/activeVersion: '[0-9]\.[0-9]'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
 	rm templates/cakephp/config.neon.bak
 	# Make the build output dir
 	[ ! -d $(BUILD_DIR) ] && mkdir $(BUILD_DIR) || true
@@ -23,8 +23,11 @@ build-$(VERSION):
 	php apigen.php --source $(SOURCE_DIR)/lib \
 		--exclude $(SOURCE_DIR)/lib/Cake/Test \
 		--skip-doc-path $(SOURCE_DIR)/lib/Cake/Test \
+		--skip-doc-path $(SOURCE_DIR)/lib/Cake/Console/Templates \
 		--destination $(BUILD_DIR)/$(VERSION) \
 		--template-config ./templates/cakephp/config.neon
+	# Fix rewirites file to have a opening php tag at the start
+	sed -i.bak '1i<?php' $(BUILD_DIR)/$(VERSION)/rewrite.php && rm $(BUILD_DIR)/$(VERSION)/rewrite.php.bak
 endef
 
 define build1x
@@ -36,11 +39,13 @@ build-$(VERSION):
 	# Make the build output dir
 	[ ! -d $(BUILD_DIR) ] && mkdir $(BUILD_DIR) || true
 	# Run Apigen
-	php apigen.php --source $(SOURCE_DIR)/cake \
+	php apigen.php --debug --source $(SOURCE_DIR)/cake \
 		--exclude $(SOURCE_DIR)/cake/tests \
 		--skip-doc-path $(SOURCE_DIR)/cake/tests \
 		--destination $(BUILD_DIR)/$(VERSION) \
 		--template-config ./templates/cakephp/config.neon
+	# Fix rewirites file to have a opening php tag at the start
+	sed -i.bak '1i<?php' $(BUILD_DIR)/$(VERSION)/rewrite.php && rm $(BUILD_DIR)/$(VERSION)/rewrite.php.bak
 endef
 
 # Build all the versions in a loop.
