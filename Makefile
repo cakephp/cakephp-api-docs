@@ -34,7 +34,7 @@ define build1x
 build-$(VERSION):
 	cd $(SOURCE_DIR) && git checkout $(TAG)
 	# Update the config file, Remove sed crap
-	sed -i.bak -E -e "s#(\s*activeVersion\:)[ ]*\'[0-9]\.[0-9]\'#\1 '$(VERSION)'#" templates/cakephp/config.neon
+	sed -i.bak "s/activeVersion: '[0-9]\.[0-9]'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
 	rm templates/cakephp/config.neon.bak
 	# Make the build output dir
 	[ ! -d $(BUILD_DIR) ] && mkdir $(BUILD_DIR) || true
@@ -42,6 +42,7 @@ build-$(VERSION):
 	php apigen.php --source $(SOURCE_DIR)/cake \
 		--exclude $(SOURCE_DIR)/cake/tests \
 		--skip-doc-path $(SOURCE_DIR)/cake/tests \
+		--skip-doc-path $(SOURCE_DIR)/cake/console/libs/templates \
 		--destination $(BUILD_DIR)/$(VERSION) \
 		--template-config ./templates/cakephp/config.neon
 	# Fix rewirites file to have a opening php tag at the start
