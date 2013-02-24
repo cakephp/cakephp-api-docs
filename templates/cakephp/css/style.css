@@ -25,14 +25,17 @@ td, th, p, li, dd {
 	}
 }
 
-code, var, pre {
+code,
+var,
+pre,
+.php-keyword1 {
 	font-family: monospace;
 }
 
 var {
 	font-weight: bold;
 	font-style: normal;
-	color: #ca8a04;
+	color: #234aa0;
 }
 
 pre {
@@ -368,7 +371,7 @@ ul.breadcrumbs li.unavailable a:focus {
 .description pre {
 	padding: .6em;
 	margin-bottom: 18px;
-	background: #fcfcf7;
+	background: #F2F2F2;
 }
 
 dl.tree {
@@ -505,17 +508,20 @@ div.tree span.padding {
 
 /* Source code */
 .php-keyword1 {
-	color: #e71818;
-	font-weight: bold;
+	color: #a71d5d;
+	font-style: italic;
 }
 
 .php-keyword2 {
-	font-weight: bold;
+	font-style: italic;
 }
 
+.l .php-var a:hover,
+.l .php-var a:active,
+.l .php-var a:focus,
+.l .php-var a,
 .php-var {
-	color: #d59401;
-	font-weight: bold;
+	color: #234AA0 !important;
 }
 
 .php-num {
@@ -523,11 +529,11 @@ div.tree span.padding {
 }
 
 .php-quote {
-	color: #008000;
+	color: #0b6125;
 }
 
 .php-comment {
-	color: #929292;
+	color: #5F5F5F
 }
 
 .xlang {
@@ -540,25 +546,21 @@ span.l {
 }
 
 span.l.selected {
-	background: #f6f6f4;
+	background: #FFC;
 }
 
 span.l a {
 	color: #333333;
 }
 
-span.l a:hover, div.l a:active, div.l a:focus {
+span.l a:hover,
+div.l a:active,
+div.l a:focus {
 	background: transparent;
 	color: #333333 !important;
 }
 
-span.l .php-var a {
-	color: #d59401;
-}
 
-span.l .php-var a:hover, span.l .php-var a:active, span.l .php-var a:focus {
-	color: #d59401 !important;
-}
 
 span.l a.l {
 	padding-left: 2px;
