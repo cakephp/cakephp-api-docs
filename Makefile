@@ -22,6 +22,7 @@ build-$(VERSION):
 	# Run Apigen
 	php apigen.php --source $(SOURCE_DIR)/lib \
 		--exclude $(SOURCE_DIR)/lib/Cake/Test \
+		--exclude $(SOURCE_DIR)/lib/Cake/Console/Templates \
 		--skip-doc-path $(SOURCE_DIR)/lib/Cake/Test \
 		--skip-doc-path $(SOURCE_DIR)/lib/Cake/Console/Templates \
 		--destination $(BUILD_DIR)/$(VERSION) \
