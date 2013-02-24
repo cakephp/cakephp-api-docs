@@ -39,7 +39,7 @@ build-$(VERSION):
 	# Make the build output dir
 	[ ! -d $(BUILD_DIR) ] && mkdir $(BUILD_DIR) || true
 	# Run Apigen
-	php apigen.php --debug --source $(SOURCE_DIR)/cake \
+	php apigen.php --source $(SOURCE_DIR)/cake \
 		--exclude $(SOURCE_DIR)/cake/tests \
 		--skip-doc-path $(SOURCE_DIR)/cake/tests \
 		--destination $(BUILD_DIR)/$(VERSION) \
