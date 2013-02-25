@@ -24,6 +24,7 @@ build-$(VERSION):
 		--config ./apigen.neon \
 		--exclude $(SOURCE_DIR)/lib/Cake/Test \
 		--exclude $(SOURCE_DIR)/lib/Cake/Console/Templates \
+		--autocomplete classes,constants,functions,methods,properties,classconstants \
 		--skip-doc-path $(SOURCE_DIR)/lib/Cake/Test \
 		--skip-doc-path $(SOURCE_DIR)/lib/Cake/Console/Templates \
 		--destination $(BUILD_DIR)/$(VERSION) \
@@ -45,6 +46,7 @@ build-$(VERSION):
 		--config ./apigen.neon \
 		--exclude $(SOURCE_DIR)/cake/tests \
 		--exclude $(SOURCE_DIR)/cake/console/libs/templates \
+		--autocomplete classes,constants,functions,methods,properties,classconstants \
 		--skip-doc-path $(SOURCE_DIR)/cake/tests \
 		--destination $(BUILD_DIR)/$(VERSION) \
 		--template-config ./templates/cakephp/config.neon
