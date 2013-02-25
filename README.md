@@ -12,6 +12,19 @@ Requirements:
 * A clone of [CakePHP](https://github.com/cakephp/cakephp)
 * git
 
+
+## Installation
+
+After cloning the repository make sure you install the git submodules:
+
+    git submodule init
+    git submodule update
+
+After installing the submodules, you'll need to have a clone of cakephp/cakephp
+as well. Bulding the docs uses the CakePHP source code, and will modify which tag/reference
+is currently checked out.
+
+
 ## Building the documentation ##
 
 To build the documentation you will need to use `make`. You can build all the
