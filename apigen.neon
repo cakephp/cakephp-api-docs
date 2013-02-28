@@ -1,22 +1,21 @@
 # Source file or directory to parse
 # This should be set in the CLI options
-source: 
+source:
 
 # Directory where to save the generated documentation
 # This should be set in the cli options
-destination: 
+destination:
 
 # Mask to exclude file or directory from processing
 # This should be set in the cli options
-exclude: 
+exclude:
 
 # Don't generate documentation for classes from file or directory with this mask
 # This should be set in the cli options
-skipDocPath: 
+skipDocPath:
 
 # Don't generate documentation for classes with this name prefix
 skipDocPrefix:
-
 
 # List of allowed file extensions
 extensions: [php]
@@ -25,7 +24,7 @@ extensions: [php]
 charset: auto
 
 # Main project namespace/package prefix
-main: Cake
+main:
 
 # Title of generated documentation
 title: CakePHP
@@ -64,7 +63,7 @@ php: Yes
 tree: Yes
 
 # Generate documentation for deprecated classes, methods, properties and constants
-deprecated: No
+deprecated: Yes
 
 # Generate documentation of tasks
 todo: No

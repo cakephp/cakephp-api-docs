@@ -24,8 +24,6 @@ build-$(VERSION):
 		--config ./apigen.neon \
 		--exclude $(SOURCE_DIR)/lib/Cake/Test \
 		--exclude $(SOURCE_DIR)/lib/Cake/Console/Templates \
-		--skip-doc-path $(SOURCE_DIR)/lib/Cake/Test \
-		--skip-doc-path $(SOURCE_DIR)/lib/Cake/Console/Templates \
 		--destination $(BUILD_DIR)/$(VERSION) \
 		--template-config ./templates/cakephp/config.neon
 	# Fix rewirites file to have a opening php tag at the start
@@ -45,7 +43,6 @@ build-$(VERSION):
 		--config ./apigen.neon \
 		--exclude $(SOURCE_DIR)/cake/tests \
 		--exclude $(SOURCE_DIR)/cake/console/libs/templates \
-		--skip-doc-path $(SOURCE_DIR)/cake/tests \
 		--destination $(BUILD_DIR)/$(VERSION) \
 		--template-config ./templates/cakephp/config.neon
 	# Fix rewirites file to have a opening php tag at the start
