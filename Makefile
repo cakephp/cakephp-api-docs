@@ -21,7 +21,10 @@ build-$(VERSION):
 	[ ! -d $(BUILD_DIR) ] && mkdir $(BUILD_DIR) || true
 	# Run Apigen
 	php apigen.php --source $(SOURCE_DIR)/lib \
+		--source $(SOURCE_DIR)/app \
 		--config ./apigen.neon \
+		--exclude $(SOURCE_DIR)/app/Config/database.php \
+		--exclude $(SOURCE_DIR)/lib/Cake/Console/Command/AppShell.php \
 		--exclude $(SOURCE_DIR)/lib/Cake/Test \
 		--exclude $(SOURCE_DIR)/lib/Cake/Console/Templates \
 		--destination $(BUILD_DIR)/$(VERSION) \
