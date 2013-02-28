@@ -42,10 +42,12 @@ build-$(VERSION):
 	# Make the build output dir
 	[ ! -d $(BUILD_DIR) ] && mkdir $(BUILD_DIR) || true
 	# Run Apigen
-	php apigen.php --source $(SOURCE_DIR)/cake \
+	php apigen.php --source $(SOURCE_DIR)/cake/libs \
+		--source $(SOURCE_DIR)/cake/console/libs \
 		--config ./apigen.neon \
 		--exclude $(SOURCE_DIR)/cake/tests \
-		--exclude $(SOURCE_DIR)/cake/console/libs/templates \
+		--exclude $(SOURCE_DIR)/cake/libs/overloadable_php4.php \
+		--exclude $(SOURCE_DIR)/cake/console/templates \
 		--destination $(BUILD_DIR)/$(VERSION) \
 		--template-config ./templates/cakephp/config.neon
 	# Fix rewirites file to have a opening php tag at the start
@@ -77,7 +79,7 @@ VERSION:=2.4
 $(eval $(build2x))
 
 # Generate build targets for various 1.x versions
-TAG:=1.3.15
+TAG:=1.3
 VERSION:=1.3
 $(eval $(build1x))
 
