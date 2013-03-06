@@ -159,6 +159,7 @@ the file LICENSE.md that was distributed with this source code.
 				<dl>
 				{foreach $method->parameters as $parameter}
 					<dt>
+						{!$parameter->typeHint|typeLinks:$method}
 						<var>${$parameter->name}</var>
 						{if $parameter->defaultValueAvailable}
 						<span class="label">optional</span>
@@ -286,7 +287,7 @@ the file LICENSE.md that was distributed with this source code.
 		{/foreach}
 		</table>
 	</div>
-	
+
 	<div class="section" n:foreach="$class->inheritedMagicMethods as $parentName => $methods">
 		<h2>Magic methods inherited from <a href="{$parentName|classUrl}#methods" n:tag-if="$template->getClass($parentName)">{$parentName}</a></h2>
 		<table class="summary inherited">
