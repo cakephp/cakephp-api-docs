@@ -102,6 +102,7 @@ code {
 	background: #BD8A5D;
 	z-index: 10;
 }
+.version-picker:focus ul,
 .version-picker:hover ul {
 	display: block;
 }
@@ -268,7 +269,7 @@ ul.breadcrumbs li.unavailable a:focus {
 	text-decoration: underline;
 }
 
-#menu #groups span {
+#groups span {
 	position: absolute;
 	top: 4px;
 	right: 2px;
@@ -279,15 +280,15 @@ ul.breadcrumbs li.unavailable a:focus {
 	background: url('collapsed.png') transparent 0 0 no-repeat;
 }
 
-#menu #groups span:hover {
+#groups span:hover {
 	background-position: -12px 0;
 }
 
-#menu #groups span.collapsed {
+#groups span.collapsed {
 	background-position: 0 -12px;
 }
 
-#menu #groups span.collapsed:hover {
+#groups span.collapsed:hover {
 	background-position: -12px -12px;
 }
 
@@ -567,7 +568,9 @@ span.l a.l {
 	color: #c0c0c0;
 }
 
-span.l a.l:hover, span.l a.l:active, span.l a.l:focus {
+span.l a.l:hover,
+span.l a.l:active,
+span.l a.l:focus {
 	background: transparent;
 	color: #c0c0c0 !important;
 }
