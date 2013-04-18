@@ -93,6 +93,10 @@ the file LICENSE.md that was distributed with this source code.
 
 	{var $ownMethods = $class->ownMethods}
 	{var $ownMagicMethods = $class->ownMagicMethods}
+	<?php
+	ksort($ownMethods);
+	ksort($ownMagicMethods);
+	?>
 
 	{define #method_visibility}
 	{var $annotations = $method->annotations}
@@ -315,6 +319,9 @@ the file LICENSE.md that was distributed with this source code.
 	</div>
 
 	{var $ownConstants = $class->ownConstants}
+	<?php
+	ksort($ownConstants);
+	?>
 
 	<div class="section" n:if="$ownConstants">
 		<h2>Constants summary</h2>
@@ -423,6 +430,10 @@ the file LICENSE.md that was distributed with this source code.
 
 	{var $ownProperties = $class->ownProperties}
 	{var $ownMagicProperties = $class->ownMagicProperties}
+	<?php
+	ksort($ownProperties);
+	ksort($ownMagicProperties);
+	?>
 
 	<div class="section" n:if="$ownProperties">
 		<h2>Properties summary</h2>
