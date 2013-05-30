@@ -29,7 +29,7 @@ build-$(VERSION):
 		--exclude $(SOURCE_DIR)/lib/Cake/Console/Templates \
 		--destination $(BUILD_DIR)/$(VERSION) \
 		--template-config ./templates/cakephp/config.neon
-	# Fix rewirites file to have a opening php tag at the start
+	# Fix rewrites file to have a opening php tag at the start
 	sed -i.bak '1i<?php' $(BUILD_DIR)/$(VERSION)/rewrite.php && rm $(BUILD_DIR)/$(VERSION)/rewrite.php.bak
 endef
 
@@ -50,7 +50,7 @@ build-$(VERSION):
 		--exclude $(SOURCE_DIR)/cake/console/templates \
 		--destination $(BUILD_DIR)/$(VERSION) \
 		--template-config ./templates/cakephp/config.neon
-	# Fix rewirites file to have a opening php tag at the start
+	# Fix rewrites file to have a opening php tag at the start
 	sed -i.bak '1i<?php' $(BUILD_DIR)/$(VERSION)/rewrite.php && rm $(BUILD_DIR)/$(VERSION)/rewrite.php.bak
 endef
 
