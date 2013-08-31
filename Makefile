@@ -5,7 +5,7 @@ BUILD_DIR='./build/api'
 .PHONY: build-all
 
 # Versions that can be built.
-VERSIONS = 1.2 1.3 2.0 2.1 2.2 2.3 2.4
+VERSIONS = 1.2 1.3 2.0 2.1 2.2 2.3 2.4 2.5
 
 clean:
 	rm -rf $(BUILD_DIR)
@@ -62,20 +62,24 @@ TAG:=2.0.6
 VERSION:=2.0
 $(eval $(build2x))
 
-TAG:=2.1.4
+TAG:=2.1.5
 VERSION:=2.1
 $(eval $(build2x))
 
-TAG:=2.2.7
+TAG:=2.2.9
 VERSION:=2.2
 $(eval $(build2x))
 
-TAG:=origin/master
+TAG:=2.3.10
 VERSION:=2.3
 $(eval $(build2x))
 
-TAG:=origin/2.4
+TAG:=origin/master
 VERSION:=2.4
+$(eval $(build2x))
+
+TAG:=origin/2.5
+VERSION:=2.5
 $(eval $(build2x))
 
 # Generate build targets for various 1.x versions

@@ -46,6 +46,7 @@ following versions can be built:
 * 2.2
 * 2.3
 * 2.4
+* 2.5
 
 By default the api-docs assume that `../cakephp` is a git clone of CakePHP.
 Also documentation will be output to `./build/api`. If you want to change
