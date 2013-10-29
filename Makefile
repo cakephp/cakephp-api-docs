@@ -35,7 +35,7 @@ endef
 
 define build1x
 build-$(VERSION):
-	cd $(SOURCE_DIR) && git checkout $(TAG)
+	cd $(SOURCE_DIR) && git checkout -f $(TAG)
 	# Update the config file, Remove sed crap
 	sed -i.bak "s/activeVersion: '[0-9]\.[0-9]'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
 	rm templates/cakephp/config.neon.bak
