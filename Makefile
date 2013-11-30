@@ -5,12 +5,31 @@ BUILD_DIR='./build/api'
 .PHONY: build-all
 
 # Versions that can be built.
-VERSIONS = 1.2 1.3 2.0 2.1 2.2 2.3 2.4 2.5
+VERSIONS = 1.2 1.3 2.0 2.1 2.2 2.3 2.4 2.5 3.0
 
 clean:
 	rm -rf $(BUILD_DIR)
 
 # Make a macro to save re-typing recipies multiple times
+define build3x
+build-$(VERSION):
+	cd $(SOURCE_DIR) && git checkout $(TAG)
+	# Update the config file, Remove sed crap
+	sed -i.bak "s/activeVersion: '[0-9]\.[0-9]'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
+	rm templates/cakephp/config.neon.bak
+	# Make the build output dir
+	[ ! -d $(BUILD_DIR) ] && mkdir $(BUILD_DIR) || true
+	# Run Apigen
+	php apigen.php --source $(SOURCE_DIR)/Cake \
+		--config ./apigen.neon \
+		--exclude $(SOURCE_DIR)/Cake/Test \
+		--exclude $(SOURCE_DIR)/Cake/Console/Templates \
+		--destination $(BUILD_DIR)/$(VERSION) \
+		--template-config ./templates/cakephp/config.neon
+	# Fix rewrites file to have a opening php tag at the start
+	sed -i.bak '1i<?php' $(BUILD_DIR)/$(VERSION)/rewrite.php && rm $(BUILD_DIR)/$(VERSION)/rewrite.php.bak
+endef
+
 define build2x
 build-$(VERSION):
 	cd $(SOURCE_DIR) && git checkout $(TAG)
@@ -81,6 +100,10 @@ $(eval $(build2x))
 TAG:=origin/2.5
 VERSION:=2.5
 $(eval $(build2x))
+
+TAG:=origin/3.0
+VERSION:=3.0
+$(eval $(build3x))
 
 # Generate build targets for various 1.x versions
 TAG:=origin/1.3
