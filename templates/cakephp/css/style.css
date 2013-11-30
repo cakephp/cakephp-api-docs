@@ -269,6 +269,10 @@ ul.breadcrumbs li.unavailable a:focus {
 	text-decoration: underline;
 }
 
+#elements {
+	overflow-x: scroll;
+}
+
 #groups span {
 	position: absolute;
 	top: 4px;
