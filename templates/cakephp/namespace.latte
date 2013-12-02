@@ -14,15 +14,18 @@ the file LICENSE.md that was distributed with this source code.
 {block #title}{if $namespace != 'None'}Namespace {$namespace}{else}No namespace{/if}{/block}
 
 {block #content}
-<div id="content" class="namespace">
+<div class="section namespace">
 	<h1>{if $namespace != 'None'}Namespace {!$namespace|namespaceLinks:false}{else}No namespace{/if}</h1>
 
-	<table class="summary" id="namespaces" n:if="$subnamespaces">
-	<caption>Namespaces summary</caption>
-	<tr n:foreach="$subnamespaces as $namespace">
-		<td class="name"><a href="{$namespace|namespaceUrl}">{$namespace}</a></td>
-	</tr>
-	</table>
+	<div n:if="$subnamespaces">
+		<h3>Namespaces summary</h3>
+
+		<ul class="summary-list">
+			<li n:foreach="$subnamespaces as $namespace">
+				<a href="{$namespace|namespaceUrl}">{$namespace}</a>
+			</li>
+		</ul>
+	</div>
 
 	{include '@elementlist.latte'}
 </div>
