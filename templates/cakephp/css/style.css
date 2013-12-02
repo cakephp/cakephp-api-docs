@@ -118,7 +118,6 @@ code {
 	width: 85px;
 }
 
-
 #logo {
 	width: 70px;
 }
@@ -270,7 +269,7 @@ ul.breadcrumbs li.unavailable a:focus {
 }
 
 #elements {
-	overflow-x: scroll;
+	overflow-x: auto;
 }
 
 #groups span {
@@ -300,7 +299,6 @@ ul.breadcrumbs li.unavailable a:focus {
 	display: none;
 }
 
-
 /* Search */
 .search-form {
 	margin: 20px 0;
@@ -319,7 +317,6 @@ ul.breadcrumbs li.unavailable a:focus {
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 }
-
 
 /* Autocomplete */
 .ac_results {
@@ -366,7 +363,6 @@ ul.breadcrumbs li.unavailable a:focus {
 	color: #ffffff;
 }
 
-
 /* Content */
 #content {
 	clear: both;
@@ -400,10 +396,12 @@ dl.tree dd {
 	width: 100%;
 	border: none;
 }
+
 /* revert styles from foundation */
 .summary tr:nth-child(even) {
 	background: none;
 }
+
 .summary td {
 	margin: 0;
 	padding: 0.5em 10px;
@@ -439,7 +437,6 @@ dl.tree dd {
 	font-size: 1.8rem
 }
 
-
 .name, .attributes {
 	white-space: nowrap;
 }
@@ -459,8 +456,6 @@ td.attributes {
 	white-space: normal;
 }
 
-
-
 /*
  * Property lists
  */
@@ -471,12 +466,10 @@ td.attributes {
 	margin-bottom: 9px;
 }
 
-
 div.invalid {
 	background-color: #fae4e0;
 	padding: 10px;
 }
-
 
 /* Tree */
 div.tree ul {
@@ -565,8 +558,6 @@ div.l a:focus {
 	color: #333333 !important;
 }
 
-
-
 span.l a.l {
 	padding-left: 2px;
 	color: #c0c0c0;
@@ -578,4 +569,3 @@ span.l a.l:focus {
 	background: transparent;
 	color: #c0c0c0 !important;
 }
-
