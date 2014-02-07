@@ -41,7 +41,7 @@ build-$(VERSION):
 	php apigen.php --source $(SOURCE_DIR)/lib \
 		--source $(SOURCE_DIR)/app \
 		--config ./apigen.neon \
-		--exclude $(SOURCE_DIR)/app/Config/database.php \
+		--exclude $(SOURCE_DIR)/app/Config \
 		--exclude $(SOURCE_DIR)/lib/Cake/Console/Command/AppShell.php \
 		--exclude $(SOURCE_DIR)/lib/Cake/Test \
 		--exclude $(SOURCE_DIR)/lib/Cake/Console/Templates \
