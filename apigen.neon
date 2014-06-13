@@ -75,7 +75,7 @@ sourceCode: Yes
 download: No
 
 # Save a checkstyle report of poorly documented elements into a file
-report:
+report: report.log
 
 # Wipe out the destination directory first
 wipeout: Yes
