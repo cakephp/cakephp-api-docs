@@ -57,7 +57,7 @@ accessLevels: [public, protected]
 internal: No
 
 # Generate documentation for PHP internal classes
-php: Yes
+php: No
 
 # Generate tree view of classes, interfaces and exceptions
 tree: Yes
