@@ -22,7 +22,7 @@ build-$(VERSION):
 	# Run Apigen
 	php apigen.php --source $(SOURCE_DIR)/src \
 		--config ./apigen.neon \
-		--exclude $(SOURCE_DIR)/src/Console/Templates \
+		--exclude $(SOURCE_DIR)/src/Templates \
 		--destination $(BUILD_DIR)/$(VERSION) \
 		--template-config ./templates/cakephp/config.neon
 	# Fix rewrites file to have a opening php tag at the start
