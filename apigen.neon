@@ -72,7 +72,7 @@ todo: No
 sourceCode: Yes
 
 # Add a link to download documentation as a ZIP archive
-download: No
+download: Yes
 
 # Save a checkstyle report of poorly documented elements into a file
 report: report.log
