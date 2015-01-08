@@ -5,7 +5,7 @@ BUILD_DIR='./build/api'
 .PHONY: build-all
 
 # Versions that can be built.
-VERSIONS = 1.2 1.3 2.0 2.1 2.2 2.3 2.4 2.5 3.0
+VERSIONS = 1.2 1.3 2.0 2.1 2.2 2.3 2.4 2.5 2.6 3.0
 
 clean:
 	rm -rf $(BUILD_DIR)
