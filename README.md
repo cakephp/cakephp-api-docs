@@ -47,6 +47,7 @@ following versions can be built:
 * 2.3
 * 2.4
 * 2.5
+* 2.6
 * 3.0
 
 By default the api-docs assume that `../cakephp` is a git clone of CakePHP.
