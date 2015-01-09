@@ -211,7 +211,7 @@ class Generator extends Object implements IGenerator
 
 		foreach ($files as $filePath => $size) {
 			$content = $this->charsetConvertor->convertFile($filePath);
-			$content = preg_replace('~\{\{\{(.+?)\}\}\}~s', '<code>\\1</code>', $content);
+			$content = preg_replace('~(```|\{\{\{)(.+?)(```|\}\}\})~s', '<code>\\2</code>', $content);
 
 			try {
 				$broker->processString($content, $filePath);
