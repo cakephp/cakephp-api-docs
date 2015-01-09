@@ -96,8 +96,12 @@ TAG:=2.4.10
 VERSION:=2.4
 $(eval $(build2x))
 
-TAG:=origin/master
+TAG:=2.5.8
 VERSION:=2.5
+$(eval $(build2x))
+
+TAG:=origin/master
+VERSION:=2.6
 $(eval $(build2x))
 
 TAG:=origin/3.0
