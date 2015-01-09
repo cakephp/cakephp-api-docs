@@ -7,6 +7,9 @@ BUILD_DIR='./build/api'
 # Versions that can be built.
 VERSIONS = 1.2 1.3 2.0 2.1 2.2 2.3 2.4 2.5 2.6 3.0
 
+# Versions that are actively developed / maintained.
+ACTIVE_VERSIONS = 2.6 3.0
+
 clean:
 	rm -rf $(BUILD_DIR)
 
@@ -74,6 +77,9 @@ endef
 
 # Build all the versions in a loop.
 build-all: $(foreach version, $(VERSIONS), build-$(version))
+
+# Build all active versions in a loop.
+build-active: $(foreach version, $(ACTIVE_VERSIONS), build-$(version))
 
 # Generate build targets for various 2.x versions.
 TAG:=2.0.6
