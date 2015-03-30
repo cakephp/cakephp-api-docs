@@ -85,7 +85,8 @@ build-active: $(foreach version, $(ACTIVE_VERSIONS), build-$(version))
 # Build all active and missing versions in a loop.
 build-active-and-missing:
 	for version in $(VERSIONS); do \
-		if [[ "$(ACTIVE_VERSIONS)" =~ "$$version" || ! -d "$(BUILD_DIR)/$$version" ]]; then \
+		IS_ACTIVE=$$(echo $(ACTIVE_VERSIONS) | grep "$$version"); \
+		if test -n "$$IS_ACTIVE" || ! test -d "$(BUILD_DIR)/$$version"; then \
 			$(MAKE) build-$$version; \
 		fi \
 	done
