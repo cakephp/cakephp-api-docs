@@ -1,8 +1,9 @@
 SOURCE_DIR='../cakephp'
-BUILD_DIR='./build/api'
+BUILD_DIR=./build/api
 
 .PHONY: clean
 .PHONY: build-all
+.PHONY: build-active-and-missing
 
 # Versions that can be built.
 VERSIONS = 1.2 1.3 2.0 2.1 2.2 2.3 2.4 2.5 2.6 3.0
@@ -80,6 +81,14 @@ build-all: $(foreach version, $(VERSIONS), build-$(version))
 
 # Build all active versions in a loop.
 build-active: $(foreach version, $(ACTIVE_VERSIONS), build-$(version))
+
+# Build all active and missing versions in a loop.
+build-active-and-missing:
+	for version in $(VERSIONS); do \
+		if [[ "$(ACTIVE_VERSIONS)" =~ "$$version" || ! -d "$(BUILD_DIR)/$$version" ]]; then \
+			$(MAKE) build-$$version; \
+		fi \
+	done
 
 # Generate build targets for various 2.x versions.
 TAG:=2.0.6
