@@ -173,7 +173,7 @@ the file LICENSE.md that was distributed with this source code.
 						{/if}
 						{if $parameter->unlimited},…{/if}
 					</dt>
-					<dd>{$parameter->description|description:$method}</dd>
+					<dd>{!$parameter->description|description:$method}</dd>
 				{/foreach}
 				</dl>
 				</div>
@@ -244,7 +244,7 @@ the file LICENSE.md that was distributed with this source code.
 					</span>{sep}, {/sep}
 				{/foreach}
 				)
-				<p>{$method|shortDescription}</p>
+				<p>{!$method|shortDescription}</p>
 			</td>
 		</tr>
 		</table>
