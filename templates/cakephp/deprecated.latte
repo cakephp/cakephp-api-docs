@@ -31,27 +31,27 @@ the file LICENSE.md that was distributed with this source code.
 	{/define}
 
 	<table class="summary" id="classes" n:if="$deprecatedClasses">
-	<caption>Classes summary</caption>
+	<h3>Classes summary</h3>
 	{include #classes, items => $deprecatedClasses}
 	</table>
 
 	<table class="summary" id="interfaces" n:if="$deprecatedInterfaces">
-	<caption>Interfaces summary</caption>
+	<h3>Interfaces summary</h3>
 	{include #classes, items => $deprecatedInterfaces}
 	</table>
 
 	<table class="summary" id="traits" n:if="$deprecatedTraits">
-	<caption>Traits summary</caption>
+	<h3>Traits summary</h3>
 	{include #classes, items => $deprecatedTraits}
 	</table>
 
 	<table class="summary" id="exceptions" n:if="$deprecatedExceptions">
-	<caption>Exceptions summary</caption>
+	<h3>Exceptions summary</h3>
 	{include #classes, items => $deprecatedExceptions}
 	</table>
 
 	<table class="summary" id="methods" n:if="$deprecatedMethods">
-	<caption>Methods summary</caption>
+	<h3>Methods summary</h3>
 	<tr n:foreach="$deprecatedMethods as $method">
 		<td class="name"><a href="{$method->declaringClassName|classUrl}">{$method->declaringClassName}</a></td>
 		<td class="name"><code><a href="{$method|methodUrl}">{$method->name}()</a></code></td>
@@ -68,7 +68,7 @@ the file LICENSE.md that was distributed with this source code.
 	</table>
 
 	<table class="summary" id="constants" n:if="$deprecatedConstants">
-	<caption>Constants summary</caption>
+	<h3>Constants summary</h3>
 	<tr n:foreach="$deprecatedConstants as $constant">
 		{if $constant->declaringClassName}
 		<td class="name"><a href="{$constant->declaringClassName|classUrl}">{$constant->declaringClassName}</a></td>
@@ -88,7 +88,7 @@ the file LICENSE.md that was distributed with this source code.
 	</table>
 
 	<table class="summary" id="properties" n:if="$deprecatedProperties">
-	<caption>Properties summary</caption>
+	<h3>Properties summary</h3>
 	<tr n:foreach="$deprecatedProperties as $property">
 		<td class="name"><a href="{$property->declaringClassName|classUrl}">{$property->declaringClassName}</a></td>
 		<td class="name"><a href="{$property|propertyUrl}"><var>${$property->name}</var></a></td>
@@ -103,7 +103,7 @@ the file LICENSE.md that was distributed with this source code.
 	</table>
 
 	<table class="summary" id="functions" n:if="$deprecatedFunctions">
-	<caption>Functions summary</caption>
+	<h3>Functions summary</h3>
 	<tr n:foreach="$deprecatedFunctions as $function">
 		<td class="name" n:if="$namespaces"><a n:if="$function->namespaceName" href="{$function->namespaceName|namespaceUrl}">{$function->namespaceName}</a></td>
 		<td class="name"><code><a href="{$function|functionUrl}">{$function->shortName}</a></code></td>
