@@ -140,6 +140,20 @@ the file LICENSE.md that was distributed with this source code.
 			{include #method_signature, method => $method}
 			{include #method_visibility, method => $method}
 		</h3>
+		<p class="method-signature">
+			{block|strip}
+				{$method->name}(
+				{foreach $method->parameters as $parameter}
+					{!$parameter->typeHint|typeLinks:$method}
+						<var>${$parameter->name}</var>
+					{if $parameter->defaultValueAvailable}
+						{!$parameter->defaultValueDefinition|highlightPHP:$class}
+					{/if}
+					{if $parameter->unlimited},…{/if}
+				{/foreach}
+				)
+			{/block}
+		</p>
 
 		<div class="description detailed">
 			{!$method|longDescription}

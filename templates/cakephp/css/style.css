@@ -223,6 +223,9 @@ ul.breadcrumbs li.unavailable a:focus {
 .hidden {
 	display: none;
 }
+.method-signature {
+	font-family: monospace;
+}
 
 /* Menu */
 #menu {
