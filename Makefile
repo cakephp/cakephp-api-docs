@@ -1,15 +1,35 @@
 SOURCE_DIR='../cakephp'
 BUILD_DIR=./build/api
 
-.PHONY: clean
+.PHONY: clean help
 .PHONY: build-all
 .PHONY: build-active-and-missing
+.ALL: help
 
 # Versions that can be built.
 VERSIONS = 1.2 1.3 2.0 2.1 2.2 2.3 2.4 2.5 2.6 3.0
 
 # Versions that are actively developed / maintained.
 ACTIVE_VERSIONS = 2.6 3.0
+
+
+help:
+	@echo "CakePHP API Documentation generator"
+	@echo "-----------------------------------"
+	@echo ""
+	@echo "Tasks:"
+	@echo " clean - Clean the build output directory"
+	@echo ""
+	@echo " build-x.y - Build the x.y documentation. The versions that can be"
+	@echo "             built are:"
+	@echo "             $(VERSIONS)"
+	@echo " build-all - Build all versions of the documentation"
+	@echo " build-active - Build all the actively developed versions: $(ACTIVE_VERSIONS)"
+	@echo ""
+	@echo "Variables:"
+	@echo " SOURCE_DIR - Define where your cakephp clone is. This clone will have its"
+	@echo "              currently checked out branch manipulated. Default: $(SOURCE_DIR)"
+	@echo " BUILD_DIR  - The directory where the output should go. Default: $(BUILD_DIR)"
 
 clean:
 	rm -rf $(BUILD_DIR)
