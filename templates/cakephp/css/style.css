@@ -372,6 +372,7 @@ ul.breadcrumbs li.unavailable a:focus {
 	padding: 5px 15px;
 }
 
+.method-signature,
 .description pre {
 	padding: .6em;
 	margin-bottom: 18px;
