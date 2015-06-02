@@ -273,30 +273,16 @@ the file LICENSE.md that was distributed with this source code.
 
 	<div class="section" n:foreach="$class->inheritedMethods as $parentName => $methods">
 		<h2>Methods inherited from <a href="{$parentName|classUrl}#methods" n:tag-if="$template->getClass($parentName)">{$parentName}</a></h2>
-		<table class="summary inherited">
-		<tr>
-			<td><code>
-			{foreach $methods as $method}
-				<a href="{$method|methodUrl}" n:tag-if="$template->getClass($parentName)"><span n:tag-if="$method->deprecated" class="deprecated">{$method->name}()</span></a>{sep}, {/sep}
-			{/foreach}
-			</code></td>
-		</tr>
-		</table>
+		<div class="method-detail" n:foreach="$methods as $data">
+			{include #method, method => $data}
+		</div>
 	</div>
 
 	<div class="section" n:foreach="$class->usedMethods as $traitName => $methods">
 		<h2>Methods used from <a href="{$traitName|classUrl}#methods" n:tag-if="$template->getClass($traitName)">{$traitName}</a></h2>
-		<table class="summary used">
-		<tr>
-			<td><code>
-			{foreach $methods as $data}
-				<a href="{$data['method']|methodUrl:$data['method']->declaringTrait}" n:tag-if="$template->getClass($traitName)">
-				<span n:tag-if="$data['method']->deprecated" class="deprecated">
-					{$data['method']->name}()</span></a>{if $data['aliases']} (as {foreach $data['aliases'] as $alias}<span n:tag-if="$data['method']->deprecated" class="deprecated">{$alias->name}()</span>{sep}, {/sep}{/foreach}){/if}{sep}, {/sep}
-			{/foreach}
-			</code></td>
-		</tr>
-		</table>
+		<div class="method-detail" n:foreach="$methods as $data">
+			{include #method, method => $data['method']}
+		</div>
 	</div>
 
 	<div class="section" n:if="$ownMagicMethods">
