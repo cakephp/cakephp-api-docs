@@ -35,6 +35,21 @@ the file LICENSE.md that was distributed with this source code.
 		<b>Located at</b> <a n:tag-if="$config->sourceCode" href="{$function|sourceUrl}" title="Go to source code">{$function->fileName|relativePath}</a><br>
 	</div>
 
+	<p class="method-signature">
+		{block|strip}
+			{$function->name}(
+			{foreach $function->parameters as $parameter}
+				{!$parameter->typeHint|typeLinks:$function}
+					<var>${$parameter->name}</var>
+				{if $parameter->defaultValueAvailable}
+					{!$parameter->defaultValueDefinition|highlightPHP:$function}
+				{/if}
+				{if $parameter->unlimited},…{/if}
+			{/foreach}
+			)
+		{/block}
+	</p>
+
 	{var $annotations = $function->annotations}
 
 	<div class="section" n:if="$function->numberOfParameters">
@@ -51,7 +66,7 @@ the file LICENSE.md that was distributed with this source code.
 	</div>
 
 	<div class="section" n:if="isset($annotations['return']) && 'void' !== $annotations['return'][0]">
-		<h3>Return value summary</h3>
+		<h3>Returns</h3>
 		<ul>
 			<li>
 				<span class="name"><code>
@@ -65,7 +80,7 @@ the file LICENSE.md that was distributed with this source code.
 	</div>
 
 	<div class="section" n:ifset="$annotations['throws']">
-		<h3>Thrown exceptions summary</h3>
+		<h3>Throws</h3>
 		<ul>
 			<li n:foreach="$annotations['throws'] as $throws">
 				<span class="name"><code>
