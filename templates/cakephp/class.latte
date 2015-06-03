@@ -149,7 +149,7 @@ the file LICENSE.md that was distributed with this source code.
 					{if $parameter->defaultValueAvailable}
 						{!$parameter->defaultValueDefinition|highlightPHP:$class}
 					{/if}
-					{if $parameter->unlimited},…{/if}
+					{if $parameter->unlimited},…{/if}{sep}, {/sep}
 				{/foreach}
 				)
 			{/block}
