@@ -237,34 +237,6 @@ the file LICENSE.md that was distributed with this source code.
 	{/define}
 
 	<div class="section" n:if="$ownMethods">
-		<h2>Method summary</h2>
-		<table class="summary methods" id="methods">
-		<tr n:foreach="$ownMethods as $method">
-			<td class="name">
-				{include #method_visibility, method => $method}
-			</td>
-			<td>
-				<a href="#{if $method->magic}m{/if}_{$method->name}">
-				{$method->name}
-				</a>(
-				{foreach $method->parameters as $parameter}
-					<span>{!$parameter->typeHint|typeLinks:$method}
-					<var>
-					{if $parameter->passedByReference}&amp; {/if}${$parameter->name}</var>
-					{if $parameter->defaultValueAvailable} = {!$parameter->defaultValueDefinition}
-					{elseif $parameter->unlimited}
-					,…
-					{/if}
-					</span>{sep}, {/sep}
-				{/foreach}
-				)
-				<p>{!$method|shortDescription}</p>
-			</td>
-		</tr>
-		</table>
-	</div>
-
-	<div class="section" n:if="$ownMethods">
 		<h2>Method Detail</h2>
 		<div class="method-detail" n:foreach="$ownMethods as $method">
 			{include #method, method => $method}
