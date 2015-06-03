@@ -271,12 +271,16 @@ the file LICENSE.md that was distributed with this source code.
 		</div>
 	</div>
 
-	<div class="section" n:foreach="$class->inheritedMethods as $parentName => $methods">
-		<h2>Methods inherited from <a href="{$parentName|classUrl}#methods" n:tag-if="$template->getClass($parentName)">{$parentName}</a></h2>
-		<div class="method-detail" n:foreach="$methods as $data">
-			{include #method, method => $data}
+	{foreach $class->inheritedMethods as $parentName => $methods}
+		{if $template->getClass($parentName) && !$template->getClass($parentName)->isInterface()}
+		<div class="section">
+			<h2>Methods inherited from <a href="{$parentName|classUrl}#methods" n:tag-if="$template->getClass($parentName)">{$parentName}</a></h2>
+			<div class="method-detail" n:foreach="$methods as $data">
+				{include #method, method => $data}
+			</div>
 		</div>
-	</div>
+		{/if}
+	{/foreach}
 
 	<div class="section" n:foreach="$class->usedMethods as $traitName => $methods">
 		<h2>Methods used from <a href="{$traitName|classUrl}#methods" n:tag-if="$template->getClass($traitName)">{$traitName}</a></h2>
@@ -379,8 +383,14 @@ the file LICENSE.md that was distributed with this source code.
 	</div>
 
 	{define #property}
-	<tr id="{if $property->magic}m{/if}${$property->name}">
-		<td class="attributes">
+	<div class="property-detail" id="{if $property->magic}m{/if}${$property->name}">
+		{if $class->internal}
+			<a href="{$property|manualUrl}" title="Go to PHP documentation"><var>${$property->name}</var></a>
+		{else}
+			<a n:tag-if="$config->sourceCode" href="{$property|sourceUrl}" title="Go to source code"><var>${$property->name}</var></a>
+		{/if}
+
+		<p class="attributes">
 			{if $property->protected}
 			<span class="label">protected</span>
 			{elseif $property->private}
@@ -397,37 +407,28 @@ the file LICENSE.md that was distributed with this source code.
 			<span class="label">write-only</span>
 			{/if}
 			{!$property->typeHint|typeLinks:$property}
-		</td>
+		</p>
 
-		<td class="name">
-			{if $class->internal}
-				<a href="{$property|manualUrl}" title="Go to PHP documentation"><var>${$property->name}</var></a>
-			{else}
-				<a n:tag-if="$config->sourceCode" href="{$property|sourceUrl}" title="Go to source code"><var>${$property->name}</var></a>
-			{/if}
+		<div class="description detailed">
+			{!$property|longDescription}
 
-			<div class="description detailed">
-				{!$property|longDescription}
-
-				{foreach $template->annotationSort($template->annotationFilter($property->annotations, array('var'))) as $annotation => $descriptions}
-					<h6>{$annotation|annotationBeautify}</h6>
-					<div class="list">
-					{foreach $descriptions as $description}
-						{if $description}
-							{!$description|annotation:$annotation:$property}<br>
-						{/if}
-					{/foreach}
-					</div>
+			{foreach $template->annotationSort($template->annotationFilter($property->annotations, array('var'))) as $annotation => $descriptions}
+				<h6>{$annotation|annotationBeautify}</h6>
+				<div class="list">
+				{foreach $descriptions as $description}
+					{if $description}
+						{!$description|annotation:$annotation:$property}<br>
+					{/if}
 				{/foreach}
-
-				<div n:if="!$property->magic && $property->defaultValueDefinition" class="default-value">
-					<pre>{!$property->defaultValueDefinition|highlightValue:$class}</pre>
 				</div>
+			{/foreach}
+
+			<div n:if="!$property->magic && $property->defaultValueDefinition" class="default-value">
+				<pre>{!$property->defaultValueDefinition|highlightValue:$class}</pre>
 			</div>
+		</div>
 
-		</td>
-
-	</tr>
+	</div>
 	{/define}
 
 	{var $ownProperties = $class->ownProperties}
@@ -448,63 +449,48 @@ the file LICENSE.md that was distributed with this source code.
 
 	<div class="section" n:foreach="$class->inheritedProperties as $parentName => $properties">
 		<h2>Properties inherited from <a href="{$parentName|classUrl}#properties" n:tag-if="$template->getClass($parentName)">{$parentName}</a></h2>
-		<table class="summary inherited">
-		<tr>
-			<td><code>
-			{foreach $properties as $property}
-				<a href="{$property|propertyUrl}" n:tag-if="$template->getClass($parentName)"><var><span n:tag-if="$property->deprecated" class="deprecated">${$property->name}</span></var></a>{sep}, {/sep}
-			{/foreach}
-			</code></td>
-		</tr>
-		</table>
+		<div class="summary properties inherited">
+		{foreach $properties as $property}
+			{include #property, property => $property}
+		{/foreach}
+		</div>
 	</div>
 
 	<div class="section" n:foreach="$class->usedProperties as $traitName => $properties">
 		<h2>Properties used from <a href="{$traitName|classUrl}#properties" n:tag-if="$template->getClass($traitName)">{$traitName}</a></h2>
-		<table n:foreach="$class->usedProperties as $traitName => $properties" class="summary used">
-		<tr>
-			<td><code>
-			{foreach $properties as $property}
-				<a href="{$property|propertyUrl:$property->declaringTrait}" n:tag-if="$template->getClass($traitName)"><var><span n:tag-if="$property->deprecated" class="deprecated">${$property->name}</span></var></a>{sep}, {/sep}
-			{/foreach}
-			</code></td>
-		</tr>
-		</table>
+		<div class="properties summary used">
+		{foreach $properties as $property}
+			{include #property, property => $property}
+		{/foreach}
+		</div>
 	</div>
 
 	<div class="section" n:if="$ownMagicProperties">
 		<h2>Magic properties summary</h2>
-		<table class="summary properties" id="magicProperties">
+		<div class="summary properties" id="magicProperties">
 		{foreach $ownMagicProperties as $property}
 			{include #property, property => $property}
 		{/foreach}
-		</table>
+		</div>
 	</div>
 
 	<div class="section" n:foreach="$class->inheritedMagicProperties as $parentName => $properties">
 		<h2>Magic properties inherited from <a href="{$parentName|classUrl}#properties" n:tag-if="$template->getClass($parentName)">{$parentName}</a></h2>
-		<table class="summary inherited">
-		<tr>
-			<td><code>
-			{foreach $properties as $property}
-				<a href="{$property|propertyUrl}" n:tag-if="$template->getClass($parentName)"><var><span n:tag-if="$property->deprecated" class="deprecated">${$property->name}</span></var></a>{sep}, {/sep}
-			{/foreach}
-			</code></td>
-		</tr>
-		</table>
+		<div class="summary properties inherited">
+		{foreach $properties as $property}
+			{include #property, property => $property}
+		{/foreach}
+		</div>
 	</div>
 
 	<div class="section" n:foreach="$class->usedMagicProperties as $traitName => $properties">
 		<h2>Magic properties used from <a href="{$traitName|classUrl}#properties" n:tag-if="$template->getClass($traitName)">{$traitName}</a></h2>
-		<table class="summary used">
-		<tr>
-			<td><code>
-			{foreach $properties as $property}
-				<a href="{$property|propertyUrl:$property->declaringTrait}" n:tag-if="$template->getClass($traitName)"><var><span n:tag-if="$property->deprecated" class="deprecated">${$property->name}</span></var></a>{sep}, {/sep}
-			{/foreach}
-			</code></td>
-		</tr>
-		</table>
+
+		<div class="summary properities used">
+		{foreach $properties as $property}
+			{include #property, property => $property}
+		{/foreach}
+		</div>
 	</div>
 
 	{else}
