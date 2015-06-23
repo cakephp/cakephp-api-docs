@@ -139,6 +139,7 @@ the file LICENSE.md that was distributed with this source code.
 		<h3 class="method-name">
 			{include #method_signature, method => $method}
 			{include #method_visibility, method => $method}
+			<a href="#{if $method->magic}m{/if}_{$method->name}" class="permalink" title="Permalink to this method">¶</a>
 		</h3>
 		<p class="method-signature">
 			{block|strip}
@@ -359,7 +360,10 @@ the file LICENSE.md that was distributed with this source code.
 		{if $class->internal}
 			<a href="{$property|manualUrl}" title="Go to PHP documentation"><var>${$property->name}</var></a>
 		{else}
-			<a n:tag-if="$config->sourceCode" href="{$property|sourceUrl}" title="Go to source code"><var>${$property->name}</var></a>
+			<div class="property-name">
+				<a n:tag-if="$config->sourceCode" href="{$property|sourceUrl}" title="Go to source code"><var>${$property->name}</var></a>
+				<a href="#{if $property->magic}m{/if}${$property->name}" class="permalink" title="Permalink to this property">¶</a>
+			</div>
 		{/if}
 
 		<p class="attributes">
