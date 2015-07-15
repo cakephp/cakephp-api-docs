@@ -7,10 +7,10 @@ BUILD_DIR=./build/api
 .ALL: help
 
 # Versions that can be built.
-VERSIONS = 1.2 1.3 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 3.0
+VERSIONS = 1.2 1.3 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 3.0 3.1
 
 # Versions that are actively developed / maintained.
-ACTIVE_VERSIONS = 2.7 3.0
+ACTIVE_VERSIONS = 2.7 3.0 3.1
 
 
 help:
@@ -146,6 +146,10 @@ $(eval $(build2x))
 
 TAG:=origin/master
 VERSION:=3.0
+$(eval $(build3x))
+
+TAG:=origin/3.1
+VERSION:=3.1
 $(eval $(build3x))
 
 # Generate build targets for various 1.x versions
