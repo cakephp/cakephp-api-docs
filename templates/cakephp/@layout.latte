@@ -74,14 +74,19 @@ the file LICENSE.md that was distributed with this source code.
 
 			<div class="columns nine phone-three">
 				{var $versions = $config->template->options->versions}
-				<div class="version-picker dropdown">
-					<a href="#">Version {$config->template->options->activeVersion}</a>
-					<ul>
-						{foreach $versions as $ver}
-							<li><a href="../{$ver}">{$ver}</a></li>
-						{/foreach}
-					</ul>
-				</div>
+				{var $activeVersion = $config->template->options->activeVersion}
+				{if $activeVersion != 'master' && is_array($versions)}
+					<div class="version-picker dropdown">
+						<a href="#">
+						Version {$config->template->options->activeVersion}
+						</a>
+						<ul>
+							{foreach $versions as $ver}
+								<li><a href="../{$ver}">{$ver}</a></li>
+							{/foreach}
+						</ul>
+					</div>
+				{/if}
 
 				<ul class="navigation">
 					<li n:class="'overview' === $active ? active">

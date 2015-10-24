@@ -97,12 +97,15 @@ build-$(VERSION):
 	sed -i.bak '1i<?php' $(BUILD_DIR)/$(VERSION)/rewrite.php && rm $(BUILD_DIR)/$(VERSION)/rewrite.php.bak
 endef
 
+# TODO - Make this more generic so we could use it
+# for the elasticsearch plugin as well?
+# Perhaps take directories and versions as config parameters?
 define chronos
 build-chronos-$(VERSION):
 	cd $(CHRONOS_SOURCE_DIR) && git checkout -f $(TAG)
 	# Update the config file, Remove sed crap
-	sed -i.bak "s/activeVersion: '[0-9]\.[0-9]'/activeVersion: '$(VERSION)'/" templates/cakephp-mini/config.neon
-	rm templates/cakephp-mini/config.neon.bak
+	sed -i.bak "s/activeVersion: '[0-9]\.[0-9]'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
+	rm templates/cakephp/config.neon.bak
 	# Make the build output dir
 	[ ! -d $(BUILD_DIR) ] && mkdir $(BUILD_DIR) || true
 	# Run Apigen
@@ -111,7 +114,7 @@ build-chronos-$(VERSION):
 		--exclude $(CHRONOS_SOURCE_DIR)/vendor \
 		--config ./apigen.neon \
 		--destination $(BUILD_DIR)/chronos/$(VERSION) \
-		--template-config ./templates/cakephp-mini/config.neon
+		--template-config ./templates/cakephp/config.neon
 endef
 
 # Build all the versions in a loop.
