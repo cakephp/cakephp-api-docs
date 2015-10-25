@@ -24,8 +24,9 @@ help:
 	@echo " build-x.y - Build the x.y documentation. The versions that can be"
 	@echo "             built are:"
 	@echo "             $(VERSIONS)"
-	@echo " build-all - Build all versions of the documentation"
-	@echo " build-active - Build all the actively developed versions: $(ACTIVE_VERSIONS)"
+	@echo " build-all     - Build all versions of the documentation"
+	@echo " build-chronos-1.0 - Build the documentation for chronos."
+	@echo " build-active  - Build all the actively developed versions: $(ACTIVE_VERSIONS)"
 	@echo ""
 	@echo "Variables:"
 	@echo " SOURCE_DIR - Define where your cakephp clone is. This clone will have its"
@@ -40,7 +41,7 @@ define build3x
 build-$(VERSION):
 	cd $(SOURCE_DIR) && git checkout -f $(TAG)
 	# Update the config file, Remove sed crap
-	sed -i.bak "s/activeVersion: '[0-9]\.[0-9]'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
+	sed -i.bak "s/activeVersion: '.*'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
 	rm templates/cakephp/config.neon.bak
 	# Make the build output dir
 	[ ! -d $(BUILD_DIR) ] && mkdir $(BUILD_DIR) || true
@@ -58,7 +59,7 @@ define build2x
 build-$(VERSION):
 	cd $(SOURCE_DIR) && git checkout -f $(TAG)
 	# Update the config file, Remove sed crap
-	sed -i.bak "s/activeVersion: '[0-9]\.[0-9]'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
+	sed -i.bak "s/activeVersion: '.*'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
 	rm templates/cakephp/config.neon.bak
 	# Make the build output dir
 	[ ! -d $(BUILD_DIR) ] && mkdir $(BUILD_DIR) || true
@@ -80,7 +81,7 @@ define build1x
 build-$(VERSION):
 	cd $(SOURCE_DIR) && git checkout -f $(TAG)
 	# Update the config file, Remove sed crap
-	sed -i.bak "s/activeVersion: '[0-9]\.[0-9]'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
+	sed -i.bak "s/activeVersion: '.*'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
 	rm templates/cakephp/config.neon.bak
 	# Make the build output dir
 	[ ! -d $(BUILD_DIR) ] && mkdir $(BUILD_DIR) || true
@@ -104,7 +105,7 @@ define chronos
 build-chronos-$(VERSION):
 	cd $(CHRONOS_SOURCE_DIR) && git checkout -f $(TAG)
 	# Update the config file, Remove sed crap
-	sed -i.bak "s/activeVersion: '[0-9]\.[0-9]'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
+	sed -i.bak "s/activeVersion: '.*'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
 	rm templates/cakephp/config.neon.bak
 	# Make the build output dir
 	[ ! -d $(BUILD_DIR) ] && mkdir $(BUILD_DIR) || true
@@ -119,10 +120,10 @@ build-chronos-$(VERSION):
 endef
 
 # Build all the versions in a loop.
-build-all: $(foreach version, $(VERSIONS), build-$(version))
+build-all: $(foreach version, $(VERSIONS), build-$(version)) build-chronos-1.0
 
 # Build all active versions in a loop.
-build-active: $(foreach version, $(ACTIVE_VERSIONS), build-$(version))
+build-active: $(foreach version, $(ACTIVE_VERSIONS), build-$(version)) build-chronos-1.0
 
 # Build all active and missing versions in a loop.
 build-active-and-missing:
