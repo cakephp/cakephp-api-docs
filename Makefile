@@ -1,6 +1,7 @@
 SOURCE_DIR='../cakephp'
 CHRONOS_SOURCE_DIR='../chronos'
 BUILD_DIR=./build/api
+DEPLOY_DIR=./website
 
 .PHONY: clean help
 .PHONY: build-all
@@ -32,18 +33,34 @@ help:
 	@echo " SOURCE_DIR - Define where your cakephp clone is. This clone will have its"
 	@echo "              currently checked out branch manipulated. Default: $(SOURCE_DIR)"
 	@echo " BUILD_DIR  - The directory where the output should go. Default: $(BUILD_DIR)"
+	@echo " DEPLOY_DIR - The directory files shold be copied to in `deploy` Default: $(DEPLOY_DIR)"
 
 clean:
 	rm -rf $(BUILD_DIR)
 
+
+# Make the deployment directory
+$(DEPLOY_DIR):
+	mkdir $(DEPLOY_DIR)
+
+deploy: $(DEPLOY_DIR)
+	for release in $$(ls $(BUILD_DIR)); do \
+		rm -rf $(DEPLOY_DIR)/$$release; \
+		mv $(BUILD_DIR)/$$release $(DEPLOY_DIR)/; \
+	done
+
+
+# Make the build output dir
+$(BUILD_DIR):
+	mkdir $(BUILD_DIR)
+
 # Make a macro to save re-typing recipies multiple times
 define build3x
-build-$(VERSION):
+build-$(VERSION): $(BUILD_DIR)
 	cd $(SOURCE_DIR) && git checkout -f $(TAG)
 	# Update the config file, Remove sed crap
 	sed -i.bak "s/activeVersion: '.*'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
 	rm templates/cakephp/config.neon.bak
-	# Make the build output dir
 	[ ! -d $(BUILD_DIR) ] && mkdir $(BUILD_DIR) || true
 	# Run Apigen
 	php apigen.php --source $(SOURCE_DIR)/src \
@@ -61,8 +78,6 @@ build-$(VERSION):
 	# Update the config file, Remove sed crap
 	sed -i.bak "s/activeVersion: '.*'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
 	rm templates/cakephp/config.neon.bak
-	# Make the build output dir
-	[ ! -d $(BUILD_DIR) ] && mkdir $(BUILD_DIR) || true
 	# Run Apigen
 	php apigen.php --source $(SOURCE_DIR)/lib \
 		--source $(SOURCE_DIR)/app \
@@ -83,8 +98,6 @@ build-$(VERSION):
 	# Update the config file, Remove sed crap
 	sed -i.bak "s/activeVersion: '.*'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
 	rm templates/cakephp/config.neon.bak
-	# Make the build output dir
-	[ ! -d $(BUILD_DIR) ] && mkdir $(BUILD_DIR) || true
 	# Run Apigen
 	php apigen.php --source $(SOURCE_DIR)/cake/libs \
 		--source $(SOURCE_DIR)/cake/console/libs \
@@ -107,8 +120,6 @@ build-chronos-$(VERSION):
 	# Update the config file, Remove sed crap
 	sed -i.bak "s/activeVersion: '.*'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
 	rm templates/cakephp/config.neon.bak
-	# Make the build output dir
-	[ ! -d $(BUILD_DIR) ] && mkdir $(BUILD_DIR) || true
 	# Run Apigen
 	php apigen.php --source $(CHRONOS_SOURCE_DIR) \
 		--title 'Chronos' \
