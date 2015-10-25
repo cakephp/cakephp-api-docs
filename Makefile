@@ -1,4 +1,5 @@
 SOURCE_DIR='../cakephp'
+CHRONOS_SOURCE_DIR='../chronos'
 BUILD_DIR=./build/api
 
 .PHONY: clean help
@@ -96,6 +97,27 @@ build-$(VERSION):
 	sed -i.bak '1i<?php' $(BUILD_DIR)/$(VERSION)/rewrite.php && rm $(BUILD_DIR)/$(VERSION)/rewrite.php.bak
 endef
 
+# TODO - Make this more generic so we could use it
+# for the elasticsearch plugin as well?
+# Perhaps take directories and versions as config parameters?
+define chronos
+build-chronos-$(VERSION):
+	cd $(CHRONOS_SOURCE_DIR) && git checkout -f $(TAG)
+	# Update the config file, Remove sed crap
+	sed -i.bak "s/activeVersion: '[0-9]\.[0-9]'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
+	rm templates/cakephp/config.neon.bak
+	# Make the build output dir
+	[ ! -d $(BUILD_DIR) ] && mkdir $(BUILD_DIR) || true
+	# Run Apigen
+	php apigen.php --source $(CHRONOS_SOURCE_DIR) \
+		--title 'Chronos' \
+		--exclude $(CHRONOS_SOURCE_DIR)/tests \
+		--exclude $(CHRONOS_SOURCE_DIR)/vendor \
+		--config ./apigen.neon \
+		--destination $(BUILD_DIR)/chronos/$(VERSION) \
+		--template-config ./templates/cakephp/config.neon
+endef
+
 # Build all the versions in a loop.
 build-all: $(foreach version, $(VERSIONS), build-$(version))
 
@@ -152,6 +174,7 @@ TAG:=origin/3.1
 VERSION:=3.1
 $(eval $(build3x))
 
+
 # Generate build targets for various 1.x versions
 TAG:=origin/1.3
 VERSION:=1.3
@@ -160,3 +183,9 @@ $(eval $(build1x))
 TAG:=1.2.12
 VERSION:=1.2
 $(eval $(build1x))
+
+
+# Generate build targets for chronos
+TAG:=origin/master
+VERSION:=1.0
+$(eval $(chronos))
