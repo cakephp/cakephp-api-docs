@@ -110,6 +110,7 @@ build-chronos-$(VERSION):
 	[ ! -d $(BUILD_DIR) ] && mkdir $(BUILD_DIR) || true
 	# Run Apigen
 	php apigen.php --source $(CHRONOS_SOURCE_DIR) \
+		--title 'Chronos' \
 		--exclude $(CHRONOS_SOURCE_DIR)/tests \
 		--exclude $(CHRONOS_SOURCE_DIR)/vendor \
 		--config ./apigen.neon \
