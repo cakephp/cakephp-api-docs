@@ -11,7 +11,7 @@ BUILD_DIR=./build/api
 VERSIONS = 1.2 1.3 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 3.0 3.1
 
 # Versions that are actively developed / maintained.
-ACTIVE_VERSIONS = 2.7 3.0 3.1
+ACTIVE_VERSIONS = 2.7 3.1
 
 
 help:
@@ -167,11 +167,11 @@ TAG:=origin/2.7
 VERSION:=2.7
 $(eval $(build2x))
 
-TAG:=origin/master
+TAG:=origin/3.0.14
 VERSION:=3.0
 $(eval $(build3x))
 
-TAG:=origin/3.1
+TAG:=origin/master
 VERSION:=3.1
 $(eval $(build3x))
 
