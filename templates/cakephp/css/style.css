@@ -127,9 +127,8 @@ code {
  */
 ul.breadcrumbs {
 	display: block;
-	padding: 6px 0 7px;
 	overflow: hidden;
-	margin: 5px 15px;
+	margin: 10px 15px 10px 0;
 }
 ul.breadcrumbs li {
 	margin: 0;
@@ -292,6 +291,9 @@ ul.breadcrumbs li.unavailable a:focus {
 #elements {
 	overflow-x: auto;
 }
+#elements ul {
+	margin-bottom: 15px;
+}
 
 #groups span {
 	position: absolute;
@@ -387,7 +389,7 @@ ul.breadcrumbs li.unavailable a:focus {
 /* Content */
 #content {
 	clear: both;
-	padding: 5px 15px;
+	margin: 10px 15px 10px 0;
 }
 
 .method-signature,
