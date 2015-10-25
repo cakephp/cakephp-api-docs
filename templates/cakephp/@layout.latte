@@ -75,7 +75,7 @@ the file LICENSE.md that was distributed with this source code.
 			<div class="columns nine phone-three">
 				{var $versions = $config->template->options->versions}
 				{var $activeVersion = $config->template->options->activeVersion}
-				{if $activeVersion != 'master' && is_array($versions)}
+				{if $activeVersion != 'master' && !empty($versions)}
 					<div class="version-picker dropdown">
 						<a href="#">
 						Version {$config->template->options->activeVersion}
