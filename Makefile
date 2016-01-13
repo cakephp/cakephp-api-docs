@@ -9,10 +9,10 @@ DEPLOY_DIR=./website
 .ALL: help
 
 # Versions that can be built.
-VERSIONS = 1.2 1.3 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 3.0 3.1 3.2
+VERSIONS = 1.2 1.3 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 3.0 3.1 3.2
 
 # Versions that are actively developed / maintained.
-ACTIVE_VERSIONS = 2.7 3.1
+ACTIVE_VERSIONS = 2.7 2.8 3.1
 
 
 help:
@@ -176,6 +176,10 @@ $(eval $(build2x))
 
 TAG:=origin/2.7
 VERSION:=2.7
+$(eval $(build2x))
+
+TAG:=origin/2.8
+VERSION:=2.8
 $(eval $(build2x))
 
 TAG:=3.0.14
