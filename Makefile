@@ -170,7 +170,7 @@ TAG:=2.5.9
 VERSION:=2.5
 $(eval $(build2x))
 
-TAG:=2.6.12	
+TAG:=2.6.11
 VERSION:=2.6
 $(eval $(build2x))
 
