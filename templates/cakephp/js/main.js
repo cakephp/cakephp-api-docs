@@ -14,7 +14,6 @@ $(function() {
 	var $left = $('#left');
 	var $right = $('#right');
 	var $rightInner = $('#rightInner');
-	var $splitter = $('#splitter');
 	var $groups = $('#groups');
 	var $content = $('#content');
 
@@ -147,71 +146,6 @@ $(function() {
 				$('.detailed', $this).show();
 			});
 	}
-
-	// Splitter
-	var splitterWidth = $splitter.width();
-	var splitterPosition = $.cookie('splitter') ? parseInt($.cookie('splitter')) : null;
-	var splitterPositionBackup = $.cookie('splitterBackup') ? parseInt($.cookie('splitterBackup')) : null;
-	function setSplitterPosition(position)
-	{
-		splitterPosition = position;
-
-		$left.width(position);
-		$right.css('margin-left', position + splitterWidth);
-		$splitter.css('left', position);
-	}
-	function setContentWidth()
-	{
-		var width = $rightInner.width();
-		$rightInner
-			.toggleClass('medium', width <= 960)
-			.toggleClass('small', width <= 650);
-	}
-	$splitter.mousedown(function() {
-			$splitter.addClass('active');
-
-			$document.mousemove(function(event) {
-				if (event.pageX >= 230 && $document.width() - event.pageX >= 600 + splitterWidth) {
-					setSplitterPosition(event.pageX);
-					setContentWidth();
-				}
-			});
-
-			$()
-				.add($splitter)
-				.add($document)
-					.mouseup(function() {
-						$splitter
-							.removeClass('active')
-							.unbind('mouseup');
-						$document
-							.unbind('mousemove')
-							.unbind('mouseup');
-
-						$.cookie('splitter', splitterPosition, {expires: 365});
-					});
-
-			return false;
-		});
-	$splitter.dblclick(function() {
-		if (splitterPosition) {
-			splitterPositionBackup = $left.width();
-			setSplitterPosition(0);
-		} else {
-			setSplitterPosition(splitterPositionBackup);
-			splitterPositionBackup = null;
-		}
-
-		setContentWidth();
-
-		$.cookie('splitter', splitterPosition, {expires: 365});
-		$.cookie('splitterBackup', splitterPositionBackup, {expires: 365});
-	});
-	if (null !== splitterPosition) {
-		setSplitterPosition(splitterPosition);
-	}
-	setContentWidth();
-	$(window).resize(setContentWidth);
 
 	// Select selected lines
 	var matches = window.location.hash.substr(1).match(/^\d+(?:-\d+)?(?:,\d+(?:-\d+)?)*$/);
