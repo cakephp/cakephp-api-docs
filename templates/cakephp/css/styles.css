@@ -4642,7 +4642,7 @@ header {
 }
 
 .page-container {
-    padding-top: 140px;
+    padding-top: 160px;
 }
 
 .info,
@@ -4691,9 +4691,24 @@ header {
 	white-space: pre-wrap;
 }
 
-td.attributes {
-	width: 1%;
+
+/* Property tables */
+.summary .description {
+	padding: 0;
 }
+.summary .description p:last-child {
+	margin-bottom: 0;
+}
+
+.summary .name {
+	vertical-align: top;
+}
+.summary .attributes {
+	width: 1%;
+	padding: 0 0.5em 0.5em 0.5em;
+	vertical-align: top;
+}
+
 
 .class .methods .name,
 .class .properties .name,
@@ -4758,8 +4773,9 @@ pre::-webkit-scrollbar-thumb:horizontal {
 	line-height: 1.3em;
 	vertical-align: middle;
 }
+/* Method descriptions */
 .description {
-	padding: 0 20px;
+	padding: 0 20px 0 0;
 }
 .description h6 {
 	font-size: 18px;
@@ -4774,4 +4790,39 @@ pre::-webkit-scrollbar-thumb:horizontal {
 }
 .parameter-list var {
 	font-style: normal;
+}
+
+/**
+ * Class trees
+ */
+.tree ul {
+	list-style: none;
+	background: url('tree-vertical.png') left repeat-y;
+	padding: 0;
+	margin-left: 20px;
+}
+
+.tree li {
+	margin: 0;
+	padding: 0;
+}
+
+.tree div {
+	padding-left: 35px;
+}
+
+.tree div.notlast {
+	background: url('tree-hasnext.png') left 10px no-repeat;
+}
+
+.tree div.last {
+	background: url('tree-last.png') left -240px no-repeat;
+}
+
+.tree li.last {
+	background: url('tree-cleaner.png') left center repeat-y;
+}
+
+.tree span.padding {
+	padding-left: 15px;
 }
