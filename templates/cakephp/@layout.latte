@@ -19,9 +19,9 @@ the file LICENSE.md that was distributed with this source code.
 
 	<title>{include #title}{if 'overview' !== $active && $config->title} | {$config->title}{/if}</title>
 
-	{var favicon = 'resources/favicon.ico'}
-	<link href="{$favicon|staticFile}" type="image/x-icon" rel="icon" />
-	<link href="{$favicon|staticFile}" type="image/x-icon" rel="shortcut icon" />
+	{var favicon = 'resources/favicon.png'}
+	<link href="{$favicon|staticFile}" type="image/png" rel="icon" />
+	<link href="{$favicon|staticFile}" type="image/png" rel="shortcut icon" />
 	{var combinedJs = 'resources/combined.js'}
 	<script type="text/javascript" src="{$combinedJs|staticFile}"></script>
 	{var elementListJs = 'elementlist.js'}
@@ -52,7 +52,7 @@ the file LICENSE.md that was distributed with this source code.
 
 	<div class="container page-container">
 		<div class="row">
-			<div id="class-nav" class="col-md-3 hidden-sm">
+			<div id="class-nav" class="col-md-3 hidden-sm hidden-xs">
 				<div id="menu">
 					{define #group}
 						<ul class="nav-list">

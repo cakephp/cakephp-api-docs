@@ -4027,7 +4027,7 @@ blockquote {
 .navigation li:last-child {
 	margin-right: 0;
 }
-.navigation span,
+.navigation li,
 .navigation a {
     color: #7A7B76;
 }

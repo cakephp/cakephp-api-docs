@@ -10,6 +10,8 @@
  */
 
 $(function() {
+  var $win = $(window);
+  var $body = $('body');
 	var $document = $(document);
 	var $left = $('#left');
 	var $right = $('#right');
@@ -17,40 +19,225 @@ $(function() {
 	var $groups = $('#groups');
 	var $content = $('#content');
 
-	// Menu
+  /* Validate function */
+  function validate(data, def) {
+    return (data !== undefined) ? data : def;
+  }
 
-	// Hide deep packages and namespaces
-	$('ul span', $groups).click(function(event) {
-		event.preventDefault();
-		event.stopPropagation();
-		$(this)
-			.toggleClass('collapsed')
-			.parent()
-				.next('ul')
-					.toggleClass('collapsed');
-	}).click();
+  // Window width without scrollbar
+  $windowWidth = $win.width(),
 
-	$active = $('ul li.active', $groups);
-	if ($active.length > 0) {
-		// Open active
-		$('> a > span', $active).click();
-	} else {
-		$main = $('> ul > li.main', $groups);
-		if ($main.length > 0) {
-			// Open first level of the main project
-			$('> a > span', $main).click();
-		} else {
-			// Open first level of all
-			$('> ul > li > a > span', $groups).click();
-		}
-	}
+  // Media Query fix (outerWidth -- scrollbar)
+  // Media queries width include the scrollbar
+  mqWidth = $win.outerWidth(true, true),
 
-	// Content
+  // Detect Mobile Devices 
+  isMobileDevice = (( navigator.userAgent.match(/Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone|IEMobile|Opera Mini|Mobi/i) || (mqWidth < 767) ) ? true : false );
+
+  // detect IE browsers
+  var ie = (function(){
+    var rv = 0,
+      ua = window.navigator.userAgent,
+      msie = ua.indexOf('MSIE '),
+      trident = ua.indexOf('Trident/');
+
+    if (msie > 0) {
+        // IE 10 or older => return version number
+        rv = parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
+    } else if (trident > 0) {
+        // IE 11 (or newer) => return version number
+        var rvNum = ua.indexOf('rv:');
+        rv = parseInt(ua.substring(rvNum + 3, ua.indexOf('.', rvNum)), 10);
+    }
+
+    return ((rv > 0) ? rv : 0);
+  }());
+
+	// Responsive Menus
+  $('#modal').on('show.bs.modal', function (event) {
+    var modal = $(this);
+    var button = $(event.relatedTarget);
+    var id = button.attr('id');
+    var contents, title;
+    if (id == 'btn-menu') {
+      title = 'Menu';
+      contents = $('#cake-nav').html();
+    }
+    if (id == 'btn-nav') {
+      title = 'Navigation';
+      contents = $('#nav-cook').html();
+    }
+    if (id == 'btn-toc') {
+      title = 'Class Navigation';
+      contents = $('#class-nav').html();
+    }
+
+    modal.find('.modal-body').html(contents);
+    modal.find('.modal-title-cookbook').text(title);
+
+    // Bind click events for sub menus.
+    modal.find('li').on('click', function() {
+      var el = $(this),
+        menu = el.find('.submenu, .megamenu');
+      // No menu, bail
+      if (menu.length == 0) {
+        return;
+      }
+      menu.toggle();
+      return false;
+    });
+  });
+
+  /* ********************* Megamenu ********************* */
+  var menu = $(".menu"),
+    Megamenu = {
+      desktopMenu: function() {
+
+        menu.children("li").show(0);
+
+        // Mobile touch for tablets > 768px
+        if (isMobileDevice) {
+          menu.on("click touchstart","a", function(e){
+            if ($(this).attr('href') === '#') {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+
+            var $this = $(this),
+              $sub = $this.siblings(".submenu, .megamenu");
+
+            $this.parent("li").siblings("li").find(".submenu, .megamenu").stop(true, true).fadeOut(300);
+
+            if ($sub.css("display") === "none") {
+              $sub.stop(true, true).fadeIn(300);
+            } else {
+              $sub.stop(true, true).fadeOut(300);
+              $this.siblings(".submenu").find(".submenu").stop(true, true).fadeOut(300);
+            }
+          });
+
+          $(document).on("click.menu touchstart.menu", function(e){
+            if ($(e.target).closest(menu).length === 0) {
+              menu.find(".submenu, .megamenu").fadeOut(300);
+            }
+          });
+
+        // Desktop hover effect
+        } else {
+          menu.find('li').on({
+            "mouseenter": function() {
+              $(this).children(".submenu, .megamenu").stop(true, true).fadeIn(300);
+            },
+            "mouseleave": function() {
+              $(this).children(".submenu, .megamenu").stop(true, true).fadeOut(300);
+            }
+          });
+        }
+      },
+
+      mobileMenu: function() {
+        var children = menu.children("li"),
+          toggle = menu.children("li.toggle-menu");
+
+        toggle.show(0).on("click", function(){
+
+          if ($children.is(":hidden")){
+            children.slideDown(300);
+          } else {
+            toggle.show(0);
+          }
+        });
+
+        // Click (touch) effect
+        menu.find("li").not(".toggle-menu").each(function(){
+          var el = $(this);
+          if (el.children(".submenu, .megamenu").length) {
+            el.children("a").on("click", function(e){
+              if ($(this).attr('href') === '#') {
+                e.preventDefault();
+                e.stopPropagation();
+              }
+
+              var $sub = $(this).siblings(".submenu, .megamenu");
+
+              if ($sub.hasClass("open")) {
+                $sub.slideUp(300).removeClass("open");
+              } else {
+                $sub.slideDown(300).addClass("open");
+              }
+            });
+          }
+        });
+      },
+      unbindEvents: function() {
+        menu.find("li, a").off();
+        $(document).off("click.menu touchstart.menu");
+        menu.find(".submenu, .megamenu").hide(0);
+      }
+    }; // END Megamenu object
+
+  if ($windowWidth < 768) {
+    Megamenu.mobileMenu();
+  } else {
+    Megamenu.desktopMenu();
+  }
+
+  /* **************** Hide header on scroll down *************** */
+  (function() {
+    // Hide Header on on scroll down
+    var didScroll;
+    var lastScrollTop = 0;
+    var delta = 5;
+    var navbarHeight = $('header').outerHeight();
+
+    $win.scroll(function(event){
+        didScroll = true;
+    });
+
+    // Debounce the header toggling to ever 250ms
+    var toggleHeader = function() {
+        if (didScroll) {
+            hasScrolled();
+            didScroll = false;
+        }
+        setTimeout(toggleHeader, 200);
+    };
+    setTimeout(toggleHeader, 200);
+
+    function hasScrolled() {
+        var st = $win.scrollTop();
+
+        // Make sure they scroll more than delta
+        if (Math.abs(lastScrollTop - st) <= delta) {
+            return;
+        }
+
+        // If they scrolled down and are past the navbar, add class .nav-up.
+        // This is necessary so you never see what is "behind" the navbar.
+        if (st > lastScrollTop && st > navbarHeight){
+            // Scroll Down
+            $('header').removeClass('nav-down').addClass('nav-up');
+          // Scroll Up
+        } else if (st + $(window).height() < $(document).height()) {
+            $('header').removeClass('nav-up').addClass('nav-down');
+        }
+        lastScrollTop = st;
+    }
+
+    // If we're directly linking to a section, hide the nav.
+    if (window.location.hash.length) {
+        $('header').addClass('nav-up');
+    }
+  }());
+
+  // Footer Tooltips
+  $("[data-toggle='tooltip']").tooltip();
 
 	// Search autocompletion
 	var autocompleteFound = false;
 	var autocompleteFiles = {'c': 'class', 'co': 'constant', 'f': 'function', 'm': 'class', 'mm': 'class', 'p': 'class', 'mp': 'class', 'cc': 'class'};
-	var $search = $('#search input[name=q]');
+
+	var $search = $('.search input[name=q]');
 	$search
 		.autocomplete(ApiGen.elements, {
 			matchContains: true,
@@ -103,39 +290,6 @@ $(function() {
 
 				return !autocompleteFound && '' !== $('#search input[name=cx]').val();
 			});
-
-	// Save natural order
-	$('table.summary tr[data-order]', $content).each(function(index) {
-		do {
-			index = '0' + index;
-		} while (index.length < 3);
-		$(this).attr('data-order-natural', index);
-	});
-
-	// Switch between natural and alphabetical order
-	var $caption = $('table.summary', $content)
-		.filter(':has(tr[data-order])')
-			.find('caption');
-	$caption
-		.click(function() {
-			var $this = $(this);
-			var order = $this.data('order') || 'natural';
-			order = 'natural' === order ? 'alphabetical' : 'natural';
-			$this.data('order', order);
-			$.cookie('order', order, {expires: 365});
-			var attr = 'alphabetical' === order ? 'data-order' : 'data-order-natural';
-			$this
-				.closest('table')
-					.find('tr').sortElements(function(a, b) {
-						return $(a).attr(attr) > $(b).attr(attr) ? 1 : -1;
-					});
-			return false;
-		})
-		.addClass('switchable')
-		.attr('title', 'Switch between natural and alphabetical order');
-	if ((null === $.cookie('order') && 'alphabetical' === ApiGen.config.options.elementsOrder) || 'alphabetical' === $.cookie('order')) {
-		$caption.click();
-	}
 
 	// Open details
 	if (ApiGen.config.options.elementDetailsCollapsed) {
