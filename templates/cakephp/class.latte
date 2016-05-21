@@ -67,12 +67,12 @@ the file LICENSE.md that was distributed with this source code.
 	</div>
 
 	<div class="section" n:if="$directUsers">
-		<h6>Direct Known Users</h6>
+		<h4>Direct Known Users</h4>
 		{include #children, children => $directUsers}
 	</div>
 
 	<div class="section" n:if="$indirectUsers">
-		<h6>Indirect Known Users</h6>
+		<h4>Indirect Known Users</h4>
 		{include #children, children => $indirectUsers}
 	</div>
 
@@ -88,7 +88,7 @@ the file LICENSE.md that was distributed with this source code.
 				{!$value|annotation:$annotation:$class}<br>
 			{/foreach}
 		{/foreach}
-		{if $class->internal}<b>Documented at</b> <a href="{$class|manualUrl}" title="Go to PHP documentation">php.net</a>{else}<b>Located at</b> <a n:tag-if="$config->sourceCode" href="{$class|sourceUrl}" title="Go to source code">{$class->fileName|relativePath}</a>{/if}<br>
+		{if $class->internal}<b>Documented at</b> <a href="{$class|manualUrl}" title="Go to PHP documentation">php.net</a>{else}<b>Location:</b> <a n:tag-if="$config->sourceCode" href="{$class|sourceUrl}" title="Go to source code">{$class->fileName|relativePath}</a>{/if}<br>
 	</div>
 
 	{var $ownMethods = $class->ownMethods}

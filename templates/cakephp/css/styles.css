@@ -4642,7 +4642,30 @@ header {
 }
 
 .page-container {
-    padding-top: 160px;
+    padding-top: 140px;
+}
+
+.info,
+.section {
+	margin-bottom: 1em;
+}
+
+/*
+ * Sidebar navigation
+ */
+.nav-title {
+	color: #363637;
+	font-family: 'Raleway', sans-serif;
+	display: block;
+	font-weight: bold;
+	font-size: 13px;
+	line-height: 1.5;
+}
+.nav-list {
+	margin: 0 0 1em 5px;
+}
+.nav-list li {
+	list-style: none;
 }
 
 /* - Summary lists on overview pages. - */
@@ -4709,9 +4732,23 @@ pre::-webkit-scrollbar-thumb:horizontal {
     -webkit-border-radius: 5px;
 }
 
+.deprecated {
+	text-decoration: line-through;
+}
+
 /*
  * method / function styles
  */
+.permalink {
+	display: none;
+}
+
+.method-name:hover .permalink,
+.property-name:hover .permalink {
+	display: inline;
+}
+
+/* Visibility labels */
 .label {
 	font-family: "Roboto Mono", "Consolas", "Monaco", monospace;
 	font-weight: normal;
@@ -4734,4 +4771,7 @@ pre::-webkit-scrollbar-thumb:horizontal {
 }
 .parameter-list dd {
 	margin-bottom: 20px;
+}
+.parameter-list var {
+	font-style: normal;
 }

@@ -55,7 +55,7 @@ the file LICENSE.md that was distributed with this source code.
 			<div id="class-nav" class="col-md-3 hidden-sm">
 				<div id="menu">
 					{define #group}
-						<ul>
+						<ul class="nav-list">
 							{foreach $groups as $group}
 							{var $nextLevel = substr_count($iterator->nextValue, '\\') > substr_count($group, '\\')}
 							<li n:class="$actualGroup === $group || 0 === strpos($actualGroup, $group . '\\') ? active, $config->main && 0 === strpos($group, $config->main) ? main"><a href="{$group|groupUrl}">{$group|subgroupName}{if $nextLevel}<span></span>{/if}</a>
@@ -73,7 +73,7 @@ the file LICENSE.md that was distributed with this source code.
 
 					<div id="groups">
 						{if $namespaces}
-						<h3>Namespaces</h3>
+						<h3 class="nav-title">Namespaces</h3>
 						{include #group, groups => $namespaces, actualGroup => $namespace}
 						{elseif $packages}
 						<h3>Packages</h3>
@@ -81,42 +81,40 @@ the file LICENSE.md that was distributed with this source code.
 						{/if}
 					</div>
 
-					<hr n:if="($namespaces || $packages) && ($classes || $interfaces || $traits || $exceptions || $constants || $functions)">
-
 					{define #elements}
-						<ul>
+						<ul class="nav-list">
 							<li n:foreach="$elements as $element" n:class="$activeElement === $element ? active"><a title="{if $namespace}{$element->shortName}{else}{$element->name}{/if}" n:class="$element->deprecated ? deprecated, !$element->valid ? invalid" href="{$element|elementUrl}">{if $namespace}{$element->shortName}{else}{$element->name}{/if}</a></li>
 						</ul>
 					{/define}
 
 					<div id="elements">
 						{if $classes}
-						<h3>Classes</h3>
+						<h3 class="nav-title">Classes</h3>
 						{include #elements, elements => $classes, activeElement => $class}
 						{/if}
 
 						{if $interfaces}
-						<h3>Interfaces</h3>
+						<h3 class="nav-title">Interfaces</h3>
 						{include #elements, elements => $interfaces, activeElement => $class}
 						{/if}
 
 						{if $traits}
-						<h3>Traits</h3>
+						<h3 class="nav-title">Traits</h3>
 						{include #elements, elements => $traits, activeElement => $class}
 						{/if}
 
 						{if $exceptions}
-						<h3>Exceptions</h3>
+						<h3 class="nav-title">Exceptions</h3>
 						{include #elements, elements => $exceptions, activeElement => $class}
 						{/if}
 
 						{if $constants}
-						<h3>Constants</h3>
+						<h3 class="nav-title">Constants</h3>
 						{include #elements, elements => $constants, activeElement => $constant}
 						{/if}
 
 						{if $functions}
-						<h3>Functions</h3>
+						<h3 class="nav-title">Functions</h3>
 						{include #elements, elements => $functions, activeElement => $function}
 						{/if}
 					</div>
@@ -125,24 +123,6 @@ the file LICENSE.md that was distributed with this source code.
 
 			{* Document content *}
 			<div id="right" class="col-md-9">
-				<ul class="breadcrumbs">
-					<li n:if="$package">
-						<a href="{$package|packageUrl}" title="Summary of {$package}">Package</a>
-					</li>
-					<li n:if="$namespace">
-						<a href="{$namespace|namespaceUrl}" title="Summary of {$namespace}">Namespace</a>
-					</li>
-					<li n:if="$class && !$function && !$constant">
-						<a href="{$class|classUrl}" title="Summary of {$class->name}">Class</a>
-					</li>
-					<li n:if="$function">
-						<a href="{$function|functionUrl}" title="Summary of {$function->name}">Function</a>
-					</li>
-					<li n:if="$constant">
-						<a href="{$constant|constantUrl}" title="Summary of {$constant->name}">Constant</a>
-					</li>
-				</ul>
-
 				{include #content}
 			</div>
 		</div>
