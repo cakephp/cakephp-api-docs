@@ -4645,9 +4645,7 @@ header {
     padding-top: 160px;
 }
 
-/**
- * Summary lists on overview pages.
- */
+/* - Summary lists on overview pages. - */
 .summary-list {
 	margin: 0;
 }
@@ -4681,7 +4679,9 @@ td.attributes {
 	white-space: normal;
 }
 
-/* Method signatures and Code blocks */
+/*
+ * Method signatures and Code blocks
+ */
 .method-signature,
 pre {
     font-family: "Roboto Mono", "Consolas", "Monaco", monospace;
@@ -4707,4 +4707,31 @@ pre::-webkit-scrollbar-thumb:horizontal {
     background: #c0c0c0;
     border-radius: 5px;
     -webkit-border-radius: 5px;
+}
+
+/*
+ * method / function styles
+ */
+.label {
+	font-family: "Roboto Mono", "Consolas", "Monaco", monospace;
+	font-weight: normal;
+	background: #ECECE9;
+	color: #222;
+	font-size: 10px;
+	line-height: 1.3em;
+	vertical-align: middle;
+}
+.description {
+	padding: 0 20px;
+}
+.description h6 {
+	font-size: 18px;
+	font-weight: bold;
+}
+.list,
+.parameter-list {
+	padding-left: 20px;
+}
+.parameter-list dd {
+	margin-bottom: 20px;
 }
