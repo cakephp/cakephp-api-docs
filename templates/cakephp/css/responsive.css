@@ -48,15 +48,7 @@
 		background-color: #D33C44;
 	}
 
-	#wrap .twitter-typeahead {
-		left: -240px; /* 60px less than width so icon is in box */
-		width: 300px;
-	}
-	#wrap .tt-input {
-		left: 240px;
-	}
-	#wrap .tt-input:focus {
-		left: 0;
+	#wrap .ac_input:focus {
 		width: 300px;
 	}
 
@@ -204,15 +196,7 @@
         padding-top: 20px;
     }
 
-	#wrap .twitter-typeahead {
-		left: -390px; /* 60px less than width so icon is in box */
-		width: 450px;
-	}
-	#wrap .tt-input {
-		left: 390px;
-	}
-	#wrap .tt-input:focus {
-		left: 0;
+	#wrap .ac_input:focus {
 		width: 450px;
 	}
 

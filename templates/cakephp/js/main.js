@@ -262,7 +262,7 @@ $(function() {
 				// Make the results wider, and shift left to accomodate new width.
 				list
 					.width(Math.max(maxWidth, $search.innerWidth()))
-					.css('left', listLeft - (maxWidth - listWidth));
+					.css('left', listLeft - Math.max(0, maxWidth - listWidth));
 			}
 		}).result(function(event, data) {
 			autocompleteFound = true;

@@ -4123,7 +4123,7 @@ header {
     position: relative;
     z-index: 99;
 }
-#wrap .tt-input {
+#wrap .ac_input {
 	height: 60px;
     font-size: 16px;
     display: inline-block;
@@ -4137,14 +4137,12 @@ header {
     position: absolute;
     top: 0;
     right: 0;
-	left: 0;
     background: none;
     z-index: 3;
-    transition: width .2s cubic-bezier(0.000, 0.795, 0.000, 1.000),
-				left .2s cubic-bezier(0.000, 0.795, 0.000, 1.000);
+    transition: width .2s cubic-bezier(0.000, 0.795, 0.000, 1.000);
     cursor: pointer;
 }
-#wrap .tt-input:focus {
+#wrap .ac_input:focus {
   z-index: 1;
   cursor: text;
   background-color: #b8343b;
@@ -4156,7 +4154,7 @@ header {
     display: inline-block;
     color: red;
     float: right;
-    background: url(../search.png) center center no-repeat;
+    background: url(search.png) center center no-repeat;
     background-size: 19px;
     text-indent: -10000px;
     border: none;
@@ -4178,10 +4176,6 @@ header {
 #wrap input::-moz-placeholder,
 #wrap input::-webkit-input-placeholder {
   color:#363637;
-}
-/* Search results should be narrower in the responsive header search */
-#wrap .tt-menu {
-	width: 100%;
 }
 
 
