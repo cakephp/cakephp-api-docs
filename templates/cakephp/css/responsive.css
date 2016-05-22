@@ -313,15 +313,16 @@
 #modal .back-book h2 {
 	color: #363638;
 }
-#modal .t-language h6 {
-	text-align: left;
-	color: #363638;
+#modal .search-cook {
+	clear: both;
+	padding: 8px 15px 0 15px !important;
 }
 #modal .search,
 #modal .dropdown .fa-chevron-down {
 	display: none;
 }
 #modal .navbar-nav {
+	margin: 0;
 	float: none;
 }
 #modal .dropdown-toggle {
