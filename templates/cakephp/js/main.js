@@ -252,15 +252,17 @@ $(function() {
 			formatResult: function(data) {
 				return data[1];
 			},
-			show: function($list) {
-				var $items = $('li span', $list);
-				var maxWidth = Math.max.apply(null, $items.map(function() {
+			show: function(list) {
+				var listWidth = list.width();
+				var items = $('li span', list);
+				var listLeft = parseInt(list.css('left'), 10);
+				var maxWidth = Math.max.apply(null, items.map(function() {
 					return $(this).width();
 				}));
-				// 10px padding
-				$list
-					.width(Math.max(maxWidth + 10, $search.innerWidth()))
-					.css('left', $search.offset().left + $search.outerWidth() - $list.outerWidth());
+				// Make the results wider, and shift left to accomodate new width.
+				list
+					.width(Math.max(maxWidth, $search.innerWidth()))
+					.css('left', listLeft - (maxWidth - listWidth));
 			}
 		}).result(function(event, data) {
 			autocompleteFound = true;

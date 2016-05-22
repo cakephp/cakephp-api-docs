@@ -4826,3 +4826,46 @@ pre::-webkit-scrollbar-thumb:horizontal {
 .tree span.padding {
 	padding-left: 15px;
 }
+
+/* Autocomplete */
+.ac_results {
+	padding: 0;
+	border: 1px solid #cccccc;
+	border-top: 0;
+	background-color: #ffffff;
+	overflow: hidden;
+	z-index: 99999;
+}
+
+.ac_results ul {
+	width: 100%;
+	list-style-position: outside;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.ac_results li {
+	margin: 0;
+	padding: 2px 5px;
+	cursor: default;
+	display: block;
+	line-height: 16px;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.ac_results li strong {
+	color: #363638;
+}
+.ac_odd {
+	background-color: #f8f8f1;
+}
+.ac_over {
+	background-color: #2f85ae;
+	color: #ffffff;
+}
+
+.ac_results li.ac_over strong {
+	color: #ffffff;
+}
