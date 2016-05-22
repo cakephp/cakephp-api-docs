@@ -96,7 +96,11 @@ p {
 /* Preformatted text */
 code {
     font-family: "Roboto Mono", "Consolas", "Monaco", monospace;
-    font-size: 1.3rem;
+    font-size: 105%;
+    line-height: normal;
+    padding: 0px 2px;
+    color: #363637;
+	background: none;
 }
 
 /* lists */
@@ -4723,7 +4727,7 @@ pre {
     font-size: 1.3rem;
     margin-bottom: 18px;
     overflow-x: auto;
-    padding: 10px;
+    padding: 15px 20px;
     background: #ECECE9;
     color: #222;
     line-height: 120%;
@@ -4771,9 +4775,19 @@ pre::-webkit-scrollbar-thumb:horizontal {
 	vertical-align: middle;
 }
 /* Method descriptions */
+.method-detail {
+	margin-bottom: 3em;
+}
 .description {
 	padding: 0 20px 0 0;
 }
+.description h1,
+.description h2,
+.description h3 {
+	font-size: 22px;
+	margin-bottom: 0.5em;
+}
+
 .description h6 {
 	font-size: 18px;
 	font-weight: bold;
