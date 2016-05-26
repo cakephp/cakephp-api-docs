@@ -466,6 +466,9 @@ iframe {
 	width: 400px;
 	right: 0;
 }
+.megamenu .fa-menu-title {
+    display: inline;
+}
 
 
 
