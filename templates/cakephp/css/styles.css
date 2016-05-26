@@ -322,7 +322,7 @@ iframe {
     float: left;
     list-style: none;
 }
-.menu li {
+.menu > li {
     display: inline-block;
     float: left;
 }

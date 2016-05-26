@@ -252,7 +252,7 @@
 #modal .menu {
     float: none;
 }
-#modal .menu li {
+#modal .menu > li {
     float: none;
     display: block;
     width: 100%;
@@ -294,6 +294,9 @@
 #modal .megamenu-list {
     padding-top: 5px;
 }
+#modal .megamenu-list li {
+    padding: 0;
+}
 #modal .col-3 {
     padding: 0;
     width: 100%;
@@ -313,16 +316,15 @@
 #modal .back-book h2 {
     color: #363638;
 }
-#modal .search-cook {
-    clear: both;
-    padding: 8px 15px 0 15px !important;
+#modal .t-language h6 {
+    text-align: left;
+    color: #363638;
 }
 #modal .search,
 #modal .dropdown .fa-chevron-down {
     display: none;
 }
 #modal .navbar-nav {
-    margin: 0;
     float: none;
 }
 #modal .dropdown-toggle {
