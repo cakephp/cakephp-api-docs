@@ -460,36 +460,13 @@ iframe {
     width:15px;
     margin:5px 0 5px;
 }
-
-
-/* Megamenu widths */
-.megamenu.one_two {
-    width: 50%;
-}
+/* Not actually full, as we're missing some sub-menus */
 .megamenu.full {
-    width: 100%;
-    left: 0;
-}
-.megamenu.two_three {
-    width:66.66%;
-    left: 0;
-}
-.megamenu.three_four {
-    width:75%;
-    left:0;
+	/* Will need to be 100% one day */
+	width: 400px;
+	right: 0;
 }
 
-@media (min-width: 992px) and (max-width: 1199px) {
-    .megamenu.one_two { width: 70%; }
-    .megamenu.two_three { width:100%; }
-    .megamenu.three_four { width:100%; }
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-    .megamenu.one_two { width: 100%; }
-    .megamenu.two_three { width:100%; }
-    .megamenu.three_four { width:100%; }
-}
 
 
 /*Megamenu positions */
@@ -2014,15 +1991,21 @@ header {
 
 
 
-/* ---------------------- COOK BOOK ------------------------- */
+/* ---------------------- API ------------------------- */
 .icon-submenu-cook {
     padding: 0 6px 0 0;
 }
 
-.t-cook-nav h2 {
+.t-api-title {
+    width: 28%
+}
+.t-api-title h2 {
     color: #B8B8AE;
     text-align: left;
     padding: 10px 0;
+}
+.t-api-nav {
+    width: 38%
 }
 
 /* Search form */

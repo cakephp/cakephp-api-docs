@@ -26,12 +26,12 @@
 							<a href="#"><i class="fa fa-menu fa-chevron-down"></i>Community</a>
 							<div class="megamenu full">
 								<div class="row">
-									<div class="col-3">
+									<div class="col-6">
 										<ul class="megamenu-list">
 											{include 'menu/help.html'}
 										</ul>
 									</div>
-									<div class="col-3">
+									<div class="col-6">
 										<ul class="megamenu-list">
 											{include 'menu/community.html'}
 										</ul>
@@ -76,14 +76,14 @@
 	<section id="nav-cook" class="hidden-xs hidden-sm">
 		<div class="container-fluid ">
 			<div class="row back-book">
-				<div class="col-md-4 text-center t-cook-nav hidden-sm hidden-xs">
+				<div class="col-md-3 t-api-title hidden-sm hidden-xs">
 					<h2>
 						<span class="glyph_range icon-submenu icon-submenu-cook">C</span>
 						CakePHP 3.2 Red Velvet <strong>API</strong>
 					</h2>
 				</div>
 
-				<div class="col-md-4">
+				<div class="col-md-5 t-api-nav p0">
 					<ul class="navigation">
 						<li n:class="'overview' === $active ? active">
 							<a n:tag-if="'overview' !== $active" href="index.html" title="Overview">
@@ -138,9 +138,7 @@
 							</button>
 						</div>
 					</form>
-					<span n:if="$config->download">
-						<a class="btn btn-red btn-sm btn-download" href="{$archive}" title="Download documentation as ZIP archive"><span>Download</span></a>
-					</span>
+					<a class="col-md-3 btn btn-red btn-sm btn-download" href="{$archive}" title="Download documentation as ZIP archive"><span>Download</span></a>
 				</div>
 
 			</div>
