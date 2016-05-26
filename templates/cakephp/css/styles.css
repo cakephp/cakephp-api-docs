@@ -348,7 +348,7 @@ iframe {
 
 
 /* Submenu */
-.submenu, 
+.submenu,
 .submenu .submenu {
     list-style: none;
     margin: 0;
@@ -2029,118 +2029,6 @@ header {
 }
 .search-cook span {
     vertical-align: top;
-}
-
-.t-language h6{
-    color: #bdbdb5;
-    margin: 0;
-    padding-top: 15px;
-    text-transform: uppercase;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    font-size: 11px;
-    text-align: right;
-    padding-right: 8px;
-}
-
-.width-version {
-    min-width: 64px;
-}
-
-.menu-language  {
-    margin: 0;
-}
-
-.menu-language > li > a {
-    padding: 2px 2px 2px 8px;
-    margin: 7px 0;
-    font-size: 13px;
-    text-transform: capitalize;
-    font-weight: 700;
-    display: inline-block;
-    color: #363638;
-    position: relative;
-    z-index: 10;
-    -webkit-transition: all .0s ease-out;
-    transition: all .0s ease-out;
-    background: #bdbdb5;
-    border-radius: 4px;
-}
-
-.sidebar-book-title-sub {
-    color: #363637;
-    text-transform: capitalize;
-    letter-spacing: 0.04em;
-    font-weight: 500;
-    font-size: 13px;
-    margin-top: 0;
-}
-
-.title-book-wel {
-    font-weight: 300;
-    letter-spacing: 0.01em;
-    font-size: 32px;
-    margin-top: 9px;
-    margin-bottom: 5px;
-    color: #363637;
-}
-
-.box-featured-light {
-    padding: 12px 10px 12px;
-    margin-bottom: 25px;
-}
-
-.box-featured-light p {
-    margin: 0;
-    color: #363637;
-    letter-spacing: 0.01em;
-    font-weight: 500;
-    display: inline;
-}
-
-
-.icon-featured {
-    font-size: 35px;
-    color: #f8c6bd;
-    padding-right: 9px;
-    position: relative;
-    top: 4px;
-    display: block;
-    float: left;
-    margin: -3px 15px 15px 5px;
-}
-
-#welcome-book p {
-    line-height: 24px;
-    font-weight: 500;
-    letter-spacing: 0.03em;
-}
-
-#welcome-book li {
-    font-weight: 500;
-    line-height: 21px;
-}
-
-.read-the-book {
-    background: #F0F0E8;
-    margin-bottom: 30px;
-}
-
-.read-the-book h4 {
-    margin: 0;
-    padding: 30px 0 0;
-    margin-top: 30px;
-}
-
-.read-the-book p {
-    background: #F0F0E8;
-    font-weight: 500;
-    padding: 0 100px;
-    margin-bottom: 5px;
-}
-
-.read-the-book a {
-    margin: 25px 5px 50px;
 }
 .div-clear {
     clear:both;
