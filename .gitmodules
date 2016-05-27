@@ -3,7 +3,7 @@
 	url = git://github.com/kukulich/fshl.git
 [submodule "vendor/Nette"]
 	path = vendor/Nette
-	url = git://github.com/nette/nette.git
+	url = git://github.com/markstory/nette.git
 [submodule "vendor/Texy"]
 	path = vendor/Texy
 	url = git://github.com/dg/texy.git
