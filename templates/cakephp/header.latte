@@ -79,7 +79,10 @@
 				<div class="col-md-3 t-api-title hidden-sm hidden-xs">
 					<h2>
 						<span class="glyph_range icon-submenu icon-submenu-cook">C</span>
-						CakePHP 3.2 Red Velvet <strong>API</strong>
+						{var $activeVersion = $config->template->options->activeVersion}
+						CakePHP {$activeVersion}
+						{if preg_match('/^3.*$/', $activeVersion) } Red Velvet{/if}
+						<strong>API</strong>
 					</h2>
 				</div>
 
@@ -113,7 +116,7 @@
 									{var $activeVersion = $config->template->options->activeVersion}
 									{if $activeVersion != 'master' && !empty($versions)}
 										<a href="#" class="dropdown-toggle" data-hover="dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-											{$config->template->options->activeVersion} <i class="fa fa-menu-en fa-chevron-down"></i>
+											{$activeVersion} <i class="fa fa-menu-en fa-chevron-down"></i>
 										</a>
 										<ul class="dropdown-menu">
 											{foreach $versions as $ver}
