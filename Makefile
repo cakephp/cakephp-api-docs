@@ -174,11 +174,11 @@ TAG:=2.6.9
 VERSION:=2.6
 $(eval $(build2x))
 
-TAG:=origin/2.7
+TAG:=2.7.11
 VERSION:=2.7
 $(eval $(build2x))
 
-TAG:=origin/2.8
+TAG:=2.8.4
 VERSION:=2.8
 $(eval $(build2x))
 
@@ -196,7 +196,7 @@ $(eval $(build3x))
 
 
 # Generate build targets for various 1.x versions
-TAG:=origin/1.3
+TAG:=1.3.21
 VERSION:=1.3
 $(eval $(build1x))
 
