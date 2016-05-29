@@ -1340,7 +1340,9 @@ input[type="email"].big-dog::webkit-input-placeholder {
 
 
 /* *********************    Footers     ********************* */
-
+.back-3 {
+    background: #2B2B2B;
+}
 .footer-wrapper {
     background-color: #363638;
     color: #d8dade;
@@ -1405,6 +1407,10 @@ input[type="email"].big-dog::webkit-input-placeholder {
     font-size:13px;
     word-spacing:2px;
     padding-bottom: 5px;
+}
+/* specificity needs to be high to get around responsive styles */
+.footer-wrapper .col-p30 .business-solution {
+    padding: 0 20px;
 }
 
 

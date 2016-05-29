@@ -35,6 +35,7 @@
 				<a href="http://goo.gl/mSC0s" data-toggle="tooltip" title="Google Plus"><i class="fa icon-social  fa-google-plus"></i></a>
 				<a href="http://www.youtube.com/user/CakePHP" data-toggle="tooltip" title="Youtube"><i class="fa icon-social fa-youtube-play"></i></a>
 				<a href="https://github.com/cakephp" data-toggle="tooltip" title="Github"><i class="fa icon-social fa-git"></i></a>
+				<a href="http://cakesf.herokuapp.com/" target="_blank" title="Slack" data-toggle="tooltip"><i class="fa fa-slack icon-social"></i></a>
 				<a href="http://stackoverflow.com/tags/cakephp" data-toggle="tooltip" title="Stack Overflow"><i class="fa icon-social fa-stack-overflow"></i></a>
 				<a href="http://webchat.freenode.net/?channels=cakephp" data-toggle="tooltip" title="IRC" class="icon-irc">#IRC</a>
 			</div>
@@ -44,7 +45,6 @@
 
 <footer id="footer" class="footer-wrapper">
 	<div class="container">
-
 		<div class="row col-p30">
 			<div class="col-sm-12 col-md-3">
 				<div class="footer-widget t-footer">
@@ -64,19 +64,25 @@
 			</div>
 
 			<div class="col-sm-12 col-md-9">
-				<div class="col-md-3 col-sm-4">
+				<div class="col-md-3 col-sm-6 business-solution">
+					<ul class="footer-menu">
+						{include 'menu/business-solutions.html'}
+					</ul>
+				</div>
+
+				<div class="col-md-3 col-sm-6">
 					<ul class="footer-menu">
 						{include 'menu/footer-documentation.html'}
 					</ul>
 				</div>
 
-				<div class="col-md-3 col-sm-4">
+				<div class="col-md-3 col-sm-6">
 					<ul class="footer-menu">
 						{include 'menu/community.html'}
 					</ul>
 				</div>
 
-				<div class="col-md-3 col-sm-4">
+				<div class="col-md-3 col-sm-6">
 					<ul class="footer-menu">
 						{include 'menu/help.html'}
 					</ul>
