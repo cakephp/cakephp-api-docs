@@ -39,8 +39,8 @@ body {
     font-family: 'Raleway', sans-serif;
     font-size: 14px;
     line-height: 26px;
-    letter-spacing:0.01em;
-    font-weight:400;
+    letter-spacing:0.05em;
+    font-weight:500;
     background-color: white;
     color: #363637;
 }
@@ -63,7 +63,6 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 300;
     margin: 0;
     color: #363637;
-    font-weight:200;
     margin: 9px 0 9px 0;
 }
 h1 {
@@ -1409,7 +1408,7 @@ input[type="email"].big-dog::webkit-input-placeholder {
     word-spacing:2px;
 }
 
-.footer-subscribe :-ms-input-placeholder { 
+.footer-subscribe :-ms-input-placeholder {
     color:inherit;
     font-weight:400;
     font-size:13px;
