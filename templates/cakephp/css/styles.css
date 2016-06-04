@@ -294,6 +294,9 @@ iframe {
 .bg-dark-gray { background-color: #778888 !important; }
 .bg-light-gray { background-color: #aaabac !important; }
 
+.pl30 {
+    padding-left: 30px !important;
+}
 
 
 
