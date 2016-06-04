@@ -40,7 +40,7 @@ body {
     font-size: 14px;
     line-height: 26px;
     letter-spacing:0.05em;
-    font-weight:500;
+    font-weight: 500;
     background-color: white;
     color: #363637;
 }
@@ -1131,6 +1131,8 @@ input[type="email"].big-dog::webkit-input-placeholder {
     color: #d8dade;
     position:relative;
     padding:60px 0 40px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
 }
 
 .footer-widget { margin-bottom:50px;}
@@ -1792,6 +1794,7 @@ header {
 .t-api-title {
     width: 28%
 }
+.t-api-title a,
 .t-api-title h2 {
     color: #B8B8AE;
     text-align: left;

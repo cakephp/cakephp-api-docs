@@ -78,11 +78,13 @@
 			<div class="row back-book">
 				<div class="col-md-3 t-api-title hidden-sm hidden-xs">
 					<h2>
-						<span class="glyph_range icon-submenu icon-submenu-cook">C</span>
-						{var $activeVersion = $config->template->options->activeVersion}
-						CakePHP {$activeVersion}
-						{if preg_match('/^3.*$/', $activeVersion) } Red Velvet{/if}
-						<strong>API</strong>
+						<a href="{$config->baseUrl}">
+							<span class="glyph_range icon-submenu icon-submenu-cook">C</span>
+							{var $activeVersion = $config->template->options->activeVersion}
+							CakePHP {$activeVersion}
+							{if preg_match('/^3.*$/', $activeVersion) } Red Velvet{/if}
+							<strong>API</strong>
+						</a>
 					</h2>
 				</div>
 
