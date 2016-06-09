@@ -244,7 +244,7 @@ $(function() {
 			scrollHeight: 200,
 			max: 20,
 			formatItem: function(data) {
-				return data[1].replace(/^(.+\\)(.+)$/, '<span><small>$1</small>$2</span>');
+				return '<span>' + data[1].replace(/^(.+\\)(.+)$/, '<small>$1</small>$2') + '</span>';
 			},
 			formatMatch: function(data) {
 				return data[1];
