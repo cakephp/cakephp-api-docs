@@ -135,14 +135,16 @@ the file LICENSE.md that was distributed with this source code.
 		</ul>
 	</div>
 
-	<div class="section" n:foreach="$class->inheritedConstants as $parentName => $constants">
-		<h2>Constants inherited from <a href="{$parentName|classUrl}#constants" n:tag-if="$template->getClass($parentName)">{$parentName}</a></h2>
+	<div class="section" n:if="$class->inheritedConstants">
+		<h2>Inherited Constants</h2>
 		<ul class="member-summary inherited">
 		<li>
-			{foreach $constants as $constant}
-				<code><a href="{$constant|constantUrl}" n:tag-if="$template->getClass($parentName)"><!--
-				--><span n:tag-if="$constant->deprecated" class"deprecated">{$constant->name}</span><!--
-				--></a></code>{sep}, {/sep}
+			{foreach $class->inheritedConstants as $parentName => $constants}
+				{foreach $constants as $constant}
+					<code><a href="{$constant|constantUrl}" n:tag-if="$template->getClass($parentName)"><!--
+					--><span n:tag-if="$constant->deprecated" class"deprecated">{$constant->name}</span><!--
+					--></a></code>{sep}, {/sep}
+				{/foreach}
 			{/foreach}
 		</li>
 		</ul>
@@ -209,60 +211,41 @@ the file LICENSE.md that was distributed with this source code.
 		</ul>
 	</div>
 
-	<div class="section" n:foreach="$class->inheritedMagicProperties as $parentName => $properties">
-		<h2>Magic properties inherited from <a href="{$parentName|classUrl}#properties" n:tag-if="$template->getClass($parentName)">{$parentName}</a></h2>
+	<?php
+	$inheritedMagicProperties = array_merge($class->inheritedMagicProperties, $class->usedMagicProperties)
+	?>
+	<div class="section" n:if="$inheritedMagicProperties">
+		<h2>Inherited Magic Properties</h2>
 		<ul class="member-summary used">
-		<li>
-			{foreach $properties as $property}
-				<code><a href="{$property|propertyUrl}" n:tag-if="$template->getClass($parentName)"><!--
+			<li>
+			{foreach $inheritedMagicProperties as $parentName => $properties}
+				{foreach $properties as $property}
+					<code><a href="{$property|propertyUrl}" n:tag-if="$template->getClass($parentName)"><!--
 					--><span n:tag-if="$property->deprecated" class"deprecated">{$property->name}</span><!--
-				--></a></code>{sep}, {/sep}
+					--></a></code>{sep}, {/sep}
+				{/foreach}
 			{/foreach}
-		</li>
+			</li>
 		</ul>
 	</div>
 
-	<div class="section" n:foreach="$class->usedMagicProperties as $traitName => $properties">
-		<h2>Magic properties used from <a href="{$traitName|classUrl}#properties" n:tag-if="$template->getClass($traitName)">{$traitName}</a></h2>
-
+	<?php
+	$inheritedProperties = array_merge($class->inheritedProperties, $class->usedProperties)
+	?>
+	<div class="section" n:if="$inheritedProperties">
+		<h2>Inherited Properties</h2>
 		<ul class="member-summary used">
-		<li>
-			{foreach $properties as $property}
-				<code><a href="{$property|propertyUrl}" n:tag-if="$template->getClass($traitName)"><!--
+			<li>
+			{foreach $inheritedProperties as $parentName => $properties}
+				{foreach $properties as $property}
+					<code><a href="{$property|propertyUrl}" n:tag-if="$template->getClass($parentName)"><!--
 					--><span n:tag-if="$property->deprecated" class"deprecated">{$property->name}</span><!--
-				--></a></code>{sep}, {/sep}
+					--></a></code>{sep}, {/sep}
+				{/foreach}
 			{/foreach}
-		</li>
+			</li>
 		</ul>
 	</div>
-
-	<div class="section" n:foreach="$class->inheritedProperties as $parentName => $properties">
-		<h2>Properties inherited from <a href="{$parentName|classUrl}#properties" n:tag-if="$template->getClass($parentName)">{$parentName}</a></h2>
-		<ul class="member-summary inherited">
-		<li>
-			{foreach $properties as $property}
-				<code><a href="{$property|propertyUrl}" n:tag-if="$template->getClass($parentName)"><!--
-					--><span n:tag-if="$property->deprecated" class"deprecated">{$property->name}</span><!--
-				--></a></code>{sep}, {/sep}
-			{/foreach}
-		</li>
-		</ul>
-	</div>
-
-	<div class="section" n:foreach="$class->usedProperties as $traitName => $properties">
-		<h2>Properties used from <a href="{$traitName|classUrl}#properties" n:tag-if="$template->getClass($traitName)">{$traitName}</a></h2>
-		<ul class="member-summary used">
-		<li>
-			{foreach $properties as $property}
-				<code><a href="{$property|propertyUrl}" n:tag-if="$template->getClass($traitName)"><!--
-					--><span n:tag-if="$property->deprecated" class"deprecated">{$property->name}</span><!--
-				--></a></code>{sep}, {/sep}
-			{/foreach}
-		</li>
-		</ul>
-	</div>
-
-
 
 
 	{var $ownMethods = $class->ownMethods}
