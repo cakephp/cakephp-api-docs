@@ -148,58 +148,40 @@ the file LICENSE.md that was distributed with this source code.
 		</ul>
 	</div>
 
-
-	{define #property}
-	<li class="property-detail">
-		<a id="{if $property->magic}m{/if}${$property->name}"></a>
-
-		<div class="property-name col-md-12">
-			{if $class->internal}
-				<a href="{$property|manualUrl}" title="Go to PHP documentation"><var>${$property->name}</var></a>
-			{else}
-				<a n:tag-if="$config->sourceCode" href="{$property|sourceUrl}" title="Go to source code"><var>${$property->name}</var></a>
-				<a href="#{if $property->magic}m{/if}${$property->name}" class="permalink" title="Permalink to this property">¶</a>
-			{/if}
-		</div>
-
-		<div class="attributes col-md-12">
-			{if $property->protected}
-			<span class="label">protected</span>
-			{elseif $property->private}
-			<span class="label">private</span>
-			{else}
-			<span class="label">public</span>
-			{/if}
-			{if $property->static}
-			<span class="label">static</span>
-			{/if}
-			{if $property->readOnly}
-			<span class="label">read-only</span>
-			{elseif $property->writeOnly}
-			<span class="label">write-only</span>
-			{/if}
-			{!$property->typeHint|typeLinks:$property}
-		</div>
-
-		<div class="description detailed col-md-12">
-			{!$property|longDescription}
-
-			{foreach $template->annotationSort($template->annotationFilter($property->annotations, array('var'))) as $annotation => $descriptions}
-				<h6>{$annotation|annotationBeautify}</h6>
-				<div class="list">
-				{foreach $descriptions as $description}
-					{if $description}
-						{!$description|annotation:$annotation:$property}<br>
-					{/if}
-				{/foreach}
-				</div>
-			{/foreach}
-
-			<div n:if="!$property->magic && $property->defaultValueDefinition" class="col-md-10 col-md-offset-2">
-				<pre>{!$property->defaultValueDefinition|highlightValue:$class}</pre>
+	{define #property_summary}
+		<li class="clearfix">
+			<div class="col-md-2 col-sm-2 p0">
+				{!$property->typeHint|typeLinks:$property}
 			</div>
-		</div>
-	</li>
+
+			<div class="name col-md-10 col-sm-10 p0">
+				{if $class->internal}
+					<code><a href="{$property|manualUrl}" title="Go to PHP documentation">${$property->name}</a></code>
+				{else}
+					<code><a n:tag-if="$config->sourceCode" href="{$property|propertyUrl}">${$property->name}</a></code>
+				{/if}
+
+				<span class="attributes">
+					{if $property->protected}
+					<span class="label">protected</span>
+					{elseif $property->private}
+					<span class="label">private</span>
+					{else}
+					<span class="label">public</span>
+					{/if}
+
+					{if $property->static}
+					<span class="label">static</span>
+					{/if}
+
+				</span>
+			</div>
+
+			<div class="col-md-10 col-md-offset-2 description">
+				{!$property|shortDescription}
+			</div>
+
+		</li>
 	{/define}
 
 	{var $ownProperties = $class->ownProperties}
@@ -213,39 +195,7 @@ the file LICENSE.md that was distributed with this source code.
 		<h2>Properties summary</h2>
 		<ul class="member-summary properties">
 		{foreach $ownProperties as $property}
-			<li class="clearfix">
-				<div class="col-md-2 col-sm-2 p0">
-					{!$property->typeHint|typeLinks:$property}
-				</div>
-
-				<div class="name col-md-10 col-sm-10 p0">
-					{if $class->internal}
-						<code><a href="{$property|manualUrl}" title="Go to PHP documentation">${$property->name}</a></code>
-					{else}
-						<code><a n:tag-if="$config->sourceCode" href="{$property|propertyUrl}">${$property->name}</a></code>
-					{/if}
-
-					<span class="attributes">
-						{if $property->protected}
-						<span class="label">protected</span>
-						{elseif $property->private}
-						<span class="label">private</span>
-						{else}
-						<span class="label">public</span>
-						{/if}
-
-						{if $property->static}
-						<span class="label">static</span>
-						{/if}
-
-					</span>
-				</div>
-
-				<div class="col-md-10 col-md-offset-2 description">
-					{!$property|shortDescription}
-				</div>
-
-			</li>
+			{include #property_summary, property => $property}
 		{/foreach}
 		</ul>
 	</div>
@@ -254,7 +204,7 @@ the file LICENSE.md that was distributed with this source code.
 		<h2>Magic properties summary</h2>
 		<ul class="member-summary properties">
 		{foreach $ownMagicProperties as $property}
-			{include #property, property => $property}
+			{include #property_summary, property => $property}
 		{/foreach}
 		</ul>
 	</div>
@@ -518,6 +468,79 @@ the file LICENSE.md that was distributed with this source code.
 			</code></td>
 		</tr>
 		</table>
+	</div>
+
+	{define #property}
+	<div class="property-detail">
+		<a id="{if $property->magic}m{/if}${$property->name}"></a>
+
+		<h3 class="property-name">
+			{if $class->internal}
+				<a href="{$property|manualUrl}" title="Go to PHP documentation"><var>${$property->name}</var></a>
+			{else}
+				<a n:tag-if="$config->sourceCode" href="{$property|sourceUrl}" title="Go to source code"><var>${$property->name}</var></a>
+				<a href="#{if $property->magic}m{/if}${$property->name}" class="permalink" title="Permalink to this property">¶</a>
+			{/if}
+		</h3>
+
+		<div class="attributes">
+			{if $property->protected}
+			<span class="label">protected</span>
+			{elseif $property->private}
+			<span class="label">private</span>
+			{else}
+			<span class="label">public</span>
+			{/if}
+			{if $property->static}
+			<span class="label">static</span>
+			{/if}
+			{if $property->readOnly}
+			<span class="label">read-only</span>
+			{elseif $property->writeOnly}
+			<span class="label">write-only</span>
+			{/if}
+			{!$property->typeHint|typeLinks:$property}
+		</div>
+
+		<div class="description detailed">
+			{!$property|longDescription}
+
+			{foreach $template->annotationSort($template->annotationFilter($property->annotations, array('var'))) as $annotation => $descriptions}
+				<h6>{$annotation|annotationBeautify}</h6>
+				<div class="list">
+				{foreach $descriptions as $description}
+					{if $description}
+						{!$description|annotation:$annotation:$property}<br>
+					{/if}
+				{/foreach}
+				</div>
+			{/foreach}
+
+			<div n:if="!$property->magic && $property->defaultValueDefinition">
+				<pre>{!$property->defaultValueDefinition|highlightValue:$class}</pre>
+			</div>
+		</div>
+	</div>
+	{/define}
+
+	{var $ownProperties = $class->ownProperties}
+	{var $ownMagicProperties = $class->ownMagicProperties}
+	<?php
+	ksort($ownProperties);
+	ksort($ownMagicProperties);
+	?>
+	<div class="section" n:if="$ownProperties">
+		<h2>Properties detail</h2>
+		{foreach $ownProperties as $property}
+			{include #property, property => $property}
+		{/foreach}
+	</div>
+
+	<div class="section" n:if="$ownMagicProperties">
+		<h2>Magic properties detail</h2>
+		{foreach $ownMagicProperties as $property}
+			{include #property, property => $property}
+		{/foreach}
 	</div>
 
 	{else}

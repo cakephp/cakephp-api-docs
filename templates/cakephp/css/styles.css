@@ -2140,15 +2140,13 @@ header {
     margin-bottom: 0;
 }
 
-.summary .name {
-    vertical-align: top;
+/* - Property details - */
+.property-detail {
+    margin-bottom: 3em;
 }
-.summary .attributes {
-    width: 1%;
-    padding: 0 0.5em 0.5em 0.5em;
-    vertical-align: top;
+.property-detail .attributes {
+    margin-bottom: 1em;
 }
-
 
 .class .methods .name,
 .class .properties .name,
