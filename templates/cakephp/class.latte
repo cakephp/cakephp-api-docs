@@ -99,6 +99,56 @@ the file LICENSE.md that was distributed with this source code.
 		{if $class->internal}<b>Documented at</b> <a href="{$class|manualUrl}" title="Go to PHP documentation">php.net</a>{else}<b>Location:</b> <a n:tag-if="$config->sourceCode" href="{$class|sourceUrl}" title="Go to source code">{$class->fileName|relativePath}</a>{/if}<br>
 	</div>
 
+	{var $ownConstants = $class->ownConstants}
+	<?php
+	ksort($ownConstants);
+	?>
+	<div class="section" n:if="$ownConstants">
+		<h2>Constants summary</h2>
+		<ul class="member-summary constants">
+		<li n:foreach="$ownConstants as $constant" class="clearfix">
+			<a id="{$constant->name}"></a>
+			{var $annotations = $constant->annotations}
+			<div class="attributes col-md-2 col-sm-2 p0">
+				<code>{!$constant->typeHint|typeLinks:$constant}</code>
+			</div>
+
+			<div class="name col-md-10 col-sm-10">
+				<code>
+				{if $class->internal}
+					<a href="{$constant|manualUrl}" title="Go to PHP documentation"><b>{$constant->name}</b></a>
+				{else}
+					<a n:tag-if="$config->sourceCode" href="{$constant|sourceUrl}" title="Go to source code"><b>{$constant->name}</b></a>
+				{/if}
+				</code>
+				<a href="#{$constant->name}" class="permalink" title="Permalink to this constant">¶</a>
+			</div>
+
+			<p n:if="$config->template->options->elementDetailsCollapsed" class="description short col-md-10 col-md-offset-2">
+				{!$constant|shortDescription:true}
+			</p>
+
+			<div class="col-md-10 col-md-offset-2">
+				<code>{!$constant->valueDefinition|highlightValue:$class}</code>
+			</div>
+		</li>
+		</ul>
+	</div>
+
+	<div class="section" n:foreach="$class->inheritedConstants as $parentName => $constants">
+		<h2>Constants inherited from <a href="{$parentName|classUrl}#constants" n:tag-if="$template->getClass($parentName)">{$parentName}</a></h2>
+		<table class="summary inherited">
+		<tr>
+			<td><code>
+			{foreach $constants as $constant}
+				<a href="{$constant|constantUrl}" n:tag-if="$template->getClass($parentName)"><b><span n:tag-if="$constant->deprecated" class"deprecated">{$constant->name}</span></b></a>{sep}, {/sep}
+			{/foreach}
+			</code></td>
+		</tr>
+		</table>
+	</div>
+
+
 	{var $ownMethods = $class->ownMethods}
 	{var $ownMagicMethods = $class->ownMagicMethods}
 	<?php
@@ -299,64 +349,6 @@ the file LICENSE.md that was distributed with this source code.
 			<td><code>
 			{foreach $methods as $data}
 				<a href="{$data['method']|methodUrl:$data['method']->declaringTrait}" n:tag-if="$template->getClass($traitName)"><span n:tag-if="$data['method']->deprecated" class="deprecated">{$data['method']->originalName}()</span></a>{if $data['aliases']}(as {foreach $data['aliases'] as $alias}<span n:tag-if="$data['method']->deprecated" class="deprecated">{$alias->name}()</span>{sep}, {/sep}{/foreach}){/if}{sep}, {/sep}
-			{/foreach}
-			</code></td>
-		</tr>
-		</table>
-	</div>
-
-	{var $ownConstants = $class->ownConstants}
-	<?php
-	ksort($ownConstants);
-	?>
-
-	<div class="section" n:if="$ownConstants">
-		<h2>Constants summary</h2>
-		<table class="summary constants" id="constants">
-		<tr n:foreach="$ownConstants as $constant" data-order="{$constant->name}" id="{$constant->name}">
-			{var $annotations = $constant->annotations}
-
-			<td class="attributes"><code>{!$constant->typeHint|typeLinks:$constant}</code></td>
-			<td class="name">
-				<code>
-				{if $class->internal}
-					<a href="{$constant|manualUrl}" title="Go to PHP documentation"><b>{$constant->name}</b></a>
-				{else}
-					<a n:tag-if="$config->sourceCode" href="{$constant|sourceUrl}" title="Go to source code"><b>{$constant->name}</b></a>
-				{/if}
-				</code>
-
-				<div n:if="$config->template->options->elementDetailsCollapsed" class="description short">
-					{!$constant|shortDescription:true}
-				</div>
-
-				<div n:class="description, detailed, $config->template->options->elementDetailsCollapsed ? hidden">
-					{!$constant|longDescription}
-
-					{foreach $template->annotationSort($template->annotationFilter($annotations, array('var'))) as $annotation => $descriptions}
-						<h6>{$annotation|annotationBeautify}</h6>
-						<div class="list">
-						{foreach $descriptions as $description}
-							{if $description}
-								{!$description|annotation:$annotation:$constant}<br>
-							{/if}
-						{/foreach}
-						</div>
-					{/foreach}
-				</div>
-			</td>
-			<td class="value"><div><a href="#{$constant->name}" class="anchor">#</a><code>{!$constant->valueDefinition|highlightValue:$class}</code></div></td>
-		</tr>
-		</table>
-	</div>
-
-	<div class="section" n:foreach="$class->inheritedConstants as $parentName => $constants">
-		<h2>Constants inherited from <a href="{$parentName|classUrl}#constants" n:tag-if="$template->getClass($parentName)">{$parentName}</a></h2>
-		<table class="summary inherited">
-		<tr>
-			<td><code>
-			{foreach $constants as $constant}
-				<a href="{$constant|constantUrl}" n:tag-if="$template->getClass($parentName)"><b><span n:tag-if="$constant->deprecated" class"deprecated">{$constant->name}</span></b></a>{sep}, {/sep}
 			{/foreach}
 			</code></td>
 		</tr>

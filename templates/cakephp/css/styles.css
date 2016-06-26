@@ -2115,6 +2115,23 @@ header {
 }
 
 
+/* - Constant, property and method summaries. - */
+.member-summary {
+    margin: 0;
+}
+.member-summary li {
+    list-style: none;
+    margin-bottom: 1em;
+    clear: both;
+}
+.member-summary .description {
+    padding: 0;
+}
+.member-summary p:last-child {
+    margin-bottom: 0;
+}
+
+
 /* Property tables */
 .summary .description {
     padding: 0;
@@ -2182,6 +2199,7 @@ pre::-webkit-scrollbar-thumb:horizontal {
     display: none;
 }
 
+.member-summary li:hover .permalink,
 .method-name:hover .permalink,
 .property-name:hover .permalink {
     display: inline;
