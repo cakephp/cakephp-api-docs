@@ -2117,7 +2117,7 @@ header {
 
 /* - Constant, property and method summaries. - */
 .member-summary {
-    margin: 0;
+    margin: 0 0 2em 0;
 }
 .member-summary li {
     list-style: none;

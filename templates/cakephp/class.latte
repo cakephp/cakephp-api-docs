@@ -137,16 +137,149 @@ the file LICENSE.md that was distributed with this source code.
 
 	<div class="section" n:foreach="$class->inheritedConstants as $parentName => $constants">
 		<h2>Constants inherited from <a href="{$parentName|classUrl}#constants" n:tag-if="$template->getClass($parentName)">{$parentName}</a></h2>
-		<table class="summary inherited">
-		<tr>
-			<td><code>
+		<ul class="member-summary inherited">
+		<li>
 			{foreach $constants as $constant}
-				<a href="{$constant|constantUrl}" n:tag-if="$template->getClass($parentName)"><b><span n:tag-if="$constant->deprecated" class"deprecated">{$constant->name}</span></b></a>{sep}, {/sep}
+				<code><a href="{$constant|constantUrl}" n:tag-if="$template->getClass($parentName)"><!--
+				--><span n:tag-if="$constant->deprecated" class"deprecated">{$constant->name}</span><!--
+				--></a></code>{sep}, {/sep}
 			{/foreach}
-			</code></td>
-		</tr>
+		</li>
+		</ul>
+	</div>
+
+
+	{define #property}
+	<div class="property-detail" id="{if $property->magic}m{/if}${$property->name}">
+		{if $class->internal}
+			<a href="{$property|manualUrl}" title="Go to PHP documentation"><var>${$property->name}</var></a>
+		{else}
+			<div class="property-name">
+				<a n:tag-if="$config->sourceCode" href="{$property|sourceUrl}" title="Go to source code"><var>${$property->name}</var></a>
+				<a href="#{if $property->magic}m{/if}${$property->name}" class="permalink" title="Permalink to this property">¶</a>
+			</div>
+		{/if}
+
+		<p class="attributes">
+			{if $property->protected}
+			<span class="label">protected</span>
+			{elseif $property->private}
+			<span class="label">private</span>
+			{else}
+			<span class="label">public</span>
+			{/if}
+			{if $property->static}
+			<span class="label">static</span>
+			{/if}
+			{if $property->readOnly}
+			<span class="label">read-only</span>
+			{elseif $property->writeOnly}
+			<span class="label">write-only</span>
+			{/if}
+			{!$property->typeHint|typeLinks:$property}
+		</p>
+
+		<div class="description detailed">
+			{!$property|longDescription}
+
+			{foreach $template->annotationSort($template->annotationFilter($property->annotations, array('var'))) as $annotation => $descriptions}
+				<h6>{$annotation|annotationBeautify}</h6>
+				<div class="list">
+				{foreach $descriptions as $description}
+					{if $description}
+						{!$description|annotation:$annotation:$property}<br>
+					{/if}
+				{/foreach}
+				</div>
+			{/foreach}
+
+			<div n:if="!$property->magic && $property->defaultValueDefinition" class="default-value">
+				<pre>{!$property->defaultValueDefinition|highlightValue:$class}</pre>
+			</div>
+		</div>
+
+	</div>
+	{/define}
+
+	{var $ownProperties = $class->ownProperties}
+	{var $ownMagicProperties = $class->ownMagicProperties}
+	<?php
+	ksort($ownProperties);
+	ksort($ownMagicProperties);
+	?>
+
+	<div class="section" n:if="$ownProperties">
+		<h2>Properties summary</h2>
+		<table class="summary properties" id="properties">
+		{foreach $ownProperties as $property}
+			{include #property, property => $property}
+		{/foreach}
 		</table>
 	</div>
+
+	<div class="section" n:if="$ownMagicProperties">
+		<h2>Magic properties summary</h2>
+		<div class="summary properties" id="magicProperties">
+		{foreach $ownMagicProperties as $property}
+			{include #property, property => $property}
+		{/foreach}
+		</div>
+	</div>
+
+	<div class="section" n:foreach="$class->inheritedMagicProperties as $parentName => $properties">
+		<h2>Magic properties inherited from <a href="{$parentName|classUrl}#properties" n:tag-if="$template->getClass($parentName)">{$parentName}</a></h2>
+		<ul class="member-summary used">
+		<li>
+			{foreach $properties as $property}
+				<code><a href="{$property|propertyUrl}" n:tag-if="$template->getClass($parentName)"><!--
+					--><span n:tag-if="$property->deprecated" class"deprecated">{$property->name}</span><!--
+				--></a></code>{sep}, {/sep}
+			{/foreach}
+		</li>
+		</ul>
+	</div>
+
+	<div class="section" n:foreach="$class->usedMagicProperties as $traitName => $properties">
+		<h2>Magic properties used from <a href="{$traitName|classUrl}#properties" n:tag-if="$template->getClass($traitName)">{$traitName}</a></h2>
+
+		<ul class="member-summary used">
+		<li>
+			{foreach $properties as $property}
+				<code><a href="{$property|propertyUrl}" n:tag-if="$template->getClass($traitName)"><!--
+					--><span n:tag-if="$property->deprecated" class"deprecated">{$property->name}</span><!--
+				--></a></code>{sep}, {/sep}
+			{/foreach}
+		</li>
+		</ul>
+	</div>
+
+	<div class="section" n:foreach="$class->inheritedProperties as $parentName => $properties">
+		<h2>Properties inherited from <a href="{$parentName|classUrl}#properties" n:tag-if="$template->getClass($parentName)">{$parentName}</a></h2>
+		<ul class="member-summary inherited">
+		<li>
+			{foreach $properties as $property}
+				<code><a href="{$property|propertyUrl}" n:tag-if="$template->getClass($parentName)"><!--
+					--><span n:tag-if="$property->deprecated" class"deprecated">{$property->name}</span><!--
+				--></a></code>{sep}, {/sep}
+			{/foreach}
+		</li>
+		</ul>
+	</div>
+
+	<div class="section" n:foreach="$class->usedProperties as $traitName => $properties">
+		<h2>Properties used from <a href="{$traitName|classUrl}#properties" n:tag-if="$template->getClass($traitName)">{$traitName}</a></h2>
+		<ul class="member-summary used">
+		<li>
+			{foreach $properties as $property}
+				<code><a href="{$property|propertyUrl}" n:tag-if="$template->getClass($traitName)"><!--
+					--><span n:tag-if="$property->deprecated" class"deprecated">{$property->name}</span><!--
+				--></a></code>{sep}, {/sep}
+			{/foreach}
+		</li>
+		</ul>
+	</div>
+
+
 
 
 	{var $ownMethods = $class->ownMethods}
@@ -155,7 +288,6 @@ the file LICENSE.md that was distributed with this source code.
 	ksort($ownMethods);
 	ksort($ownMagicMethods);
 	?>
-
 	{define #method_visibility}
 	{var $annotations = $method->annotations}
 		{if !$class->interface && $method->abstract}
@@ -353,120 +485,6 @@ the file LICENSE.md that was distributed with this source code.
 			</code></td>
 		</tr>
 		</table>
-	</div>
-
-	{define #property}
-	<div class="property-detail" id="{if $property->magic}m{/if}${$property->name}">
-		{if $class->internal}
-			<a href="{$property|manualUrl}" title="Go to PHP documentation"><var>${$property->name}</var></a>
-		{else}
-			<div class="property-name">
-				<a n:tag-if="$config->sourceCode" href="{$property|sourceUrl}" title="Go to source code"><var>${$property->name}</var></a>
-				<a href="#{if $property->magic}m{/if}${$property->name}" class="permalink" title="Permalink to this property">¶</a>
-			</div>
-		{/if}
-
-		<p class="attributes">
-			{if $property->protected}
-			<span class="label">protected</span>
-			{elseif $property->private}
-			<span class="label">private</span>
-			{else}
-			<span class="label">public</span>
-			{/if}
-			{if $property->static}
-			<span class="label">static</span>
-			{/if}
-			{if $property->readOnly}
-			<span class="label">read-only</span>
-			{elseif $property->writeOnly}
-			<span class="label">write-only</span>
-			{/if}
-			{!$property->typeHint|typeLinks:$property}
-		</p>
-
-		<div class="description detailed">
-			{!$property|longDescription}
-
-			{foreach $template->annotationSort($template->annotationFilter($property->annotations, array('var'))) as $annotation => $descriptions}
-				<h6>{$annotation|annotationBeautify}</h6>
-				<div class="list">
-				{foreach $descriptions as $description}
-					{if $description}
-						{!$description|annotation:$annotation:$property}<br>
-					{/if}
-				{/foreach}
-				</div>
-			{/foreach}
-
-			<div n:if="!$property->magic && $property->defaultValueDefinition" class="default-value">
-				<pre>{!$property->defaultValueDefinition|highlightValue:$class}</pre>
-			</div>
-		</div>
-
-	</div>
-	{/define}
-
-	{var $ownProperties = $class->ownProperties}
-	{var $ownMagicProperties = $class->ownMagicProperties}
-	<?php
-	ksort($ownProperties);
-	ksort($ownMagicProperties);
-	?>
-
-	<div class="section" n:if="$ownProperties">
-		<h2>Properties summary</h2>
-		<table class="summary properties" id="properties">
-		{foreach $ownProperties as $property}
-			{include #property, property => $property}
-		{/foreach}
-		</table>
-	</div>
-
-	<div class="section" n:foreach="$class->inheritedProperties as $parentName => $properties">
-		<h2>Properties inherited from <a href="{$parentName|classUrl}#properties" n:tag-if="$template->getClass($parentName)">{$parentName}</a></h2>
-		<div class="summary properties inherited">
-		{foreach $properties as $property}
-			{include #property, property => $property}
-		{/foreach}
-		</div>
-	</div>
-
-	<div class="section" n:foreach="$class->usedProperties as $traitName => $properties">
-		<h2>Properties used from <a href="{$traitName|classUrl}#properties" n:tag-if="$template->getClass($traitName)">{$traitName}</a></h2>
-		<div class="properties summary used">
-		{foreach $properties as $property}
-			{include #property, property => $property}
-		{/foreach}
-		</div>
-	</div>
-
-	<div class="section" n:if="$ownMagicProperties">
-		<h2>Magic properties summary</h2>
-		<div class="summary properties" id="magicProperties">
-		{foreach $ownMagicProperties as $property}
-			{include #property, property => $property}
-		{/foreach}
-		</div>
-	</div>
-
-	<div class="section" n:foreach="$class->inheritedMagicProperties as $parentName => $properties">
-		<h2>Magic properties inherited from <a href="{$parentName|classUrl}#properties" n:tag-if="$template->getClass($parentName)">{$parentName}</a></h2>
-		<div class="summary properties inherited">
-		{foreach $properties as $property}
-			{include #property, property => $property}
-		{/foreach}
-		</div>
-	</div>
-
-	<div class="section" n:foreach="$class->usedMagicProperties as $traitName => $properties">
-		<h2>Magic properties used from <a href="{$traitName|classUrl}#properties" n:tag-if="$template->getClass($traitName)">{$traitName}</a></h2>
-
-		<div class="summary properities used">
-		{foreach $properties as $property}
-			{include #property, property => $property}
-		{/foreach}
-		</div>
 	</div>
 
 	{else}
