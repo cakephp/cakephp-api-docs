@@ -22,13 +22,14 @@ the file LICENSE.md that was distributed with this source code.
 	{var favicon = 'resources/favicon.png'}
 	<link href="{$favicon|staticFile}" type="image/png" rel="icon" />
 	<link href="{$favicon|staticFile}" type="image/png" rel="shortcut icon" />
+	{var styleCss = 'resources/styles.css'}
+	<link rel="stylesheet" type="text/css" media="all" href="{$styleCss|staticFile}">
+
 	{var combinedJs = 'resources/combined.js'}
 	<script type="text/javascript" src="{$combinedJs|staticFile}"></script>
 	{var elementListJs = 'elementlist.js'}
 	<script type="text/javascript" src="{$elementListJs|staticFile}"></script>
 
-	{var styleCss = 'resources/styles.css'}
-	<link rel="stylesheet" type="text/css" media="all" href="{$styleCss|staticFile}">
 
 	<link n:if="$config->googleCseId" rel="search" type="application/opensearchdescription+xml" title="{$config->title}" href="{$config->baseUrl}/opensearch.xml">
 
