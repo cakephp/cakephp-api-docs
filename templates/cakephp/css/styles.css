@@ -2130,6 +2130,13 @@ header {
 .member-summary p:last-child {
     margin-bottom: 0;
 }
+.member-summary .property-type {
+    margin: 0.2em 0;
+}
+.member-summary .method-name {
+    line-height: 2em;
+    margin: 0.2em 0;
+}
 
 
 /* Property tables */
