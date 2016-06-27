@@ -152,15 +152,11 @@ the file LICENSE.md that was distributed with this source code.
 
 	{define #property_summary}
 		<li class="clearfix">
-			<div class="col-md-2 col-sm-2 p0">
-				{!$property->typeHint|typeLinks:$property}
-			</div>
-
-			<div class="name col-md-10 col-sm-10 p0">
+			<div class="name">
 				{if $class->internal}
 					<code><a href="{$property|manualUrl}" title="Go to PHP documentation">${$property->name}</a></code>
 				{else}
-					<code><a n:tag-if="$config->sourceCode" href="{$property|propertyUrl}">${$property->name}</a></code>
+					<code><a href="{$property|propertyUrl}">${$property->name}</a></code>
 				{/if}
 
 				<span class="attributes">
@@ -175,14 +171,14 @@ the file LICENSE.md that was distributed with this source code.
 					{if $property->static}
 					<span class="label">static</span>
 					{/if}
-
 				</span>
 			</div>
 
-			<div class="col-md-10 col-md-offset-2 description">
+			<div class="property-type"><code>{!$property->typeHint|typeLinks:$property}</code></div>
+
+			<div class="description">
 				{!$property|shortDescription}
 			</div>
-
 		</li>
 	{/define}
 
@@ -277,15 +273,42 @@ the file LICENSE.md that was distributed with this source code.
 		{/if}
 	{/define}
 
-	{define #method_signature}
+	{define #method_name}
 	{block|strip}
 		{if $class->internal}
-			<a href="{$method|manualUrl}" title="Go to PHP documentation">{$method->name}</a>
+			<a href="{$method|manualUrl}" title="Go to PHP documentation">{$method->name}()</a>
 		{else}
-			<a n:tag-if="$config->sourceCode" href="{$method|sourceUrl}" title="Go to source code">{$method->name}</a>
+			<a n:tag-if="$config->sourceCode" href="{$method|sourceUrl}" title="Go to source code">{$method->name}()</a>
 		{/if}
 	{/block}
 	{/define}
+
+	{define #method_summary}
+		<li class="clearfix">
+			<h5 class="method-name">
+				{if $class->internal}
+					<a href="{$method|manualUrl}" title="Go to PHP documentation">{$method->name}()</a>
+				{else}
+					<a href="{$method|methodUrl}">{$method->name}()</a>
+				{/if}
+
+				{include #method_visibility, method => $method}
+			</h3>
+			<div class="description detailed">
+				{!$method|shortDescription}
+			</div>
+		</li>
+	{/define}
+
+	<div class="section" n:if="$ownMethods">
+		<h2>Method Summary</h2>
+		<ul class="member-summary">
+		{foreach $ownMethods as $method}
+			{include #method_summary, method => $method}
+		{/foreach}
+		</ul>
+	</div>
+
 
 	{define #method}
 		{var $annotations = $method->annotations}
@@ -293,7 +316,7 @@ the file LICENSE.md that was distributed with this source code.
 		<a id="{if $method->magic}m{/if}_{$method->name}"></a>
 		<a id="method-{$class->name}{$method->name}"></a>
 		<h3 class="method-name">
-			{include #method_signature, method => $method}
+			{include #method_name, method => $method}
 			{include #method_visibility, method => $method}
 			<a href="#{if $method->magic}m{/if}_{$method->name}" class="permalink" title="Permalink to this method">¶</a>
 		</h3>
