@@ -17,11 +17,11 @@ the file LICENSE.md that was distributed with this source code.
 <div class="tree">
 	<ul>
 		{var $level = -1}
-		{? foreach ($tree as $reflectionName => $reflection): }
+		{foreach $tree as $reflectionName => $reflection|noiterator}
 			{if $level === $tree->getDepth()}
 				</li>
 			{elseif $level > $tree->getDepth()}
-				{'</ul></li>'|repeat:$level - $tree->getDepth()|noescape}
+				{='</ul></li>'|repeat:$level - $tree->getDepth()|noescape}
 			{elseif -1 !== $level}
 				<ul>
 			{/if}
@@ -33,14 +33,19 @@ the file LICENSE.md that was distributed with this source code.
 			{/foreach}{/if}
 			{var $traits = $reflection->ownTraits}
 			{if $traits}{if $interfaces}<br><span class="padding"></span>{/if} uses {foreach $traits as $trait}
-				<a href="{$trait|classUrl}" n:tag-if="$trait->documented"><span n:class="$trait->deprecated ? deprecated, !$trait->valid ? invalid">{$trait->name}</span></a>{sep}, {/sep}
+				{if is_string($trait)}
+					{$trait} (not available)
+
+				{else}
+					<a href="{$trait|classUrl}" n:tag-if="$trait->documented"><span n:class="$trait->deprecated ? deprecated, !$trait->valid ? invalid">{$trait->name}</span></a>{sep}, {/sep}
+				{/}
 			{/foreach}{/if}
 			</div>
 
 			{var $level = $tree->getDepth()}
-		{? endforeach; }
+		{/foreach}
 		</li>
-		{'</ul></li>'|repeat:$level|noescape}
+		{='</ul></li>'|repeat:$level|noescape}
 	</ul>
 </div>
 {/define}
