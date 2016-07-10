@@ -11,8 +11,7 @@ the file LICENSE.md that was distributed with this source code.
 {contentType css}
 
 {var $styles = ['imports.css', 'bootstrap.min.css', 'font-awesome.min.css', 'styles.css', 'responsive.css']}
-{var $dir = dirname($template->getFile())}
 
 {foreach $styles as $style}
-{file_get_contents("$dir/css/$style")|noescape}
+{file_get_contents("$basePath/css/$style")|noescape}
 {/foreach}
