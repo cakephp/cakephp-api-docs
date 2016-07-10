@@ -1699,7 +1699,7 @@ header {
     display: inline-block;
     color: red;
     float: right;
-    background: url(search.png) center center no-repeat;
+    background: url(../search.png) center center no-repeat;
     background-size: 19px;
     text-indent: -10000px;
     border: none;
@@ -2269,7 +2269,7 @@ pre::-webkit-scrollbar-thumb:horizontal {
  */
 .tree ul {
     list-style: none;
-    background: url('tree-vertical.png') left repeat-y;
+    background: url('../tree-vertical.png') left repeat-y;
     padding: 0;
     margin-left: 20px;
 }
@@ -2284,15 +2284,15 @@ pre::-webkit-scrollbar-thumb:horizontal {
 }
 
 .tree div.notlast {
-    background: url('tree-hasnext.png') left 10px no-repeat;
+    background: url('../tree-hasnext.png') left 10px no-repeat;
 }
 
 .tree div.last {
-    background: url('tree-last.png') left -240px no-repeat;
+    background: url('../tree-last.png') left -240px no-repeat;
 }
 
 .tree li.last {
-    background: url('tree-cleaner.png') left center repeat-y;
+    background: url('../tree-cleaner.png') left center repeat-y;
 }
 
 .tree span.padding {
