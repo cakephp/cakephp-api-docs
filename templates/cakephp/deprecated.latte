@@ -24,7 +24,7 @@ the file LICENSE.md that was distributed with this source code.
 			<p>
 				{foreach $class->annotations['deprecated'] as $description}
 					{if $description}
-						{!$description|annotation:'deprecated':$class}<br>
+						{$description|annotation:'deprecated':$class|noescape}<br>
 					{/if}
 				{/foreach}
 			</p>
@@ -63,7 +63,7 @@ the file LICENSE.md that was distributed with this source code.
 				<p n:if="$method->hasAnnotation('deprecated')">
 					{foreach $method->annotations['deprecated'] as $description}
 						{if $description}
-							{!$description|annotation:'deprecated':$method}<br>
+							{$description|annotation:'deprecated':$method|noescape}<br>
 						{/if}
 					{/foreach}
 				</p>
@@ -87,7 +87,7 @@ the file LICENSE.md that was distributed with this source code.
 				<p n:if="$constant->hasAnnotation('deprecated')">
 					{foreach $constant->annotations['deprecated'] as $description}
 						{if $description}
-							{!$description|annotation:'deprecated':$constant}<br>
+							{$description|annotation:'deprecated':$constant|noescape}<br>
 						{/if}
 					{/foreach}
 				</p>
@@ -107,7 +107,7 @@ the file LICENSE.md that was distributed with this source code.
 				<p n:if="$property->hasAnnotation('deprecated')">
 					{foreach $property->annotations['deprecated'] as $description}
 						{if $description}
-							{!$description|annotation:'deprecated':$property}<br>
+							{$description|annotation:'deprecated':$property|noescape}<br>
 						{/if}
 					{/foreach}
 				</p>
@@ -128,7 +128,7 @@ the file LICENSE.md that was distributed with this source code.
 				<p n:if="$function->hasAnnotation('deprecated')">
 					{foreach $function->annotations['deprecated'] as $description}
 						{if $description}
-							{!$description|annotation:'deprecated':$function}<br>
+							{$description|annotation:'deprecated':$function|noescape}<br>
 						{/if}
 					{/foreach}
 				</p>

@@ -20,16 +20,16 @@ the file LICENSE.md that was distributed with this source code.
 	{if $function->valid}
 
 	<div class="description" n:if="$template->longDescription($function)">
-	{!$function|longDescription}
+	{$function|longDescription|noescape}
 	</div>
 
 	<div class="info">
-		{if $function->inNamespace()}<b>Namespace:</b> {!$function->namespaceName|namespaceLinks}<br>{/if}
-		{if $function->inPackage()}<b>Package:</b> {!$function->packageName|packageLinks}<br>{/if}
+		{if $function->inNamespace()}<b>Namespace:</b> {$function->namespaceName|namespaceLinks|noescape}<br>{/if}
+		{if $function->inPackage()}<b>Package:</b> {$function->packageName|packageLinks|noescape}<br>{/if}
 		{foreach $template->annotationSort($template->annotationFilter($function->annotations, array('param', 'return', 'throws'))) as $annotation => $values}
 			{foreach $values as $value}
 				<b>{$annotation|annotationBeautify}{if $value}:{/if}</b>
-				{!$value|annotation:$annotation:$function}<br>
+				{$value|annotation:$annotation:$function|noescape}<br>
 			{/foreach}
 		{/foreach}
 		<b>Located at</b> <a n:tag-if="$config->sourceCode" href="{$function|sourceUrl}" title="Go to source code">{$function->fileName|relativePath}</a><br>
@@ -39,10 +39,10 @@ the file LICENSE.md that was distributed with this source code.
 		{block|strip}
 			{$function->name}(
 			{foreach $function->parameters as $parameter}
-				{!$parameter->typeHint|typeLinks:$function}
+				{$parameter->typeHint|typeLinks:$function|noescape}
 					<var>${$parameter->name}</var>
 				{if $parameter->defaultValueAvailable}
-					{!$parameter->defaultValueDefinition|highlightPHP:$function}
+					{$parameter->defaultValueDefinition|highlightPHP:$function|noescape}
 				{/if}
 				{if $parameter->unlimited},…{/if}
 			{/foreach}
@@ -56,9 +56,9 @@ the file LICENSE.md that was distributed with this source code.
 		<h3>Parameters summary</h3>
 		<table class="summary">
 		<tr n:foreach="$function->parameters as $parameter" id="${$parameter->name}">
-			<td class="name"><code>{!$parameter->typeHint|typeLinks:$function}</code></td>
+			<td class="name"><code>{$parameter->typeHint|typeLinks:$function|noescape}</code></td>
 			<td class="value"><code>{block|strip}
-				<var>{if $parameter->passedByReference}&amp; {/if}${$parameter->name}</var>{if $parameter->defaultValueAvailable} = {!$parameter->defaultValueDefinition|highlightPHP:$function}{elseif $parameter->unlimited},…{/if}
+				<var>{if $parameter->passedByReference}&amp; {/if}${$parameter->name}</var>{if $parameter->defaultValueAvailable} = {$parameter->defaultValueDefinition|highlightPHP:$function|noescape}{elseif $parameter->unlimited},…{/if}
 			{/block}</code></td>
 			<td>{$parameter->description|description:$function}</td>
 		</tr>
@@ -70,10 +70,10 @@ the file LICENSE.md that was distributed with this source code.
 		<ul>
 			<li>
 				<span class="name"><code>
-					{!$annotations['return'][0]|typeLinks:$function}
+					{$annotations['return'][0]|typeLinks:$function|noescape}
 				</code></span>
 				<span>
-					{!$annotations['return'][0]|description:$function}
+					{$annotations['return'][0]|description:$function|noescape}
 				</span>
 			</li>
 		</ul>
@@ -84,10 +84,10 @@ the file LICENSE.md that was distributed with this source code.
 		<ul>
 			<li n:foreach="$annotations['throws'] as $throws">
 				<span class="name"><code>
-					{!$throws|typeLinks:$function}
+					{$throws|typeLinks:$function|noescape}
 				</code></span>
 				<span>
-					{!$throws|description:$function}
+					{$throws|description:$function|noescape}
 				</span>
 			</li>
 		</ul>
