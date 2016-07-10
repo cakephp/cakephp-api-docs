@@ -70,7 +70,6 @@ build-$(VERSION): $(BUILD_DIR) install
 	# Update the config file, Remove sed crap
 	sed -i.bak "s/activeVersion: '.*'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
 	rm templates/cakephp/config.neon.bak
-	[ ! -d $(BUILD_DIR) ] && mkdir $(BUILD_DIR) || true
 	# Run Apigen
 	vendor/bin/apigen generate \
 		-s $(SOURCE_DIR)/src \
