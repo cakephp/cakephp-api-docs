@@ -1,0 +1,9 @@
+{
+    "name": "cakephp/cakephp-api-docs",
+    "description": "API docs for CakePHP",
+    "type": "application",
+    "require": {
+        "apigen/apigen": "4.1.*"
+    },
+    "license": "MIT"
+}
