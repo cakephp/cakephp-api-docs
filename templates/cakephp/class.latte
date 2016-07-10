@@ -256,15 +256,15 @@ the file LICENSE.md that was distributed with this source code.
 			<span class="label">final</span>
 		{/if}
 
-		<span class="label">
-		{if $method->protected}
-			protected
-		{elseif $method->private}
-			private
-		{else}
-			public
-		{/if}
-		</span>
+		<span class="label">{block|strip}
+			{if $method->protected}
+				protected
+			{elseif $method->private}
+				private
+			{else}
+				public
+			{/if}
+		{/block}</span>
 
 		{if $method->static}
 		<span class="label">static</span>
