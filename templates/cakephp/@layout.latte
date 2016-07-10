@@ -21,8 +21,10 @@ the file LICENSE.md that was distributed with this source code.
 	{var favicon = 'resources/favicon.png'}
 	<link href="{$favicon|staticFile}" type="image/png" rel="icon" />
 	<link href="{$favicon|staticFile}" type="image/png" rel="shortcut icon" />
-	{var styleCss = 'resources/styles.css'}
-	<link rel="stylesheet" type="text/css" media="all" href="{$styleCss|staticFile}">
+	<link rel="stylesheet" type="text/css" href="{='resources/css/font-awesome.min.css'|staticFile}">
+	<link rel="stylesheet" type="text/css" href="{='resources/css/bootstrap.min.css'|staticFile}">
+	<link rel="stylesheet" type="text/css" href="{='resources/css/styles.css'|staticFile}">
+	<link rel="stylesheet" type="text/css" href="{='resources/css/responsive.css'|staticFile}">
 
 	{var combinedJs = 'resources/combined.js'}
 	<script type="text/javascript" src="{$combinedJs|staticFile}"></script>
