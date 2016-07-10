@@ -39,12 +39,6 @@ RUN cd /apigen \
   && ls -lah \
   && git reset --hard \
   && git pull origin master \
-  && sed -i.bak 's#git:#https:#g' .gitmodules && rm .gitmodules.bak \
-  && sed -i.bak 's#origin/1.3#1.3.21#g' Makefile && rm Makefile.bak \
-  && sed -i.bak 's#origin/2.7#2.7.11#g' Makefile && rm Makefile.bak \
-  && sed -i.bak 's#origin/2.8#2.8.4#g' Makefile && rm Makefile.bak \
-  && git submodule init \
-  && git submodule update \
   && make clean build-all SOURCE_DIR=/cakephp CHRONOS_SOURCE_DIR=/chronos \
   && make deploy DEPLOY_DIR=/var/www/html
 
