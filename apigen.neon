@@ -6,7 +6,7 @@ skipDocPath:
 extensions: [php]
 
 # Character set of source files
-charset: auto
+charset: ['utf-8']
 
 # Main project namespace/package prefix
 main:
