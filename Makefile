@@ -52,60 +52,70 @@ deploy: $(DEPLOY_DIR)
 
 # Make the build output dir
 $(BUILD_DIR):
-	mkdir $(BUILD_DIR)
+	mkdir -p $(BUILD_DIR)
+
+composer.phar:
+	curl -sS https://getcomposer.org/installer | php
+
+install: .composer.tmp composer.phar
+	php composer.phar install
+	# Trick make by creating a tmp file, that
+	# allows make to do timestamp dependencies.
+	touch .composer.tmp
 
 # Make a macro to save re-typing recipies multiple times
 define build3x
-build-$(VERSION): $(BUILD_DIR)
+build-$(VERSION): $(BUILD_DIR) install
 	cd $(SOURCE_DIR) && git checkout -f $(TAG)
 	# Update the config file, Remove sed crap
 	sed -i.bak "s/activeVersion: '.*'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
 	rm templates/cakephp/config.neon.bak
 	[ ! -d $(BUILD_DIR) ] && mkdir $(BUILD_DIR) || true
 	# Run Apigen
-	php apigen.php --source $(SOURCE_DIR)/src \
+	vendor/bin/apigen generate \
+		-s $(SOURCE_DIR)/src \
+		-d $(BUILD_DIR)/$(VERSION) \
 		--config ./apigen.neon \
 		--exclude $(SOURCE_DIR)/src/Templates \
-		--destination $(BUILD_DIR)/$(VERSION) \
 		--template-config ./templates/cakephp/config.neon
 	# Fix rewrites file to have a opening php tag at the start
 	sed -i.bak '1i<?php' $(BUILD_DIR)/$(VERSION)/rewrite.php && rm $(BUILD_DIR)/$(VERSION)/rewrite.php.bak
 endef
 
 define build2x
-build-$(VERSION):
+build-$(VERSION): $(BUILD_DIR) install
 	cd $(SOURCE_DIR) && git checkout -f $(TAG)
 	# Update the config file, Remove sed crap
 	sed -i.bak "s/activeVersion: '.*'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
 	rm templates/cakephp/config.neon.bak
 	# Run Apigen
-	php apigen.php --source $(SOURCE_DIR)/lib \
-		--source $(SOURCE_DIR)/app \
+	vendor/bin/apigen generate -s $(SOURCE_DIR)/lib \
+		-s $(SOURCE_DIR)/app \
+		-d $(BUILD_DIR)/$(VERSION) \
 		--config ./apigen.neon \
 		--exclude $(SOURCE_DIR)/app/Config \
 		--exclude $(SOURCE_DIR)/lib/Cake/Console/Command/AppShell.php \
 		--exclude $(SOURCE_DIR)/lib/Cake/Test \
 		--exclude $(SOURCE_DIR)/lib/Cake/Console/Templates \
-		--destination $(BUILD_DIR)/$(VERSION) \
 		--template-config ./templates/cakephp/config.neon
 	# Fix rewrites file to have a opening php tag at the start
 	sed -i.bak '1i<?php' $(BUILD_DIR)/$(VERSION)/rewrite.php && rm $(BUILD_DIR)/$(VERSION)/rewrite.php.bak
 endef
 
 define build1x
-build-$(VERSION):
+build-$(VERSION): $(BUILD_DIR) install
 	cd $(SOURCE_DIR) && git checkout -f $(TAG)
 	# Update the config file, Remove sed crap
 	sed -i.bak "s/activeVersion: '.*'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
 	rm templates/cakephp/config.neon.bak
 	# Run Apigen
-	php apigen.php --source $(SOURCE_DIR)/cake/libs \
-		--source $(SOURCE_DIR)/cake/console/libs \
+	vendor/bin/apigen generate -s $(SOURCE_DIR)/cake/libs \
+		-s $(SOURCE_DIR)/cake/console/libs \
+		-d $(BUILD_DIR)/$(VERSION) \
 		--config ./apigen.neon \
 		--exclude $(SOURCE_DIR)/cake/tests \
 		--exclude $(SOURCE_DIR)/cake/libs/overloadable_php4.php \
 		--exclude $(SOURCE_DIR)/cake/console/templates \
-		--destination $(BUILD_DIR)/$(VERSION) \
 		--template-config ./templates/cakephp/config.neon
 	# Fix rewrites file to have a opening php tag at the start
 	sed -i.bak '1i<?php' $(BUILD_DIR)/$(VERSION)/rewrite.php && rm $(BUILD_DIR)/$(VERSION)/rewrite.php.bak
@@ -115,18 +125,18 @@ endef
 # for the elasticsearch plugin as well?
 # Perhaps take directories and versions as config parameters?
 define chronos
-build-chronos-$(VERSION):
+build-chronos-$(VERSION): $(BUILD_DIR) install
 	cd $(CHRONOS_SOURCE_DIR) && git checkout -f $(TAG)
 	# Update the config file, Remove sed crap
 	sed -i.bak "s/activeVersion: '.*'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
 	rm templates/cakephp/config.neon.bak
 	# Run Apigen
-	php apigen.php --source $(CHRONOS_SOURCE_DIR) \
+	vendor/bin/apigen generate -s $(CHRONOS_SOURCE_DIR) \
+		-d $(BUILD_DIR)/chronos/$(VERSION) \
 		--title 'Chronos' \
 		--exclude $(CHRONOS_SOURCE_DIR)/tests \
 		--exclude $(CHRONOS_SOURCE_DIR)/vendor \
 		--config ./apigen.neon \
-		--destination $(BUILD_DIR)/chronos/$(VERSION) \
 		--template-config ./templates/cakephp/config.neon
 endef
 
