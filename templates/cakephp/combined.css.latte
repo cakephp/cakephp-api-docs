@@ -14,5 +14,5 @@ the file LICENSE.md that was distributed with this source code.
 {var $dir = dirname($template->getFile())}
 
 {foreach $styles as $style}
-{!file_get_contents("$dir/css/$style")}
+{file_get_contents("$dir/css/$style")|noescape}
 {/foreach}
