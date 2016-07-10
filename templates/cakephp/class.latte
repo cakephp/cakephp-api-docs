@@ -124,10 +124,6 @@ the file LICENSE.md that was distributed with this source code.
 				<a href="#{$constant->name}" class="permalink" title="Permalink to this constant">¶</a>
 			</div>
 
-			<p n:if="$config->template->options->elementDetailsCollapsed" class="description short col-md-10 col-md-offset-2">
-				{$constant|shortDescription:true|noescape}
-			</p>
-
 			<div class="col-md-10 col-md-offset-2">
 				<code>{$constant->valueDefinition|highlightValue:$class|noescape}</code>
 			</div>
