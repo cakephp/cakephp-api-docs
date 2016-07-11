@@ -3,7 +3,13 @@
     "description": "API docs for CakePHP",
     "type": "application",
     "require": {
-        "apigen/apigen": "4.1.*"
+        "apigen/apigen": "dev-issue-fix-tree"
     },
-    "license": "MIT"
+    "license": "MIT",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/markstory/apigen"
+        }
+    ]
 }

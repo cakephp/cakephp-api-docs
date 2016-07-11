@@ -5,9 +5,6 @@ skipDocPath:
 # List of allowed file extensions
 extensions: [php]
 
-# Character set of source files
-charset: ['utf-8']
-
 # Main project namespace/package prefix
 main:
 
@@ -34,9 +31,6 @@ php: No
 
 # Generate tree view of classes, interfaces and exceptions
 tree: Yes
-
-# Generate documentation for deprecated classes, methods, properties and constants
-deprecated: Yes
 
 # Generate documentation of tasks
 todo: No

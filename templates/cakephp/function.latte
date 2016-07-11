@@ -52,10 +52,10 @@ the file LICENSE.md that was distributed with this source code.
 
 	{var $annotations = $function->annotations}
 
-	<div class="section" n:if="$function->numberOfParameters">
+	<div class="section" n:if="$function->getParameters()">
 		<h3>Parameters summary</h3>
 		<table class="summary">
-		<tr n:foreach="$function->parameters as $parameter" id="${$parameter->name}">
+		<tr n:foreach="$function->getParameters() as $parameter" id="${$parameter->name}">
 			<td class="name"><code>{$parameter->typeHint|typeLinks:$function|noescape}</code></td>
 			<td class="value"><code>{block|strip}
 				<var>{if $parameter->passedByReference}&amp; {/if}${$parameter->name}</var>{if $parameter->defaultValueAvailable} = {$parameter->defaultValueDefinition|highlightPHP:$function|noescape}{elseif $parameter->unlimited},…{/if}
