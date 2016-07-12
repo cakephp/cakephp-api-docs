@@ -9,7 +9,7 @@ DEPLOY_DIR=./website
 .ALL: help
 
 # Versions that can be built.
-VERSIONS = 1.2 1.3 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 3.0 3.1 3.2 3.3
+VERSIONS = 1.2 1.3 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 3.0 3.1 3.2
 
 # Versions that are actively developed / maintained.
 ACTIVE_VERSIONS = 2.7 2.8 3.2
@@ -194,9 +194,6 @@ TAG:=origin/master
 VERSION:=3.2
 $(eval $(build3x))
 
-TAG:=origin/3.next
-VERSION:=3.3
-$(eval $(build3x))
 
 # Generate build targets for various 1.x versions
 TAG:=1.3.21
