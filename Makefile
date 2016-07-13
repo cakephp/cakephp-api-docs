@@ -74,8 +74,6 @@ build-$(VERSION): $(BUILD_DIR) install
 		--config ./apigen.neon \
 		--exclude $(SOURCE_DIR)/src/Templates \
 		--template-config ./templates/cakephp/config.neon
-	# Fix rewrites file to have a opening php tag at the start
-	sed -i.bak '1i<?php' $(BUILD_DIR)/$(VERSION)/rewrite.php && rm $(BUILD_DIR)/$(VERSION)/rewrite.php.bak
 endef
 
 define build2x
@@ -94,8 +92,6 @@ build-$(VERSION): $(BUILD_DIR) install
 		--exclude $(SOURCE_DIR)/lib/Cake/Test \
 		--exclude $(SOURCE_DIR)/lib/Cake/Console/Templates \
 		--template-config ./templates/cakephp/config.neon
-	# Fix rewrites file to have a opening php tag at the start
-	sed -i.bak '1i<?php' $(BUILD_DIR)/$(VERSION)/rewrite.php && rm $(BUILD_DIR)/$(VERSION)/rewrite.php.bak
 endef
 
 define build1x
@@ -113,8 +109,6 @@ build-$(VERSION): $(BUILD_DIR) install
 		--exclude $(SOURCE_DIR)/cake/libs/overloadable_php4.php \
 		--exclude $(SOURCE_DIR)/cake/console/templates \
 		--template-config ./templates/cakephp/config.neon
-	# Fix rewrites file to have a opening php tag at the start
-	sed -i.bak '1i<?php' $(BUILD_DIR)/$(VERSION)/rewrite.php && rm $(BUILD_DIR)/$(VERSION)/rewrite.php.bak
 endef
 
 # TODO - Make this more generic so we could use it
