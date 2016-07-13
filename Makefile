@@ -57,11 +57,8 @@ $(BUILD_DIR):
 composer.phar:
 	curl -sS https://getcomposer.org/installer | php
 
-install: .composer.tmp composer.phar
+install: composer.phar
 	php composer.phar install
-	# Trick make by creating a tmp file, that
-	# allows make to do timestamp dependencies.
-	touch .composer.tmp
 
 # Make a macro to save re-typing recipies multiple times
 define build3x
