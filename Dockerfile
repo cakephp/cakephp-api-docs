@@ -29,16 +29,12 @@ WORKDIR /data
 
 COPY . /data
 
-RUN git clone https://github.com/cakephp/cakephp-api-docs.git /apigen
-
 RUN cd /cakephp && git fetch origin
 
 RUN cd /chronos && git fetch origin
 
-RUN cd /apigen \
+RUN cd /data \
   && ls -lah \
-  && git reset --hard \
-  && git pull origin master \
   && make clean build-all SOURCE_DIR=/cakephp CHRONOS_SOURCE_DIR=/chronos \
   && make deploy DEPLOY_DIR=/var/www/html
 
