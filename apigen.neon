@@ -1,27 +1,9 @@
-# Source file or directory to parse
-# This should be set in the CLI options
-source:
-
-# Directory where to save the generated documentation
-# This should be set in the cli options
-destination:
-
-# Mask to exclude file or directory from processing
-# This should be set in the cli options
-exclude:
-
 # Don't generate documentation for classes from file or directory with this mask
 # This should be set in the cli options
 skipDocPath:
 
-# Don't generate documentation for classes with this name prefix
-skipDocPrefix:
-
 # List of allowed file extensions
 extensions: [php]
-
-# Character set of source files
-charset: auto
 
 # Main project namespace/package prefix
 main:
@@ -32,23 +14,11 @@ title: CakePHP
 # Google Custom Search ID
 googleCseId:
 
-# Google Custom Search label
-googleCseLabel:
-
 # Google Analytics tracking code
 googleAnalytics:
 
-# Template config file
-templateConfig: '../templates/cakephp/config.neon'
-
 # Grouping of classes
 groups: auto
-
-# List of allowed HTML tags in documentation
-allowedHtml: [b, i, a, ul, ol, li, p, br, var, samp, kbd, tt]
-
-# Element types for search input autocomplete
-autocomplete: [classes, constants, functions, methods, properties, classconstants]
 
 # Generate documentation for methods and properties with given access level
 accessLevels: [public, protected]
@@ -62,9 +32,6 @@ php: No
 # Generate tree view of classes, interfaces and exceptions
 tree: Yes
 
-# Generate documentation for deprecated classes, methods, properties and constants
-deprecated: Yes
-
 # Generate documentation of tasks
 todo: No
 
@@ -74,23 +41,8 @@ sourceCode: Yes
 # Add a link to download documentation as a ZIP archive
 download: Yes
 
-# Save a checkstyle report of poorly documented elements into a file
-report: report.log
-
-# Wipe out the destination directory first
-wipeout: Yes
-
 # Don't display scanning and generating messages
 quiet: No
-
-# Display progressbars
-progressbar: Yes
-
-# Use colors
-colors: Yes
-
-# Check for update
-updateCheck: Yes
 
 # Display additional information in case of an error
 debug: Yes

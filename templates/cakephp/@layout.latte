@@ -14,7 +14,6 @@ the file LICENSE.md that was distributed with this source code.
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<meta name="generator" content="{$generator} {$version}">
 	<meta name="robots" content="noindex" n:if="!$robots">
 
 	<title>{include #title}{if 'overview' !== $active && $config->title} | {$config->title}{/if}</title>
@@ -22,8 +21,10 @@ the file LICENSE.md that was distributed with this source code.
 	{var favicon = 'resources/favicon.png'}
 	<link href="{$favicon|staticFile}" type="image/png" rel="icon" />
 	<link href="{$favicon|staticFile}" type="image/png" rel="shortcut icon" />
-	{var styleCss = 'resources/styles.css'}
-	<link rel="stylesheet" type="text/css" media="all" href="{$styleCss|staticFile}">
+	<link rel="stylesheet" type="text/css" href="{='resources/css/font-awesome.min.css'|staticFile}">
+	<link rel="stylesheet" type="text/css" href="{='resources/css/bootstrap.min.css'|staticFile}">
+	<link rel="stylesheet" type="text/css" href="{='resources/css/styles.css'|staticFile}">
+	<link rel="stylesheet" type="text/css" href="{='resources/css/responsive.css'|staticFile}">
 
 	{var combinedJs = 'resources/combined.js'}
 	<script type="text/javascript" src="{$combinedJs|staticFile}"></script>
@@ -59,13 +60,13 @@ the file LICENSE.md that was distributed with this source code.
 						<ul class="nav-list">
 							{foreach $groups as $group}
 							{var $nextLevel = substr_count($iterator->nextValue, '\\') > substr_count($group, '\\')}
-							<li n:class="$actualGroup === $group || 0 === strpos($actualGroup, $group . '\\') ? active, $config->main && 0 === strpos($group, $config->main) ? main"><a href="{$group|groupUrl}">{$group|subgroupName}{if $nextLevel}<span></span>{/if}</a>
+							<li n:class="$actualGroup === $group || 0 === strpos($actualGroup, $group . '\\') ? active, $config->main && 0 === strpos($group, $config->main) ? main"><a href="{if $groupBy === 'package'}{$group|packageUrl}{else}{$group|namespaceUrl}{/if}">{$group|subgroupName}{if $nextLevel}<span></span>{/if}</a>
 								{if $nextLevel}
 									<ul>
 								{else}
 									</li>
 									{if substr_count($iterator->nextValue, '\\') < substr_count($group, '\\')}
-										{!'</ul></li>'|repeat:substr_count($group, '\\') - substr_count($iterator->nextValue, '\\')}
+										{='</ul></li>'|repeat:substr_count($group, '\\') - substr_count($iterator->nextValue, '\\')|noescape}
 									{/if}
 								{/if}
 							{/foreach}
@@ -75,10 +76,10 @@ the file LICENSE.md that was distributed with this source code.
 					<div id="groups">
 						{if $namespaces}
 						<h3 class="nav-title">Namespaces</h3>
-						{include #group, groups => $namespaces, actualGroup => $namespace}
+						{include #group, groups => $namespaces, actualGroup => $namespace, groupBy => 'namespace'}
 						{elseif $packages}
 						<h3>Packages</h3>
-						{include #group, groups => $packages, actualGroup => $package}
+						{include #group, groups => $packages, actualGroup => $package, groupBy => 'package'}
 						{/if}
 					</div>
 
