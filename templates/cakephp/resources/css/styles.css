@@ -136,7 +136,7 @@ ul ul {
     padding: 0;
 }
 a {
-    color: #2f85ae
+    color: #2f85ae;
     text-decoration:none;
     -webkit-transition:all 0.2s linear; transition:all 0.2s linear;
 }
@@ -1562,7 +1562,7 @@ input[type="email"].big-dog::webkit-input-placeholder {
     margin: 0;
 }
 .navigation > li {
-    font-size: 12px
+    font-size: 12px;
     font-family: Raleway;
     list-style: none;
     float: left;
@@ -2385,4 +2385,59 @@ pre::-webkit-scrollbar-thumb:horizontal {
 
 .php-keyword2 {
     font-style: italic;
+}
+
+
+#menu {
+    overflow-x: hidden;
+}
+
+#menu a {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: keep-all;
+}
+
+#menu .active > a,
+#menu > span {
+    color: #d33c44;
+    font-weight: bold;
+}
+
+#groups a {
+    position:relative;
+}
+
+#groups span {
+    position: absolute;
+    right: 2px;
+    cursor: pointer;
+    display: block;
+    font-family:"FontAwesome";
+    font-weight: normal;
+}
+
+#groups span:before {
+    /* fa-minus-square-o */
+    content:"\f147";
+
+}
+#groups span:hover:before {
+    /* fa-minus-square */
+    content:"\f146";
+}
+
+#groups span.collapsed:before {
+    /* fa-plus-square-o */
+    content:"\f196";
+}
+
+#groups span.collapsed:hover:before {
+    /* fa-plus-square */
+    content:"\f0fe"
+}
+
+#menu #groups ul.collapsed {
+    display: none;
 }
