@@ -18,7 +18,7 @@ googleCseId:
 googleAnalytics:
 
 # Grouping of classes
-groups: auto
+groups: namespaces
 
 # Generate documentation for methods and properties with given access level
 accessLevels: [public, protected]
