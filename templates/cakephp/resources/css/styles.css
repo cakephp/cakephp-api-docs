@@ -2341,3 +2341,48 @@ pre::-webkit-scrollbar-thumb:horizontal {
 .ac_results li.ac_over strong {
     color: #ffffff;
 }
+
+/* Source code */
+.codeline {
+    display: block;
+    padding-left: 0.5em;
+    font-weight: normal;
+    line-height: 120%;
+}
+
+.codeline.selected {
+    background-color: #ffffcc;
+}
+
+.codeline .number {
+    color: #c0c0c0;
+}
+
+.codeline .php-var a:hover,
+.codeline .php-var a:active,
+.codeline .php-var a:focus,
+.codeline .php-var a,
+.php-var {
+    color: #234aa0 !important;
+}
+
+.php-num {
+    color: #a71d5d;
+}
+
+.php-quote {
+    color: #0b6125;
+}
+
+.php-comment {
+    color: #5F5F5F
+}
+
+.php-keyword1 {
+    color: #a71d5d;
+    font-style: italic;
+}
+
+.php-keyword2 {
+    font-style: italic;
+}
