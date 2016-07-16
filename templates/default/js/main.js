@@ -27,8 +27,8 @@ $(function() {
 		$(this)
 			.toggleClass('collapsed')
 			.parent()
-				.next('ul')
-					.toggleClass('collapsed');
+			.next('ul')
+			.toggleClass('collapsed');
 	}).click();
 
 	$active = $('ul li.active', $groups);
