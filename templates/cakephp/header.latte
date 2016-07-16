@@ -100,11 +100,13 @@
 							<i class="fa fa-align-left"></i><span>Tree</span>
 							</a>
 						</li>
-						<li n:class="'deprecated' === $active ? active" n:if="$config->deprecated">
-							<a n:tag-if="'deprecated' !== $active" href="deprecated.html" title="List of deprecated elements">
-							<i class="fa fa-trash"></i><span>Deprecated</span>
-							</a>
-						</li>
+						{foreach $annotationGroups as $annotation}
+							<li n:class="$active === 'annotation-group-' . $annotation ? active">
+								<a n:tag-if="$active !== 'annotation-group-' . $annotation" href="annotation-group-{$annotation}.html" title="List of elements with {$annotation} annotation">
+								<span>{$annotation|firstUpper}</span>
+								</a>
+							</li>
+						{/foreach}
 						<li n:class="'todo' === $active ? active" n:if="$config->todo">
 							<a n:tag-if="'todo' !== $active" href="todo.html" title="Todo list"><span>Todo</span></a>
 						</li>

@@ -1574,6 +1574,7 @@ input[type="email"].big-dog::webkit-input-placeholder {
 .navigation li,
 .navigation a {
     color: #B8B8AE;
+    display: inline-block;
 }
 .navigation .fa {
     padding-right: 3px;
