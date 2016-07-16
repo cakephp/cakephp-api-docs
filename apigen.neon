@@ -6,7 +6,7 @@ skipDocPath:
 extensions: [php]
 
 # Main project namespace/package prefix
-main:
+main: Cake
 
 # Title of generated documentation
 title: CakePHP
@@ -46,3 +46,6 @@ quiet: No
 
 # Display additional information in case of an error
 debug: Yes
+
+# Generate documentation for deprecated classes, methods, properties and constants 
+annotationGroups: [deprecated] # event, api
