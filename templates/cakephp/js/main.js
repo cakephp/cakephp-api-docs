@@ -341,11 +341,22 @@ $(function() {
 			}
 		}
 
-		var $firstLine = $('#' + parseInt(matches[0]));
-		if ($firstLine.length > 0) {
-			$(document).scrollTop($firstLine.offset().top);
-		}
-	}
+        var scrollToLineNumber = function() {
+            console.log('plop');
+            var offset = 0;
+            var $header = $('header');
+            if ($header.length > 0) {
+                offset = $header.height() + parseInt($header.css('top'));
+            }
+
+            var $firstLine = $('#' + parseInt(matches[0]));
+            if ($firstLine.length > 0) {
+                $(document).scrollTop($firstLine.offset().top - offset);
+            }
+        };
+        scrollToLineNumber();
+        setTimeout(scrollToLineNumber, 400);
+    }
 
 	// Save selected lines
 	var lastLine;
