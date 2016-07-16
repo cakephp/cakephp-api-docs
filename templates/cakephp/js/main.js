@@ -19,6 +19,32 @@ $(function() {
 	var $groups = $('#groups');
 	var $content = $('#content');
 
+    // Hide deep packages and namespaces
+    $('ul span', $groups).click(function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        $(this)
+            .toggleClass('collapsed')
+            .parent()
+            .next('ul')
+            .toggleClass('collapsed');
+    }).click();
+
+    $active = $('ul li.active', $groups);
+    if ($active.length > 0) {
+        // Open active
+        $('> a > span', $active).click();
+    } else {
+        $main = $('> ul > li.main', $groups);
+        if ($main.length > 0) {
+            // Open first level of the main project
+            $('> a > span', $main).click();
+        } else {
+            // Open first level of all
+            $('> ul > li > a > span', $groups).click();
+        }
+    }
+
   /* Validate function */
   function validate(data, def) {
     return (data !== undefined) ? data : def;
