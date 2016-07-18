@@ -1588,10 +1588,10 @@ input[type="email"].big-dog::webkit-input-placeholder {
     text-transform: uppercase;
     font-weight: 500;
     letter-spacing: 0.1em;
-    font-size: 9px;
+    font-size: 11px;
     text-align: right;
     padding-top: 15px;
-    padding-right: 8px;
+    padding-right: 4px;
 }
 
 .btn-download {
@@ -1811,7 +1811,7 @@ header {
 }
 
 .t-api-title {
-    width: 28%
+    width: 29%
 }
 .t-api-title a,
 .t-api-title h2 {
@@ -1823,7 +1823,7 @@ header {
     display: none;
 }
 .t-api-nav {
-    width: 38%
+    width: 37%
 }
 .modal .t-api-nav {
     width: 100%
@@ -1838,22 +1838,22 @@ header {
 .t-api-nav-el {
     display: inline-block;
     float: left;
-    color: #bdbdb5;
     margin: 0 !important;
     font-weight: 500;
-    letter-spacing: 0.1em;
-    font-size: 12px !important;
+    text-transform: uppercase;
+    font-size: 11px !important;
     text-align: right;
     padding-top: 15px;
-    padding-right: 8px;
+    padding-right: 13px;
     line-height: 18px;
 }
 .modal .t-api-nav-el {
     float: none;
-    padding: 5px 10px;
+    padding-right: 0;
 }
-.modal .t-api-nav-el {
+.modal .version-picker h6 {
     float: none;
+    text-align: left;
 }
 .modal .t-api-nav-el i,
 .modal .t-api-nav-el span {
