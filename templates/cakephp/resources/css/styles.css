@@ -1582,12 +1582,16 @@ input[type="email"].big-dog::webkit-input-placeholder {
     margin-top: 0;
 }
 .version-picker h6 {
-    font-size: 14px;
-    font-weight: 500;
     float: left;
-    color: #B8B8AE;
-    margin: 12px 8px 0 0;
+    color: #bdbdb5;
+    margin: 0;
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    font-size: 11px;
     text-align: right;
+    padding-top: 15px;
+    padding-right: 4px;
 }
 
 .btn-download {
@@ -1807,7 +1811,7 @@ header {
 }
 
 .t-api-title {
-    width: 28%
+    width: 29%
 }
 .t-api-title a,
 .t-api-title h2 {
@@ -1815,8 +1819,58 @@ header {
     text-align: left;
     padding: 10px 0;
 }
+.modal .t-api-title {
+    display: none;
+}
 .t-api-nav {
-    width: 38%
+    width: 37%
+}
+.modal .t-api-nav {
+    width: 100%
+}
+.modal .search-cook {
+    clear: both;
+}
+.modal .btn-download {
+    margin-top: 20px;
+}
+
+.t-api-nav-el {
+    display: inline-block;
+    float: left;
+    margin: 0 !important;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 11px !important;
+    text-align: right;
+    padding-top: 15px;
+    padding-right: 13px;
+    line-height: 18px;
+}
+.modal .t-api-nav-el {
+    float: none;
+    padding-right: 0;
+}
+.modal .version-picker h6 {
+    float: none;
+    text-align: left;
+}
+.modal .t-api-nav-el i,
+.modal .t-api-nav-el span {
+    color: #363638;
+    font-size: 14px;
+    font-weight: 700;
+}
+.modal .t-api-nav-el.active i,
+.modal .t-api-nav-el.active span {
+    color: #b8b8ae;
+}
+.modal li.t-api-nav-el a {
+    padding: 5px 10px;
+    display: inline-block;
+}
+.modal li.t-api-nav-el a:hover {
+    background-color: #eaeaea;
 }
 
 /* Search form */

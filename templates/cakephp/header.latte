@@ -90,22 +90,21 @@
 
 				<div class="col-md-5 t-api-nav p0">
 					<ul class="navigation">
-						<li n:class="'overview' === $active ? active">
+						<li n:class="'overview' === $active ? active, t-api-nav-el">
 							<a n:tag-if="'overview' !== $active" href="index.html" title="Overview">
-							<i class="fa fa-eye"></i>
-							<span>Overview</span></a>
+							<i class="fa fa-eye"></i><span>Overview</span></a>
 						</li>
-						<li n:class="'tree' === $active ? active" n:if="$config->tree">
+						<li n:class="'tree' === $active ? active, t-api-nav-el" n:if="$config->tree">
 							<a n:tag-if="'tree' !== $active" href="tree.html" title="Tree view of classes, interfaces, traits and exceptions">
-							<i class="fa fa-align-left"></i><span>Tree</span>
-							</a>
+							<i class="fa fa-align-left"></i><span>Tree</span></a>
 						</li>
-						<li n:class="'deprecated' === $active ? active" n:if="$config->deprecated">
-							<a n:tag-if="'deprecated' !== $active" href="deprecated.html" title="List of deprecated elements">
-							<i class="fa fa-trash"></i><span>Deprecated</span>
-							</a>
-						</li>
-						<li n:class="'todo' === $active ? active" n:if="$config->todo">
+						{foreach $annotationGroups as $annotation}
+							<li n:class="$active === 'annotation-group-' . $annotation ? active, t-api-nav-el">
+								<a n:tag-if="$active !== 'annotation-group-' . $annotation" href="annotation-group-{$annotation}.html" title="List of elements with {$annotation} annotation">
+								<i n:tag-if="'deprecated' === $annotation" class="fa fa-trash"></i><span>{$annotation|firstUpper}</span></a>
+							</li>
+						{/foreach}
+						<li n:class="'todo' === $active ? active, t-api-nav-el" n:if="$config->todo">
 							<a n:tag-if="'todo' !== $active" href="todo.html" title="Todo list"><span>Todo</span></a>
 						</li>
 
