@@ -72,7 +72,7 @@ build-$(VERSION): $(BUILD_DIR) install
 		-s $(SOURCE_DIR)/src \
 		-d $(BUILD_DIR)/$(VERSION) \
 		--config ./apigen.neon \
-		--exclude $(SOURCE_DIR)/src/Templates \
+		--exclude **\Template\** \
 		--template-config ./templates/cakephp/config.neon
 endef
 
@@ -87,10 +87,10 @@ build-$(VERSION): $(BUILD_DIR) install
 		-s $(SOURCE_DIR)/app \
 		-d $(BUILD_DIR)/$(VERSION) \
 		--config ./apigen.neon \
-		--exclude $(SOURCE_DIR)/app/Config \
-		--exclude $(SOURCE_DIR)/lib/Cake/Console/Command/AppShell.php \
-		--exclude $(SOURCE_DIR)/lib/Cake/Test \
-		--exclude $(SOURCE_DIR)/lib/Cake/Console/Templates \
+		--exclude Config\** \
+		--exclude **\Cake\\Console\\Command\\AppShell** \
+		--exclude **\Cake\\Test\** \
+		--exclude **\Cake\\Console\\Templates\** \
 		--template-config ./templates/cakephp/config.neon
 endef
 
@@ -105,9 +105,7 @@ build-$(VERSION): $(BUILD_DIR) install
 		-s $(SOURCE_DIR)/cake/console/libs \
 		-d $(BUILD_DIR)/$(VERSION) \
 		--config ./apigen.neon \
-		--exclude $(SOURCE_DIR)/cake/tests \
-		--exclude $(SOURCE_DIR)/cake/libs/overloadable_php4.php \
-		--exclude $(SOURCE_DIR)/cake/console/templates \
+		--exclude **overloadable_php4.php \
 		--template-config ./templates/cakephp/config.neon
 endef
 
@@ -124,8 +122,8 @@ build-chronos-$(VERSION): $(BUILD_DIR) install
 	vendor/bin/apigen generate -s $(CHRONOS_SOURCE_DIR) \
 		-d $(BUILD_DIR)/chronos/$(VERSION) \
 		--title 'Chronos' \
-		--exclude $(CHRONOS_SOURCE_DIR)/tests \
-		--exclude $(CHRONOS_SOURCE_DIR)/vendor \
+		--exclude **\tests\** \
+		--exclude **\vendor\** \
 		--config ./apigen.neon \
 		--template-config ./templates/cakephp/config.neon
 endef
