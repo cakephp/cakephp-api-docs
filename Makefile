@@ -71,9 +71,7 @@ build-$(VERSION): $(BUILD_DIR) install
 	vendor/bin/apigen generate \
 		-s $(SOURCE_DIR)/src \
 		-d $(BUILD_DIR)/$(VERSION) \
-		--config ./apigen.neon \
-		--exclude **\Template\** \
-		--template-config ./templates/cakephp/config.neon
+		--exclude **\Template\**
 endef
 
 define build2x
@@ -86,12 +84,10 @@ build-$(VERSION): $(BUILD_DIR) install
 	vendor/bin/apigen generate -s $(SOURCE_DIR)/lib \
 		-s $(SOURCE_DIR)/app \
 		-d $(BUILD_DIR)/$(VERSION) \
-		--config ./apigen.neon \
 		--exclude Config\** \
 		--exclude **\Cake\\Console\\Command\\AppShell** \
 		--exclude **\Cake\\Test\** \
-		--exclude **\Cake\\Console\\Templates\** \
-		--template-config ./templates/cakephp/config.neon
+		--exclude **\Cake\\Console\\Templates\**
 endef
 
 define build1x
@@ -104,9 +100,7 @@ build-$(VERSION): $(BUILD_DIR) install
 	vendor/bin/apigen generate -s $(SOURCE_DIR)/cake/libs \
 		-s $(SOURCE_DIR)/cake/console/libs \
 		-d $(BUILD_DIR)/$(VERSION) \
-		--config ./apigen.neon \
-		--exclude **overloadable_php4.php \
-		--template-config ./templates/cakephp/config.neon
+		--exclude **overloadable_php4.php
 endef
 
 # TODO - Make this more generic so we could use it
@@ -123,9 +117,7 @@ build-chronos-$(VERSION): $(BUILD_DIR) install
 		-d $(BUILD_DIR)/chronos/$(VERSION) \
 		--title 'Chronos' \
 		--exclude **\tests\** \
-		--exclude **\vendor\** \
-		--config ./apigen.neon \
-		--template-config ./templates/cakephp/config.neon
+		--exclude **\vendor\**
 endef
 
 # Build all the versions in a loop.
