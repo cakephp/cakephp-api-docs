@@ -114,6 +114,7 @@ build-chronos-$(VERSION): $(BUILD_DIR) install
 	cd $(CHRONOS_SOURCE_DIR) && git checkout -f $(TAG)
 	# Update the config file, Remove sed crap
 	sed -i.bak "s/activeVersion: '.*'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
+	sed -i.bak "s/versions: .*/versions: ['$(VERSION)']/" templates/cakephp/config.neon
 	rm templates/cakephp/config.neon.bak
 	# Run Apigen
 	vendor/bin/apigen generate -s $(CHRONOS_SOURCE_DIR) \
