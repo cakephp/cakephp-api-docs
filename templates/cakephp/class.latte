@@ -457,7 +457,7 @@ the file LICENSE.md that was distributed with this source code.
 	</div>
 
 	<div class="section" n:foreach="$class->usedMagicMethods as $traitName => $methods">
-		<h2>Magic methods used from <a href="{$traitName|classUrl}#methods" n:tag-if="$this->getClass($traitName)">{$traitName}</a></h2>
+		<h2>Magic methods used from <a href="{$traitName|classUrl}#methods" n:tag-if="($traitName|getClass)">{$traitName}</a></h2>
 		<table class="summary used">
 		<tr>
 			<td><code>
