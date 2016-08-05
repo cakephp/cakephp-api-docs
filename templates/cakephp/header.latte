@@ -78,9 +78,9 @@
 			<div class="row back-book">
 				<div class="col-md-3 t-api-title hidden-sm hidden-xs">
 					<h2>
-						<a href="{$config->baseUrl}/index.html">
+						{var $activeVersion = $config->template->options->activeVersion}
+						<a href="{$config->baseUrl}/{$activeVersion}/">
 							<span class="glyph_range icon-submenu icon-submenu-cook">C</span>
-							{var $activeVersion = $config->template->options->activeVersion}
 							CakePHP {$activeVersion}
 							{if preg_match('/^3.*$/', $activeVersion) } Red Velvet{/if}
 							<strong>API</strong>
@@ -98,10 +98,10 @@
 							<a n:tag-if="'tree' !== $active" href="tree.html" title="Tree view of classes, interfaces, traits and exceptions">
 							<i class="fa fa-align-left"></i><span>Tree</span></a>
 						</li>
-						{foreach $annotationGroups as $annotation}
-							<li n:class="$active === 'annotation-group-' . $annotation ? active, t-api-nav-el">
-								<a n:tag-if="$active !== 'annotation-group-' . $annotation" href="annotation-group-{$annotation}.html" title="List of elements with {$annotation} annotation">
-								<i n:tag-if="'deprecated' === $annotation" class="fa fa-trash"></i><span>{$annotation|firstUpper}</span></a>
+						{foreach $annotationGroups as $annotationgrp}
+							<li n:class="$active === 'annotation-group-' . $annotationgrp ? active, t-api-nav-el">
+								<a n:tag-if="$active !== 'annotation-group-' . $annotationgrp" href="annotation-group-{$annotationgrp}.html" title="List of elements with {$annotationgrp} annotation">
+								<i n:tag-if="'deprecated' === $annotationgrp" class="fa fa-trash"></i><span>{$annotationgrp|firstUpper}</span></a>
 							</li>
 						{/foreach}
 						<li n:class="'todo' === $active ? active, t-api-nav-el" n:if="$config->todo">
