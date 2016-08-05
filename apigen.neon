@@ -4,9 +4,6 @@ extensions: [php]
 # Main project namespace/package prefix
 main: Cake
 
-# Title of generated documentation
-title: CakePHP
-
 # Grouping of classes
 groups: namespaces
 

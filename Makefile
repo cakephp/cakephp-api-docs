@@ -71,6 +71,7 @@ build-$(VERSION): $(BUILD_DIR) install
 	vendor/bin/apigen generate \
 		-s $(SOURCE_DIR)/src \
 		-d $(BUILD_DIR)/$(VERSION) \
+		--title 'CakePHP' \
 		--exclude **\Template\**
 endef
 
@@ -84,6 +85,7 @@ build-$(VERSION): $(BUILD_DIR) install
 	vendor/bin/apigen generate -s $(SOURCE_DIR)/lib \
 		-s $(SOURCE_DIR)/app \
 		-d $(BUILD_DIR)/$(VERSION) \
+		--title 'CakePHP' \
 		--exclude Config\** \
 		--exclude **\Cake\\Console\\Command\\AppShell** \
 		--exclude **\Cake\\Test\** \
@@ -100,6 +102,7 @@ build-$(VERSION): $(BUILD_DIR) install
 	vendor/bin/apigen generate -s $(SOURCE_DIR)/cake/libs \
 		-s $(SOURCE_DIR)/cake/console/libs \
 		-d $(BUILD_DIR)/$(VERSION) \
+		--title 'CakePHP' \
 		--exclude **overloadable_php4.php
 endef
 
