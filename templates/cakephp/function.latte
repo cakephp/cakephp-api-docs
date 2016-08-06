@@ -19,17 +19,17 @@ the file LICENSE.md that was distributed with this source code.
 
 	{if $function->valid}
 
-	<div class="description" n:if="$template->longDescription($function)">
+	<div class="description" n:if="($function|longDescription)">
 	{$function|longDescription|noescape}
 	</div>
 
 	<div class="info">
 		{if $function->inNamespace()}<b>Namespace:</b> {$function->namespaceName|namespaceLinks|noescape}<br>{/if}
 		{if $function->inPackage()}<b>Package:</b> {$function->packageName|packageLinks|noescape}<br>{/if}
-		{foreach $template->annotationSort($template->annotationFilter($function->annotations, array('param', 'return', 'throws'))) as $annotation => $values}
-			{foreach $values as $value}
-				<b>{$annotation|annotationBeautify}{if $value}:{/if}</b>
-				{$value|annotation:$annotation:$function|noescape}<br>
+		{foreach (($function->annotations)|annotationFilter:array('param', 'return', 'throws')|annotationSort) as $functionAnnotation => $values}
+            {foreach $values as $value}
+				<b>{$functionAnnotation|annotationBeautify}{if $value}:{/if}</b>
+				{$value|annotation:$functionAnnotation:$function|noescape}<br>
 			{/foreach}
 		{/foreach}
 		<b>Located at</b> <a n:tag-if="$config->sourceCode" href="{$function|sourceUrl}" title="Go to source code">{$function->fileName|relativePath}</a><br>

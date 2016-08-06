@@ -19,7 +19,7 @@ the file LICENSE.md that was distributed with this source code.
 
 	{if $class->valid}
 
-	<div class="description" n:if="$template->longDescription($class)">
+	<div class="description" n:if="($class|longDescription)">
 	{$class|longDescription|noescape}
 	</div>
 
@@ -94,19 +94,17 @@ the file LICENSE.md that was distributed with this source code.
 		{if $class->inNamespace()}<b>Namespace:</b> {$class->namespaceName|namespaceLinks|noescape}<br>{/if}
 		{if $class->inPackage()}<b>Package:</b> {$class->packageName|packageLinks|noescape}<br>{/if}
 
-		{foreach $template->annotationSort($template->annotationFilter($class->annotations)) as $annotation => $values}
+		{foreach (($class->annotations)|annotationFilter|annotationSort) as $annot => $values}
 			{foreach $values as $value}
-				<b>{$annotation|annotationBeautify}{if $value}:{/if}</b>
-				{$value|annotation:$annotation:$class|noescape}<br>
+				<b>{$annot|annotationBeautify}{if $value}:{/if}</b>
+				{$value|annotation:$annot:$class|noescape}<br>
 			{/foreach}
 		{/foreach}
 		{if $class->internal}<b>Documented at</b> <a href="{$class|manualUrl}" title="Go to PHP documentation">php.net</a>{else}<b>Location:</b> <a n:tag-if="$config->sourceCode" href="{$class|sourceUrl}" title="Go to source code">{$class->fileName|relativePath}</a>{/if}<br>
 	</div>
 
 	{var $ownConstants = $class->ownConstants}
-	<?php
-	ksort($ownConstants);
-	?>
+    {php ksort($ownConstants); }
 	<div class="section" n:if="$ownConstants">
 		<h2>Constants summary</h2>
 		<ul class="member-summary constants">
@@ -139,9 +137,9 @@ the file LICENSE.md that was distributed with this source code.
 		<h2>Inherited Constants</h2>
 		<ul class="member-summary inherited">
 		<li>
-			{foreach $class->inheritedConstants as $parentName => $constants}
-				{foreach $constants as $constant}
-					<code><a href="{$constant|constantUrl}" n:tag-if="$template->getClass($parentName)"><!--
+			{foreach $class->inheritedConstants as $parentName => $classConstants}
+				{foreach $classConstants as $constant}
+					<code><a href="{$constant|constantUrl}" n:tag-if="($parentName|getClass)"><!--
 					--><span n:tag-if="$constant->deprecated" class"deprecated">{$constant->name}</span><!--
 					--></a></code>{sep}, {/sep}
 				{/foreach}
@@ -184,11 +182,10 @@ the file LICENSE.md that was distributed with this source code.
 
 	{var $ownProperties = $class->ownProperties}
 	{var $ownMagicProperties = $class->ownMagicProperties}
-	<?php
-	ksort($ownProperties);
-	ksort($ownMagicProperties);
-	?>
-
+	{php 
+		ksort($ownProperties);
+		ksort($ownMagicProperties);
+	}
 	<div class="section" n:if="$ownProperties">
 		<h2>Properties summary</h2>
 		<ul class="member-summary properties">
@@ -207,16 +204,14 @@ the file LICENSE.md that was distributed with this source code.
 		</ul>
 	</div>
 
-	<?php
-	$inheritedMagicProperties = array_merge($class->inheritedMagicProperties, $class->usedMagicProperties)
-	?>
+	{php $inheritedMagicProperties = array_merge($class->inheritedMagicProperties, $class->usedMagicProperties) }
 	<div class="section" n:if="$inheritedMagicProperties">
 		<h2>Inherited Magic Properties</h2>
 		<ul class="member-summary used">
 			<li>
 			{foreach $inheritedMagicProperties as $parentName => $properties}
 				{foreach $properties as $property}
-					<code><a href="{$property|propertyUrl}" n:tag-if="$template->getClass($parentName)"><!--
+					<code><a href="{$property|propertyUrl}" n:tag-if="($parentName|getClass)"><!--
 					--><span n:tag-if="$property->deprecated" class"deprecated">{$property->name}</span><!--
 					--></a></code>{sep}, {/sep}
 				{/foreach}
@@ -225,16 +220,14 @@ the file LICENSE.md that was distributed with this source code.
 		</ul>
 	</div>
 
-	<?php
-	$inheritedProperties = array_merge($class->inheritedProperties, $class->usedProperties)
-	?>
+	{php $inheritedProperties = array_merge($class->inheritedProperties, $class->usedProperties) }
 	<div class="section" n:if="$inheritedProperties">
 		<h2>Inherited Properties</h2>
 		<ul class="member-summary used">
 			<li>
 			{foreach $inheritedProperties as $parentName => $properties}
 				{foreach $properties as $property}
-					<code><a href="{$property|propertyUrl}" n:tag-if="$template->getClass($parentName)"><!--
+					<code><a href="{$property|propertyUrl}" n:tag-if=($parentName|getClass)"><!--
 					--><span n:tag-if="$property->deprecated" class"deprecated">{$property->name}</span><!--
 					--></a></code>{sep}, {/sep}
 				{/foreach}
@@ -246,10 +239,10 @@ the file LICENSE.md that was distributed with this source code.
 
 	{var $ownMethods = $class->ownMethods}
 	{var $ownMagicMethods = $class->ownMagicMethods}
-	<?php
-	ksort($ownMethods);
-	ksort($ownMagicMethods);
-	?>
+	{php
+		ksort($ownMethods);
+		ksort($ownMagicMethods);
+	}
 	{define #method_visibility}
 	{var $annotations = $method->annotations}
 		{if !$class->interface && $method->abstract}
@@ -391,12 +384,12 @@ the file LICENSE.md that was distributed with this source code.
 				</div>
 			{/ifset}
 
-			{foreach $template->annotationSort($template->annotationFilter($annotations, array('deprecated', 'param', 'return', 'throws'))) as $annotation => $descriptions}
-				<h6>{$annotation|annotationBeautify}</h6>
+			{foreach ($annotations|annotationFilter:array('deprecated', 'param', 'return', 'throws')|annotationSort) as $annot => $descriptions}
+				<h6>{$annot|annotationBeautify}</h6>
 				<div class="list">
 				{foreach $descriptions as $description}
 					{if $description}
-						{$description|annotation:$annotation:$method|noescape}<br>
+						{$description|annotation:$annot:$method|noescape}<br>
 					{/if}
 				{/foreach}
 				</div>
@@ -405,13 +398,13 @@ the file LICENSE.md that was distributed with this source code.
 			{var $overriddenMethod = $method->overriddenMethod}
 			{if $overriddenMethod}
 				<h6>Overrides</h6>
-				<div class="list"><code><a n:tag-if="$template->getClass($overriddenMethod->declaringClassName)" href="{$overriddenMethod|methodUrl}">{$overriddenMethod->prettyName}</a></code></div>
+				<div class="list"><code><a n:tag-if="($overriddenMethod->declaringClassName|getClass)" href="{$overriddenMethod|methodUrl}">{$overriddenMethod->prettyName}</a></code></div>
 			{/if}
 
 			{var $implementedMethod = $method->implementedMethod}
 			{if $implementedMethod}
 				<h6>Implementation of</h6>
-				<div class="list"><code><a n:tag-if="$template->getClass($implementedMethod->declaringClassName)" href="{$implementedMethod|methodUrl}">{$implementedMethod->prettyName}</a></code></div>
+				<div class="list"><code><a n:tag-if="($implementedMethod->declaringClassName|getClass)" href="{$implementedMethod|methodUrl}">{$implementedMethod->prettyName}</a></code></div>
 			{/if}
 		</div>
 	{/define}
@@ -424,9 +417,9 @@ the file LICENSE.md that was distributed with this source code.
 	</div>
 
 	{foreach $class->inheritedMethods as $parentName => $methods}
-		{if $template->getClass($parentName) && !$template->getClass($parentName)->isInterface()}
+		{if ($parentName|getClass) && !($parentName|getClass)->isInterface()}
 		<div class="section">
-			<h2>Methods inherited from <a href="{$parentName|classUrl}#methods" n:tag-if="$template->getClass($parentName)">{$parentName}</a></h2>
+			<h2>Methods inherited from <a href="{$parentName|classUrl}#methods" n:tag-if="($parentName|getClass)">{$parentName}</a></h2>
 			<div class="method-detail" n:foreach="$methods as $data">
 				{include #method, method => $data}
 			</div>
@@ -435,7 +428,7 @@ the file LICENSE.md that was distributed with this source code.
 	{/foreach}
 
 	<div class="section" n:foreach="$class->usedMethods as $traitName => $methods">
-		<h2>Methods used from <a href="{$traitName|classUrl}#methods" n:tag-if="$template->getClass($traitName)">{$traitName}</a></h2>
+		<h2>Methods used from <a href="{$traitName|classUrl}#methods" n:tag-if="($traitName|getClass)">{$traitName}</a></h2>
 		<div class="method-detail" n:foreach="$methods as $data">
 			{include #method, method => $data['method']}
 		</div>
@@ -451,12 +444,12 @@ the file LICENSE.md that was distributed with this source code.
 	</div>
 
 	<div class="section" n:foreach="$class->inheritedMagicMethods as $parentName => $methods">
-		<h2>Magic methods inherited from <a href="{$parentName|classUrl}#methods" n:tag-if="$template->getClass($parentName)">{$parentName}</a></h2>
+		<h2>Magic methods inherited from <a href="{$parentName|classUrl}#methods" n:tag-if="($parentName|getClass)">{$parentName}</a></h2>
 		<table class="summary inherited">
 		<tr>
 			<td><code>
 			{foreach $methods as $method}
-				<a href="{$method|methodUrl}" n:tag-if="$template->getClass($parentName)"><span n:tag-if="$method->deprecated" class="deprecated">{$method->name}()</span></a>{sep}, {/sep}
+				<a href="{$method|methodUrl}" n:tag-if="($parentName|getClass)"><span n:tag-if="$method->deprecated" class="deprecated">{$method->name}()</span></a>{sep}, {/sep}
 			{/foreach}
 			</code></td>
 		</tr>
@@ -464,12 +457,12 @@ the file LICENSE.md that was distributed with this source code.
 	</div>
 
 	<div class="section" n:foreach="$class->usedMagicMethods as $traitName => $methods">
-		<h2>Magic methods used from <a href="{$traitName|classUrl}#methods" n:tag-if="$template->getClass($traitName)">{$traitName}</a></h2>
+		<h2>Magic methods used from <a href="{$traitName|classUrl}#methods" n:tag-if="($traitName|getClass)">{$traitName}</a></h2>
 		<table class="summary used">
 		<tr>
 			<td><code>
 			{foreach $methods as $data}
-				<a href="{$data['method']|methodUrl:$data['method']->declaringTrait}" n:tag-if="$template->getClass($traitName)"><span n:tag-if="$data['method']->deprecated" class="deprecated">{$data['method']->originalName}()</span></a>{if $data['aliases']}(as {foreach $data['aliases'] as $alias}<span n:tag-if="$data['method']->deprecated" class="deprecated">{$alias->name}()</span>{sep}, {/sep}{/foreach}){/if}{sep}, {/sep}
+				<a href="{$data['method']|methodUrl:$data['method']->declaringTrait}" n:tag-if="($traitName|getClass)"><span n:tag-if="$data['method']->deprecated" class="deprecated">{$data['method']->originalName}()</span></a>{if $data['aliases']}(as {foreach $data['aliases'] as $alias}<span n:tag-if="$data['method']->deprecated" class="deprecated">{$alias->name}()</span>{sep}, {/sep}{/foreach}){/if}{sep}, {/sep}
 			{/foreach}
 			</code></td>
 		</tr>
@@ -511,12 +504,12 @@ the file LICENSE.md that was distributed with this source code.
 		<div class="description detailed">
 			{$property|longDescription|noescape}
 
-			{foreach $template->annotationSort($template->annotationFilter($property->annotations, array('var'))) as $annotation => $descriptions}
-				<h6>{$annotation|annotationBeautify}</h6>
+			{foreach (($property->annotations)|annotationFilter:array('var')|annotationSort) as $annot => $descriptions}
+				<h6>{$annot|annotationBeautify}</h6>
 				<div class="list">
 				{foreach $descriptions as $description}
 					{if $description}
-						{$description|annotation:$annotation:$property|noescape}<br>
+						{$description|annotation:$annot:$property|noescape}<br>
 					{/if}
 				{/foreach}
 				</div>
@@ -531,10 +524,10 @@ the file LICENSE.md that was distributed with this source code.
 
 	{var $ownProperties = $class->ownProperties}
 	{var $ownMagicProperties = $class->ownMagicProperties}
-	<?php
-	ksort($ownProperties);
-	ksort($ownMagicProperties);
-	?>
+	{php
+		ksort($ownProperties);
+		ksort($ownMagicProperties);
+	}
 	<div class="section" n:if="$ownProperties">
 		<h2>Properties detail</h2>
 		{foreach $ownProperties as $property}

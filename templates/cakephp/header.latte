@@ -79,9 +79,9 @@
 				<div class="col-md-3 t-api-title hidden-sm hidden-xs">
 					<h2>
 						{var $activeVersion = $config->template->options->activeVersion}
-						<a href="{$config->baseUrl}/{$activeVersion}/">
+						<a href="../{$activeVersion}/">
 							<span class="glyph_range icon-submenu icon-submenu-cook">C</span>
-							CakePHP {$activeVersion}
+							{$config->title} {$activeVersion}
 							{if preg_match('/^3.*$/', $activeVersion) } Red Velvet{/if}
 							<strong>API</strong>
 						</a>
