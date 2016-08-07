@@ -2246,6 +2246,7 @@ pre {
     border: none;
     border-radius: 0;
     letter-spacing: normal;
+    font-weight: normal;
 }
 pre::-webkit-scrollbar {
     height: 10px;
