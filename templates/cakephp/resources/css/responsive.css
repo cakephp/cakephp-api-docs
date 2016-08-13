@@ -2,6 +2,10 @@
  * Phone/phablet layout.
  */
 @media (max-width: 767px) {
+    .description {
+        padding: 0;
+    }
+    
     .logo-cake img {
         margin-top: 20px;
         margin-bottom: 14px;
