@@ -184,11 +184,11 @@ TAG:=3.1.13
 VERSION:=3.1
 $(eval $(build3x))
 
-TAG:=origin/master
+TAG:=3.2.14
 VERSION:=3.2
 $(eval $(build3x))
 
-TAG:=origin/3.next
+TAG:=origin/master
 VERSION:=3.3
 $(eval $(build3x))
 
