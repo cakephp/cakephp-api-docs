@@ -2,7 +2,7 @@
 extensions: [php]
 
 # Main project namespace/package prefix
-main: Cake
+main:
 
 # Grouping of classes
 groups: namespaces
@@ -25,7 +25,7 @@ sourceCode: Yes
 # Add a link to download documentation as a ZIP archive
 download: Yes
 
-# Generate documentation for deprecated classes, methods, properties and constants 
+# Generate documentation for deprecated classes, methods, properties and constants
 annotationGroups: [deprecated] # event, api
 
 templateConfig: ./templates/cakephp/config.neon
