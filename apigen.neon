@@ -4,9 +4,6 @@ extensions: [php]
 # Main project namespace/package prefix
 main:
 
-# Grouping of classes
-groups: namespaces
-
 # Generate documentation for methods and properties with given access level
 accessLevels: [public, protected]
 
