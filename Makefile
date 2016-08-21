@@ -85,6 +85,7 @@ build-$(VERSION): $(BUILD_DIR) install
 	vendor/bin/apigen generate -s $(SOURCE_DIR)/lib \
 		-s $(SOURCE_DIR)/app \
 		-d $(BUILD_DIR)/$(VERSION) \
+		--groups packages \
 		--title 'CakePHP' \
 		--exclude Config\** \
 		--exclude **\Cake\\Console\\Command\\AppShell** \
