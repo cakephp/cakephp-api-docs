@@ -8,7 +8,10 @@ job('API - Rebuild All API docs') {
   ''')
   scm {
     github(REPO_NAME, 'master')
-    github(CAKE_REPO_NAME, ['master', '2.x', '2.next', '3.next'])
+    github(CAKE_REPO_NAME, 'master')
+    github(CAKE_REPO_NAME, '2.x')
+    github(CAKE_REPO_NAME, '2.next')
+    github(CAKE_REPO_NAME, '3.next')
   }
   triggers {
     githubPush()
