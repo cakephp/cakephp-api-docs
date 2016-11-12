@@ -37,7 +37,7 @@ job('API - Rebuild All API docs') {
 rm -rf /tmp/apidocs-$GIT_COMMIT
 git clone https://github.com/cakephp/cakephp-api-docs.git /tmp/apidocs-$GIT_COMMIT
 cd /tmp/apidocs-$GIT_COMMIT
-touch "$GIT_COMMIT" && git add "$GIT_COMMIT" && git commit -m "Regenerate for commit $GIT_COMMIT"
+touch "$GIT_COMMIT" && git add "$GIT_COMMIT" && git commit --author 'Jenkins <ci@cakephp.org>' -m "Regenerate for commit $GIT_COMMIT"
 
 git remote rm origin
 ssh-keyscan -t rsa new.cakephp.org >> ~/.ssh/known_hosts
