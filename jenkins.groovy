@@ -42,7 +42,6 @@ git add "$GIT_COMMIT"
 git commit --author "Jenkins <ci@cakephp.org>" -m "Regenerate for commit $GIT_COMMIT"
 
 git remote rm origin
-ssh-keyscan -t rsa new.cakephp.org >> ~/.ssh/known_hosts
 git remote | grep dokku || git remote add dokku dokku@new.cakephp.org:api
 git push -fv dokku master
 rm -rf /tmp/apidocs-$GIT_COMMIT
