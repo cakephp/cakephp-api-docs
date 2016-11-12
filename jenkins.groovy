@@ -1,6 +1,6 @@
-def final REPO_NAME = 'git://github.com/cakephp/cakephp-api-docs'
-def final CAKE_REPO_NAME = 'git://github.com/cakephp/cakephp'
-def final CHRONOS_REPO_NAME = 'cakephp/chronos'
+def final REPO_NAME = 'git://github.com/cakephp/cakephp-api-docs.git'
+def final CAKE_REPO_NAME = 'git://github.com/cakephp/cakephp.git'
+def final CHRONOS_REPO_NAME = 'git://github.com/cakephp/chronos.git'
 
 job('API - Rebuild All API docs') {
   description('''\
@@ -9,9 +9,14 @@ job('API - Rebuild All API docs') {
   multiscm {
     git(REPO_NAME, 'master')
     git(CAKE_REPO_NAME, 'master')
+    git(CAKE_REPO_NAME, '2.x')
+    git(CAKE_REPO_NAME, '2.next')
+    git(CAKE_REPO_NAME, '3.x')
+    git(CAKE_REPO_NAME, '3.next')
+    git(CHRONOS_REPO_NAME, 'master')
   }
   triggers {
-    scm('H/5 * * * *')
+    githubPush()
   }
   logRotator {
     daysToKeep(30)
