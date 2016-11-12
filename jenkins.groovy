@@ -1,5 +1,5 @@
-def final REPO_NAME = 'cakephp/cakephp-api-docs'
-def final CAKE_REPO_NAME = 'cakephp/cakephp'
+def final REPO_NAME = 'git://github.com/cakephp/cakephp-api-docs'
+def final CAKE_REPO_NAME = 'git://github.com/cakephp/cakephp'
 def final CHRONOS_REPO_NAME = 'cakephp/chronos'
 
 job('API - Rebuild All API docs') {
@@ -7,39 +7,11 @@ job('API - Rebuild All API docs') {
   Will delete all API doc websites and rebuild them. Useful for fixing templates.
   ''')
   multiscm {
-    git {
-      remote {
-        github(REPO_NAME)
-      }
-      branch('master')
-    }
-    git {
-      remote {
-        github(CAKE_REPO_NAME)
-      }
-      branch('master')
-    }
-    git {
-      remote {
-        github(CAKE_REPO_NAME)
-      }
-      branch('3.next')
-    }
-    git {
-      remote {
-        github(CAKE_REPO_NAME)
-      }
-      branch('2.x')
-    }
-    git {
-      remote {
-        github(CAKE_REPO_NAME)
-      }
-      branch('2.next')
-    }
+    git(REPO_NAME, 'master')
+    git(CAKE_REPO_NAME, 'master')
   }
   triggers {
-    githubPush()
+    scm('H/5 * * * *')
   }
   logRotator {
     daysToKeep(30)
