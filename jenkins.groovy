@@ -6,7 +6,7 @@ job('API - Rebuild All API docs') {
   description('''\
   Will delete all API doc websites and rebuild them. Useful for fixing templates.
   ''')
-  scm {
+  multiscm {
     github(REPO_NAME, 'master')
     github(CAKE_REPO_NAME, 'master')
     github(CAKE_REPO_NAME, '2.x')
