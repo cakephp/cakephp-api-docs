@@ -6,14 +6,16 @@ job('API - Rebuild All API docs') {
   description('''\
   Will delete all API doc websites and rebuild them. Useful for fixing templates.
   ''')
-  multiscm {
-    git(REPO_NAME, 'master')
-    git(CAKE_REPO_NAME, 'master')
-    git(CAKE_REPO_NAME, '2.x')
-    git(CAKE_REPO_NAME, '2.next')
-    git(CAKE_REPO_NAME, '3.x')
-    git(CAKE_REPO_NAME, '3.next')
-    git(CHRONOS_REPO_NAME, 'master')
+  scm {
+    multiscm {
+      git(REPO_NAME, 'master')
+      git(CAKE_REPO_NAME, 'master')
+      git(CAKE_REPO_NAME, '2.x')
+      git(CAKE_REPO_NAME, '2.next')
+      git(CAKE_REPO_NAME, '3.x')
+      git(CAKE_REPO_NAME, '3.next')
+      git(CHRONOS_REPO_NAME, 'master')
+    }
   }
   triggers {
     githubPush()
