@@ -9,13 +9,27 @@ job('API - Rebuild All API docs') {
   multiscm {
     git {
       remote {
-        github(REPO_NAME, 'master')
+        github(REPO_NAME)
       }
+      branch('master')
     }
     git {
       remote {
-        github(CAKE_REPO_NAME, 'master')
+        github(CAKE_REPO_NAME)
       }
+      branch('master')
+    }
+    git {
+      remote {
+        github(CAKE_REPO_NAME)
+      }
+      branch('2.x')
+    }
+    git {
+      remote {
+        github(CAKE_REPO_NAME)
+      }
+      branch('2.next')
     }
     // github(CAKE_REPO_NAME, '2.x')
     // github(CAKE_REPO_NAME, '2.next')
