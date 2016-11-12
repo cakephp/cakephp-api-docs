@@ -23,6 +23,12 @@ job('API - Rebuild All API docs') {
       remote {
         github(CAKE_REPO_NAME)
       }
+      branch('3.next')
+    }
+    git {
+      remote {
+        github(CAKE_REPO_NAME)
+      }
       branch('2.x')
     }
     git {
@@ -31,9 +37,6 @@ job('API - Rebuild All API docs') {
       }
       branch('2.next')
     }
-    // github(CAKE_REPO_NAME, '2.x')
-    // github(CAKE_REPO_NAME, '2.next')
-    // github(CAKE_REPO_NAME, '3.next')
   }
   triggers {
     githubPush()
