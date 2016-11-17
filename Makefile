@@ -72,7 +72,7 @@ build-$(VERSION): $(BUILD_DIR) install
 		-s $(SOURCE_DIR)/src \
 		-d $(BUILD_DIR)/$(VERSION) \
 		--title 'CakePHP' \
-		--exclude **\Template\**
+		--exclude **/Template/**
 endef
 
 define build2x
@@ -121,8 +121,8 @@ build-chronos-$(VERSION): $(BUILD_DIR) install
 	vendor/bin/apigen generate -s $(CHRONOS_SOURCE_DIR) \
 		-d $(BUILD_DIR)/chronos/$(VERSION) \
 		--title 'Chronos' \
-		--exclude **\tests\** \
-		--exclude **\vendor\**
+		--exclude **/tests/** \
+		--exclude **/vendor/**
 endef
 
 # Build all the versions in a loop.
