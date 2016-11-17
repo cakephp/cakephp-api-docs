@@ -27,7 +27,7 @@ job('API - Rebuild All API docs') {
     }
   }
   triggers {
-    githubPush()
+    scm('H/5 * * * *')
   }
   logRotator {
     daysToKeep(30)
