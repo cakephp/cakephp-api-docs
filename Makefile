@@ -83,7 +83,6 @@ build-$(VERSION): $(BUILD_DIR) install
 	rm templates/cakephp/config.neon.bak
 	# Run Apigen
 	vendor/bin/apigen generate -s $(SOURCE_DIR)/lib \
-		-s $(SOURCE_DIR)/app \
 		-d $(BUILD_DIR)/$(VERSION) \
 		--groups packages \
 		--title 'CakePHP' \

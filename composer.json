@@ -3,6 +3,6 @@
     "description": "API docs for CakePHP",
     "type": "application",
     "require": {
-        "apigen/apigen": "4.1.1"
+        "apigen/apigen": "dev-master#ffd28665896730d330f3003ec0cd7c1cb1d7a31a"
     }
 }
