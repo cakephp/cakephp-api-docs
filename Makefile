@@ -88,6 +88,7 @@ build-$(VERSION): $(BUILD_DIR) install
 		--title 'CakePHP' \
 		--exclude Config\** \
 		--exclude **\Cake\\Console\\Command\\AppShell** \
+		--debug \
 		--exclude **\Cake\\Test\** \
 		--exclude **\Cake\\Console\\Templates\**
 endef
@@ -180,7 +181,7 @@ TAG:=origin/2.x
 VERSION:=2.9
 $(eval $(build2x))
 
-TAG:=3.0.18
+TAG:=3.0.19
 VERSION:=3.0
 $(eval $(build3x))
 
