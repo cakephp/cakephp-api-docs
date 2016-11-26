@@ -21,6 +21,10 @@ RUN mkdir /website /root/.ssh
 
 RUN ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
 
+ARG GIT_COMMIT=master
+
+ENV GIT_COMMIT ${GIT_COMMIT}
+
 RUN git clone https://github.com/cakephp/cakephp.git /cakephp
 
 RUN git clone https://github.com/cakephp/chronos.git /chronos
