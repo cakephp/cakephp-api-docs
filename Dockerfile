@@ -25,7 +25,10 @@ ARG GIT_COMMIT=master
 
 ENV GIT_COMMIT ${GIT_COMMIT}
 
-RUN git clone https://github.com/cakephp/cakephp.git /cakephp
+# Clone and fetch tags not linked to current branch heads
+RUN git clone https://github.com/cakephp/cakephp.git /cakephp \
+  && cd /cakephp \
+  && git fetch origin --tags
 
 RUN git clone https://github.com/cakephp/chronos.git /chronos
 
