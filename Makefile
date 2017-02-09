@@ -86,11 +86,11 @@ build-$(VERSION): $(BUILD_DIR) install
 		-d $(BUILD_DIR)/$(VERSION) \
 		--groups packages \
 		--title 'CakePHP' \
-		--exclude Config\** \
+		--exclude Config\\** \
 		--exclude **\Cake\\Console\\Command\\AppShell** \
 		--debug \
-		--exclude **\Cake\\Test\** \
-		--exclude **\Cake\\Console\\Templates\**
+		--exclude **\Cake\\Test\\** \
+		--exclude **\Cake\\Console\\Templates\\**
 endef
 
 define build1x
