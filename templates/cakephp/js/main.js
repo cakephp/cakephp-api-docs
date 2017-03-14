@@ -422,13 +422,4 @@ $(function() {
 
         window.location.hash = hash.join(',');
     });
-
-    // Focus support for versions menu.
-    var dropdown = $('.dropdown');
-    dropdown.find('> a').on('focus', function () {
-        dropdown.find('ul').show();
-    });
-    dropdown.find('a').last().on('blur', function () {
-        dropdown.find('ul').css('display', '');
-    });
 });
