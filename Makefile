@@ -58,7 +58,7 @@ composer.phar:
 	curl -sS https://getcomposer.org/installer | php
 
 install: composer.phar
-	php composer.phar install
+	php composer.phar install --ignore-platform-reqs
 
 # Make a macro to save re-typing recipies multiple times
 define build3x
