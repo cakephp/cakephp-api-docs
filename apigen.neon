@@ -19,9 +19,6 @@ tree: Yes
 # Generate highlighted source code files
 sourceCode: Yes
 
-# Add a link to download documentation as a ZIP archive
-download: Yes
-
 # Generate documentation for deprecated classes, methods, properties and constants
 annotationGroups: [deprecated] # event, api
 
