@@ -281,14 +281,19 @@ $(function() {
             show: function(list) {
                 var listWidth = list.width();
                 var items = $('li span', list);
-                var listLeft = parseInt(list.css('left'), 10);
-                var maxWidth = Math.max.apply(null, items.map(function() {
-                    return $(this).width();
-                }));
-                // Make the results wider, and shift left to accomodate new width.
-                list
-                    .width(Math.max(maxWidth, $search.innerWidth()))
-                    .css('left', listLeft - Math.max(0, maxWidth - listWidth));
+                if (isMobileDevice) {
+                  // Make the results full width
+                  list.width('100%').css('left', 0);
+                } else {
+                  var listLeft = parseInt(list.css('left'), 10);
+                  var maxWidth = Math.max.apply(null, items.map(function() {
+                      return $(this).width();
+                  }));
+                  // Make the results wider, and shift left to accomodate new width.
+                  list
+                      .width(Math.max(maxWidth, $search.innerWidth()))
+                      .css('left', listLeft - Math.max(0, maxWidth - listWidth));
+                  }
             }
         }).result(function(event, data) {
         autocompleteFound = true;
