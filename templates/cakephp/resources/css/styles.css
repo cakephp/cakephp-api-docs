@@ -2399,6 +2399,13 @@ pre::-webkit-scrollbar-thumb:horizontal {
     overflow: hidden;
     white-space: nowrap;
 }
+/* Make results wrap on phones & tablets */
+@media (max-width:768px) {
+    .ac_results li {
+        white-space: normal;
+        word-wrap: break-word;
+    }
+}
 
 .ac_results li strong {
     color: #363638;
