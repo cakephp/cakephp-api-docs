@@ -47,4 +47,13 @@ git push -fv dokku master
 rm -rf /tmp/apidocs-$GIT_COMMIT
     ''')
   }
+
+  publishers {
+    slackNotifications {
+      projectChannel('#dev')
+      notifyFailure()
+      notifyRepeatedFailure()
+    }
+  }
+
 }
