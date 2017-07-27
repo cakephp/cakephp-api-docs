@@ -9,10 +9,10 @@ DEPLOY_DIR=./website
 .ALL: help
 
 # Versions that can be built.
-VERSIONS = 1.2 1.3 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9 3.0 3.1 3.2 3.3 3.4 3.5
+VERSIONS = 1.2 1.3 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9 2.10 3.0 3.1 3.2 3.3 3.4 3.5
 
 # Versions that are actively developed / maintained.
-ACTIVE_VERSIONS = 2.9 3.4 3.5
+ACTIVE_VERSIONS = 2.9 2.10 3.4 3.5
 
 
 help:
@@ -177,8 +177,12 @@ TAG:=2.8.9
 VERSION:=2.8
 $(eval $(build2x))
 
-TAG:=origin/2.x
+TAG:=2.9.9
 VERSION:=2.9
+$(eval $(build2x))
+
+TAG:=origin/2.x
+VERSION:=2.10
 $(eval $(build2x))
 
 # Generate build targets for 3.x
