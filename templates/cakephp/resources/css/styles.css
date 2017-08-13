@@ -116,11 +116,11 @@ p,
 /* Preformatted text */
 code {
     font-family: "Roboto Mono", "Consolas", "Monaco", monospace;
-    font-size: 105%;
+    font-size: 100%;
     line-height: normal;
     padding: 0px 2px;
     color: #363637;
-    background: none;
+    background: #ECECE9;
 }
 
 /* lists */
