@@ -10,6 +10,7 @@ the file LICENSE.md that was distributed with this source code.
 *}
 {default $robots = true}
 {default $active = ''}
+{var $titleName = $config->title . ' ' .  $config->template->options->activeVersion}
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,7 +18,7 @@ the file LICENSE.md that was distributed with this source code.
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<meta name="robots" content="noindex" n:if="!$robots">
 
-	<title>{include #title}{if 'overview' !== $active && $config->title} | {$config->title}{/if}</title>
+	<title>{include #title}{if 'overview' !== $active && $titleName} | {$titleName}{/if}</title>
 
 	{var favicon = 'resources/favicon.png'}
 	<link href="{$favicon|staticFile}" type="image/png" rel="icon" />
