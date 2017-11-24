@@ -20,6 +20,7 @@ help:
 	@echo "-----------------------------------"
 	@echo ""
 	@echo "Tasks:"
+	@echo ""
 	@echo " clean - Clean the build output directory"
 	@echo ""
 	@echo " build-x.y - Build the x.y documentation. The versions that can be"
@@ -115,7 +116,7 @@ build-chronos-$(VERSION): $(BUILD_DIR) install
 	cd $(CHRONOS_SOURCE_DIR) && git checkout -f $(TAG)
 	# Update the config file, Remove sed crap
 	sed -i.bak "s/activeVersion: '.*'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
-	sed -i.bak "s/versions: .*/versions: ['$(VERSION)']/" templates/cakephp/config.neon
+	sed -i.bak "s/versions: .*/versions: ['1.0', '1.1']/" templates/cakephp/config.neon
 	rm templates/cakephp/config.neon.bak
 	# Run Apigen
 	vendor/bin/apigen generate -s $(CHRONOS_SOURCE_DIR) \
