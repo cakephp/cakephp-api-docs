@@ -126,10 +126,10 @@ build-chronos-$(VERSION): $(BUILD_DIR) install
 endef
 
 # Build all the versions in a loop.
-build-all: $(foreach version, $(VERSIONS), build-$(version)) build-chronos-1.0
+build-all: $(foreach version, $(VERSIONS), build-$(version)) build-chronos-1.0 build-chronos-1.1
 
 # Build all active versions in a loop.
-build-active: $(foreach version, $(ACTIVE_VERSIONS), build-$(version)) build-chronos-1.0
+build-active: $(foreach version, $(ACTIVE_VERSIONS), build-$(version)) build-chronos-1.0 build-chronos-1.1
 
 # Build all active and missing versions in a loop.
 build-active-and-missing:
@@ -222,6 +222,10 @@ $(eval $(build1x))
 
 
 # Generate build targets for chronos
-TAG:=origin/master
+TAG:=1.0.4
 VERSION:=1.0
+$(eval $(chronos))
+
+TAG:=origin/master
+VERSION:=1.1
 $(eval $(chronos))
