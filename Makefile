@@ -20,6 +20,7 @@ help:
 	@echo "-----------------------------------"
 	@echo ""
 	@echo "Tasks:"
+	@echo ""
 	@echo " clean - Clean the build output directory"
 	@echo ""
 	@echo " build-x.y - Build the x.y documentation. The versions that can be"
@@ -115,7 +116,7 @@ build-chronos-$(VERSION): $(BUILD_DIR) install
 	cd $(CHRONOS_SOURCE_DIR) && git checkout -f $(TAG)
 	# Update the config file, Remove sed crap
 	sed -i.bak "s/activeVersion: '.*'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
-	sed -i.bak "s/versions: .*/versions: ['$(VERSION)']/" templates/cakephp/config.neon
+	sed -i.bak "s/versions: .*/versions: ['1.0', '1.1']/" templates/cakephp/config.neon
 	rm templates/cakephp/config.neon.bak
 	# Run Apigen
 	vendor/bin/apigen generate -s $(CHRONOS_SOURCE_DIR) \
@@ -126,10 +127,10 @@ build-chronos-$(VERSION): $(BUILD_DIR) install
 endef
 
 # Build all the versions in a loop.
-build-all: $(foreach version, $(VERSIONS), build-$(version)) build-chronos-1.0
+build-all: $(foreach version, $(VERSIONS), build-$(version)) build-chronos-1.0 build-chronos-1.1
 
 # Build all active versions in a loop.
-build-active: $(foreach version, $(ACTIVE_VERSIONS), build-$(version)) build-chronos-1.0
+build-active: $(foreach version, $(ACTIVE_VERSIONS), build-$(version)) build-chronos-1.0 build-chronos-1.1
 
 # Build all active and missing versions in a loop.
 build-active-and-missing:
@@ -222,6 +223,10 @@ $(eval $(build1x))
 
 
 # Generate build targets for chronos
-TAG:=origin/master
+TAG:=1.0.4
 VERSION:=1.0
+$(eval $(chronos))
+
+TAG:=origin/master
+VERSION:=1.1
 $(eval $(chronos))
