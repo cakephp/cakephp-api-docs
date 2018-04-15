@@ -12,7 +12,7 @@ DEPLOY_DIR=./website
 VERSIONS = 1.2 1.3 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9 2.10 3.0 3.1 3.2 3.3 3.4 3.5 3.6
 
 # Versions that are actively developed / maintained.
-ACTIVE_VERSIONS = 2.9 2.10 3.4 3.5
+ACTIVE_VERSIONS = 2.9 2.10 3.5 3.6
 
 
 help:
@@ -207,11 +207,11 @@ TAG:=3.4.13
 VERSION:=3.4
 $(eval $(build3x))
 
-TAG:=origin/master
+TAG:=3.5.15
 VERSION:=3.5
 $(eval $(build3x))
 
-TAG:=origin/3.next
+TAG:=origin/master
 VERSION:=3.6
 $(eval $(build3x))
 
