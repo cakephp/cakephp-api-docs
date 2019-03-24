@@ -49,10 +49,10 @@ rm -rf /tmp/apidocs-$GIT_COMMIT
   }
 
   publishers {
-    slackNotifications {
-      projectChannel('#dev')
-      notifyFailure()
-      notifyRepeatedFailure()
+    slackNotifier {
+      room('#dev')
+      notifyFailure(true)
+      notifyRepeatedFailure(true)
     }
   }
 
