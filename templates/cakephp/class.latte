@@ -117,11 +117,7 @@ the file LICENSE.md that was distributed with this source code.
 
 			<div class="name col-md-10 col-sm-10">
 				<code>
-				{if $class->internal}
-					<a href="{$constant|manualUrl}" title="Go to PHP documentation"><b>{$constant->name}</b></a>
-				{else}
-					<a n:tag-if="$config->sourceCode" href="{$constant|sourceUrl}" title="Go to source code"><b>{$constant->name}</b></a>
-				{/if}
+					<b>{$constant->name}</b>
 				</code>
 				<a href="#{$constant->name}" class="permalink" title="Permalink to this constant">¶</a>
 			</div>
@@ -182,7 +178,7 @@ the file LICENSE.md that was distributed with this source code.
 
 	{var $ownProperties = $class->ownProperties}
 	{var $ownMagicProperties = $class->ownMagicProperties}
-	{php 
+	{php
 		ksort($ownProperties);
 		ksort($ownMagicProperties);
 	}
