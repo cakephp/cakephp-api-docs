@@ -9,10 +9,10 @@ DEPLOY_DIR=./website
 .ALL: help
 
 # Versions that can be built.
-VERSIONS = 1.2 1.3 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9 2.10 3.0 3.1 3.2 3.3 3.4 3.5 3.6 3.7
+VERSIONS = 1.2 1.3 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9 2.10 3.0 3.1 3.2 3.3 3.4 3.5 3.6 3.7 3.8
 
 # Versions that are actively developed / maintained.
-ACTIVE_VERSIONS = 2.9 2.10 3.5 3.6 3.7
+ACTIVE_VERSIONS = 2.9 2.10 3.5 3.6 3.7 3.8
 
 
 help:
