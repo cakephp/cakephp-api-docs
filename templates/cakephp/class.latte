@@ -240,7 +240,7 @@ the file LICENSE.md that was distributed with this source code.
 		ksort($ownMagicMethods);
 	}
 	{define #method_visibility}
-	{var $annotations = $method->annotations}
+		{var $annotations = $method->annotations}
 		{if !$class->interface && $method->abstract}
 			<span class="label">abstract</span>
 		{elseif $method->final}
@@ -259,6 +259,9 @@ the file LICENSE.md that was distributed with this source code.
 
 		{if $method->static}
 		<span class="label">static</span>
+		{/if}
+		{if $method->deprecated}
+		<span class="label">deprecated</span>
 		{/if}
 	{/define}
 
