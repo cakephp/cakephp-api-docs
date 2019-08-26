@@ -42,9 +42,9 @@ the file LICENSE.md that was distributed with this source code.
 				{$parameter->typeHint|typeLinks:$function|noescape}
 					<var>${$parameter->name}</var>
 				{if $parameter->defaultValueAvailable}
-					{$parameter->defaultValueDefinition|highlightPHP:$function|noescape}
+					= {$parameter->defaultValueDefinition|highlightPHP:$function|noescape}
 				{/if}
-				{if $parameter->unlimited},…{/if}
+				{if $parameter->unlimited},…{/if}{sep}, {/sep}
 			{/foreach}
 			)
 		{/block}

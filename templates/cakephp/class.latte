@@ -319,7 +319,7 @@ the file LICENSE.md that was distributed with this source code.
 					{$parameter->typeHint|typeLinks:$method|noescape}
 						<var>${$parameter->name}</var>
 					{if $parameter->defaultValueAvailable}
-						{$parameter->defaultValueDefinition|highlightPHP:$class|noescape}
+						= {$parameter->defaultValueDefinition|highlightPHP:$class|noescape}
 					{/if}
 					{if $parameter->unlimited},…{/if}{sep}, {/sep}
 				{/foreach}
