@@ -10,6 +10,7 @@ the file LICENSE.md that was distributed with this source code.
 *}
 {layout '@layout.latte'}
 {var $active = 'class'}
+{capture $activeUrl}{$class|classUrl}{/capture}
 
 {block #title}{if $class->deprecated}Deprecated {/if}{if $class->interface}Interface{elseif $class->trait}Trait{else}Class{/if} {$class->name}{/block}
 
