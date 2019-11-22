@@ -1,0 +1,327 @@
+{% extends 'layout.twig' %}
+
+{% import "macros.twig" as macros %}
+
+{% block title %}
+	{{ object.classType|capitalize ~ ' ' ~ object.fqsen|name }}
+{% endblock %}
+
+{% block content %}
+<div id="content" class="class">
+	<h1>{{ block('title') }}</h1>
+
+	<div class="description">
+		<p>{{ object.summary }}</p>
+		{{ object.description|markdown_to_html }}
+	</div>
+
+	{{ macros.showInheritanceTree(object.inheritanceTree) }}
+
+	{% macro children(title, children = []) %}
+		{% if children is not empty %}
+			<h6>{{ title }}</h6>
+			<ul>
+				{% for child in children %}
+					<li>
+						<a href="{{ child.url }}">
+							{{ child.name }}
+						</a>
+					</li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+	{% endmacro %}
+
+	{{ _self.children('Direct Subclasses', class.subclasses) }}
+
+	{#
+	<div class="section description" n:if="$directSubClasses">
+		<h6>Direct Subclasses</h6>
+		{include #children, children => $directSubClasses}
+	</div>
+
+	<div class="section description" n:if="$indirectSubClasses">
+		<h6>Indirect Subclasses</h6>
+		{include #children, children => $indirectSubClasses}
+	</div>
+
+	<div class="section description" n:if="$directImplementers">
+		<h6>Direct Implementers</h6>
+		{include #children, children => $directImplementers}
+	</div>
+
+	<div class="section description" n:if="$indirectImplementers">
+		<h6>Indirect Implementers</h6>
+		{include #children, children => $indirectImplementers}
+	</div>
+
+	<div class="section description" n:if="$directUsers">
+		<h4>Direct Users</h4>
+		{include #children, children => $directUsers}
+	</div>
+
+	<div class="section description" n:if="$indirectUsers">
+		<h4>Indirect Users</h4>
+		{include #children, children => $indirectUsers}
+	</div>
+	#}
+	<div class="info">
+		{% for modifier in object.modifiers %}
+			<b>{{ modifier|capitalize }}</b><br>
+		{% endfor %}
+
+		<b>Namespace:</b> {{ object.getNamespaceFqsen|fqsen }}<br>
+
+		{% if object.annotations.deprecated is not empty %}
+			<b>Deprecated ({{ object.annotations.deprecated.version }}):</b> {{ tobject.annotations.deprecated.description }}<br>
+		{% endif %}
+
+		{% for name, tags in object.annotations %}
+			{% for tag in tags %}
+				{% if name == 'covers' %}
+					<b>Covers:</b> {{ macros.linkFqsen(tag.fqsen) ~ ' ' ~ tag.description }}<br>
+				{% endif %}
+				{% if name == 'see' %}
+					<b>See:</b> {{ tag.fqsen ? macros.linkFqsen(tag.fqsen) : tag.link  ~ ' ' ~ tag.description }}<br>
+				{% endif %}
+				{% if name == 'link' %}
+					<b>Link:</b> {{ tag.link ~ ' ' ~ tag.description }}<br>
+				{% endif %}
+			{% endfor %}
+		{% endfor %}
+	</div>
+
+	<div class="section">
+		<h2>Constants summary</h2>
+		<ul class="member-summary constants">
+		{% for constant in object.constants %}
+			<li class="clearfix">
+				<a id="{{ constant.fqsen|name }}"></a>
+				<div class="attributes col-md-2 col-sm-2 p0">
+					<code>{{ constant.annotations.var.type }}</code>
+				</div>
+
+				<div class="name col-md-10 col-sm-10">
+					<b>{{ constant.fqsen|name }}</b>
+					<a href="#{{ constant.fqsen|name }}" class="permalink" title="Permalink to this constant">¶</a>
+				</div>
+
+				<div class="col-md-10 col-md-offset-2">
+					<code>{{ constant.value }}</code>
+				</div>
+			</li>
+		{% endfor %}
+		</ul>
+	</div>
+
+	<div class="section">
+		<h2>Properties summary</h2>
+		<ul class="member-summary properties">
+			{% for property in object.properties %}
+				<li class="clearfix">
+					<div class="name">
+						{{ macros.linkName(property.fqsen) }}
+
+						<span class="attributes">
+							<span class="label">{{ property.visibility }}</span>
+
+							{% if property.modifiers.static is defined %}
+								<span class="label">static</span>
+							{% endif %}
+							{% if property.annotations.annotated is defined %}
+								<span class="label">annotated</span>
+							{% endif %}
+						</span>
+					</div>
+
+					<div class="property-type"><code>{{ property.type }}</code></div>
+
+					<div class="description">
+						{{ property.summary|markdown_to_html }}
+					</div>
+				</li>
+			{% endfor %}
+		</ul>
+	</div>
+
+	<div class="section">
+		<h2>Method Summary</h2>
+		<ul class="member-summary">
+			{% for method in object.methods %}
+				<li class="clearfix">
+					<h5 class="method-name">
+					{{ macros.linkName(method.fqsen) }}
+
+					{% for modifier in ['abstract', 'final'] %}
+						{% if modifier in method.modifiers %}
+							<span class="label">{{ modifier }}</span>
+						{% endif %}
+					{% endfor %}
+
+					<span class="label">{{ method.visibility }}</span>
+					{% if method.modifiers.static is defined %}
+						<span class="label">static</span>
+					{% endif %}
+					{% if method.annotations.annotated is defined %}
+						<span class="label">annotated</span>
+					{% endif %}
+					{% if method.annotations.deprecated is defined %}
+						<span class="label">deprecated</span>
+					{% endif %}
+					</h3>
+					<div class="description detailed">
+						{{ method.summary|markdown_to_html }}
+					</div>
+				</li>
+			{% endfor %}
+		</ul>
+	</div>
+
+	<div class="section">
+		<h2>Method Detail</h2>
+		{% for method in object.methods %}
+			<div class="method-detail">
+				<a id="{{ method.fqsen|name(true) }}"></a>
+				<h3 class="method-name">
+					{{ method.fqsen|name }}
+					{% for modifier in ['abstract', 'final'] %}
+						{% if modifier in method.modifiers %}
+							<span class="label">{{ modifier }}</span>
+						{% endif %}
+					{% endfor %}
+
+					<span class="label">{{ method.visibility }}</span>
+					{% if method.modifiers.static is defined %}
+						<span class="label">static</span>
+					{% endif %}
+					{% if method.annotations.annotated is defined %}
+						<span class="label">annotated</span>
+					{% endif %}
+					{% if method.annotations.deprecated is defined %}
+						<span class="label">deprecated</span>
+					{% endif %}
+					<a href="{{ method.fqsen|fqsen_url }}" class="permalink" title="Permalink to this method">¶</a>
+				</h3>
+				<p class="method-signature">
+					{{ method.fqsen|name(true) }}(
+						{% for parameter in method.parameters %}
+							{{ parameter.type }}
+								<var>{{ parameter.definition }}</var>{{ loop.last?'':',' }}
+						{% endfor %}
+					)
+				</p>
+
+				<div class="description detailed">
+					{{ method.summary|markdown_to_html }}
+					{{ method.description|markdown_to_html }}
+
+					{% if method.annotations.deprecated is defined %}
+						<h6>Deprecated</h6>
+						<div class="list">
+							{{ method.annotations.deprecated.version }}
+							{{ method.annotations.deprecated.description|markdown_to_html }}
+						</div>
+					{% endif %}
+
+					{% if method.parameters is not empty %}
+						<h6>Parameters</h6>
+						<div class="parameter-list list">
+						<dl>
+							{% for parameter in method.parameters %}
+								<dt>
+									<code>{{ parameter.type }}</code>
+									<var>{{ parameter.name }}</var>
+									{% if parameter.default is not empty %}
+										<span class="label">optional</span>
+										{{ parameter.default }}
+									{% endif %}
+								</dt>
+								<dd>{{ parameter.description|markdown_to_html }}</dd>
+							{% endfor %}
+						</dl>
+						</div>
+					{% endif %}
+
+					{% if method.annotations.return is defined and method.annotations.return.type != 'void' %}
+						<h6>Returns</h6>
+						<div class="list">
+							{{ method.annotations.return.type }}<br>
+							{{ method.annotations.return.description|markdown_to_html }}
+						</div>
+					{% endif %}
+
+					{% if method.annotations.throws %}
+						<h6>Throws</h6>
+						<div class="list">
+							{% for throw in method.annotations.throws %}
+								{{ macros.linkFqsen(throw.type) }}<br>
+								{{ throw.description }}{{ loop.last?'':'<br>' }}
+							{% endfor %}
+						</div>
+					{% endif %}
+
+					{% if method.annotations.see %}
+						<h6>See Also</h6>
+						<div class="list">
+							{% for see in method.annotations.see %}
+								{{ see.fqsen ? macros.linkFqsen(see.fqsen) : see.link }}<br>
+								{{ see.description }}{{ loop.last?'':'<br>' }}
+							{% endfor %}
+						</div>
+					{% endif %}
+
+					{% if method.annotations.link %}
+						<h6>Links</h6>
+						<div class="list">
+							{% for link in method.annotations.link %}
+								{{ link.link }}<br>
+								{{ link.description }}{{ loop.last?'':'<br>' }}
+							{% endfor %}
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+
+	<div class="section">
+		<h2>Property Detail</h2>
+		{% for property in object.properties %}
+			<div class="property-detail">
+				<a id="{{ property.fqsen|name(true) }}"></a>
+				<h3 class="property-name">
+					<var>{{ property.name }}</var>
+					<a href="{{ property.fqsen|fqsen_url }}" class="permalink" title="Permalink to this method">¶</a>
+				</h3>
+
+				<div class="attributes">
+					<span class="label">{{ property.visibility }}</span>
+
+					{% if property.modifiers.static is defined %}
+						<span class="label">static</span>
+					{% endif %}
+					{% if property.annotations.annotated is defined %}
+						<span class="label">annotated</span>
+					{% endif %}
+
+					{{ property.type }}
+				</div>
+
+				<div class="description detailed">
+					{{ property.summary|markdown_to_html }}
+					{{ property.description|markdown_to_html }}
+
+					{% if method.annotations.var is defined %}
+						<h6>Type</h6>
+						<div class="list">
+							{{ method.annotations.var.type }}<br>
+							{{ method.annotations.var.description|markdown_to_html }}
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+
+</div>
+{% endblock %}

@@ -2,7 +2,37 @@
     "name": "cakephp/cakephp-api-docs",
     "description": "API docs for CakePHP",
     "type": "application",
+    "config": {
+        "sort-packages": true
+    },
     "require": {
-        "apigen/apigen": "dev-master#4f4493a58bf6cf236291deb159909abe8290221c"
+        "cakephp/collection": "^4.0",
+        "cakephp/console": "^4.0",
+        "composer/composer": "^1.9",
+        "erusev/parsedown": "^1.7",
+        "nette/neon": "^3.0",
+        "nette/utils": "^3.0",
+        "nicmart/tree": "^0.2.7",
+        "phpdocumentor/reflection": "^4.0",
+        "phpdocumentor/reflection-common": "^2.1",
+        "phpdocumentor/reflection-docblock": "^5.1",
+        "phpdocumentor/type-resolver": "^1.1",
+        "twig/markdown-extra": "^3.0",
+        "twig/twig": "^3.0"
+    },
+    "require-dev": {
+        "cakephp/cakephp-codesniffer": "^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Cake\\ApiDocs\\": "src/"
+        },
+        "files": [
+            "src/functions.php"
+        ]
+    },
+    "scripts": {
+        "cs-check": "phpcs --colors --parallel=16 -p src/",
+        "cs-fix": "phpcbf --colors --parallel=16 -p src/"
     }
 }

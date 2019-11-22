@@ -1,9 +1,6 @@
-/build/api/
-/build/code-browser/
-/build/coverage/
-/build/logs/
-/build/pdepend/
+/build/
+/composer.lock
 /release/
-/website
-
 /vendor/
+/website
+composer.phar

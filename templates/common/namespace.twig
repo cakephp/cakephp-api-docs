@@ -1,0 +1,44 @@
+{% extends 'layout.twig' %}
+
+{% block title 'Namespace ' ~ fqsen|to_name %}
+
+{% block content %}
+<div class="section namespace">
+	<h1>Namespace {{ fqsen|to_name }}</h1>
+
+    {#
+	{% if namespace.children|length > 0 %}
+		<div>
+			<h3>Namespaces summary</h3>
+			<ul class="summary-list">
+				{% for child in namespace.children %}
+				<li>
+					{{ macros.linkFqsen(child, 'namespace') }}
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+	{% endif %}
+    #}
+
+	{% macro section(title, elements = []) %}
+		{% if elements|length > 0 %}
+			<div class="section">
+				<h3>{{ title }} summary</h3>
+				<ul class="summary-list">
+					{% for element in elements %}
+						<li>
+							<h5><a href="{{ element|to_url }}">{{ element|to_name }}</a></h5>
+							{{ element|docblock.summary|markdown_to_html }}
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+		{% endif %}
+	{% endmacro %}
+
+	{{ _self.section('Classes', namespace.classes) }}
+	{{ _self.section('Interfaces', namespace.interfaces) }}
+	{{ _self.section('Traits', namespace.traits) }}
+</div>
+{% endblock %}

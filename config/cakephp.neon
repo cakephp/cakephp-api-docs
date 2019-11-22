@@ -1,0 +1,9 @@
+# CakePHP API docs
+
+globals:
+    title: 'CakePHP'
+    release: 'Strawberry'
+    version_links:
+        '4.0': '../4.0'
+        '3.x': '../3.x'
+        '2.x': '../2.x'

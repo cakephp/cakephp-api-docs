@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>{% block title 'API' %} | {{ config.title ~ ' ' ~ config.version }}</title>
+
+    <link href="resources/favicon.png" type="image/png" rel="icon" />
+    <link href="resources/favicon.png" type="image/png" rel="shortcut icon" />
+    <link rel="stylesheet" type="text/css" href="resources/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/css/styles.css">
+    <link rel="stylesheet" type="text/css" href="resources/css/responsive.css">
+    <link rel="stylesheet" type="text/css" href="resources/css/prism.css">
+
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="js/jquery.autocomplete.js"></script>
+    <script type="text/javascript" src="js/jquery.sortElements.js"></script>
+    <script type="text/javascript" src="js/jquery.sprintf.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="js/vendor.js"></script>
+    <script type="text/javascript" src="js/prism.js"></script>
+    <script type="text/javascript" src="searchlist.js"></script>
+</head>
+
+<body>
+
+<div id="container">
+    {{ include('header.twig') }}
+
+    <div class="container page-container">
+        <div class="row">
+            <div id="class-nav" class="col-md-3 hidden-sm hidden-xs">
+                <div id="menu">
+                    <div id="groups">
+                        <h3 class="nav-title">Namespaces</h3>
+                        <ul class="nav-list">
+                            {#
+                            {{ _self.showTree(namespaceTree, fqsen ?? '') }}
+                            #}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="right" class="col-md-9">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{{ include('footer.twig') }}
+</body>
+</html>
