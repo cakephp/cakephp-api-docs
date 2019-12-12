@@ -14,6 +14,7 @@ VERSIONS = 1.2 1.3 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9 2.10 3.0 3.1 3.2 3.3 
 # Versions that are actively developed / maintained.
 ACTIVE_VERSIONS = 2.9 2.10 3.5 3.6 3.7 3.8
 
+CHRONOS_VERSIONS = 1.1 1.2 1.3
 
 help:
 	@echo "CakePHP API Documentation generator"
@@ -116,7 +117,7 @@ build-chronos-$(VERSION): $(BUILD_DIR) install
 	cd $(CHRONOS_SOURCE_DIR) && git checkout -f $(TAG)
 	# Update the config file, Remove sed crap
 	sed -i.bak "s/activeVersion: '.*'/activeVersion: '$(VERSION)'/" templates/cakephp/config.neon
-	sed -i.bak "s/versions: .*/versions: ['1.0', '1.1']/" templates/cakephp/config.neon
+	sed -i.bak "s/versions: .*/versions: ['1.0', '1.1', '1.2', '1.3']/" templates/cakephp/config.neon
 	rm templates/cakephp/config.neon.bak
 	# Run Apigen
 	vendor/bin/apigen generate -s $(CHRONOS_SOURCE_DIR) \
@@ -127,10 +128,10 @@ build-chronos-$(VERSION): $(BUILD_DIR) install
 endef
 
 # Build all the versions in a loop.
-build-all: $(foreach version, $(VERSIONS), build-$(version)) build-chronos-1.0 build-chronos-1.1
+build-all: $(foreach version, $(VERSIONS), build-$(version)) $(foreach version, $(CHRONOS_VERSIONS), build-chronos-$(version))
 
 # Build all active versions in a loop.
-build-active: $(foreach version, $(ACTIVE_VERSIONS), build-$(version)) build-chronos-1.0 build-chronos-1.1
+build-active: $(foreach version, $(ACTIVE_VERSIONS), build-$(version)) $(foreach version, $(CHRONOS_VERSIONS), build-chronos-$(version))
 
 # Build all active and missing versions in a loop.
 build-active-and-missing:
@@ -239,6 +240,14 @@ TAG:=1.0.4
 VERSION:=1.0
 $(eval $(chronos))
 
-TAG:=origin/master
+TAG:=1.1.4
 VERSION:=1.1
+$(eval $(chronos))
+
+TAG:=1.2.8
+VERSION:=1.2
+$(eval $(chronos))
+
+TAG:=origin/1.x
+VERSION:=1.3
 $(eval $(chronos))
