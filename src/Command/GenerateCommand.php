@@ -34,12 +34,12 @@ class GenerateCommand extends BaseCommand
             'help' => 'The current version.',
         ]);
 
-        $parser->addOption('template-dir', [
+        $parser->addOption('templates', [
             'required' => true,
             'help' => 'The twig template path.',
         ]);
 
-        $parser->addOption('output-dir', [
+        $parser->addOption('output', [
             'required' => true,
             'help' => 'The html output path.',
         ]);
@@ -70,13 +70,13 @@ class GenerateCommand extends BaseCommand
     {
         $config = FileSystem::read($args->getOption('config'));
         $config = Neon::decode($config);
-        $config = array_merge($config, [
-            'templateDir' => $args->getOption('template-dir'),
-            'outputDir' => $args->getOption('output-dir'),
-        ]);
-        $config['globals'] = array_merge($config['globals'] ?? [], [
+        $config = $config + [
+            'templates' => $args->getOption('templates'),
+            'output' => $args->getOption('output'),
+        ];
+        $config['globals'] = $config['globals'] + [
             'version' => $args->getOption('version'),
-        ]);
+        ];
 
         return $config;
     }

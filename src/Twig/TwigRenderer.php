@@ -18,24 +18,24 @@ class TwigRenderer
     /**
      * @var string
      */
-    private $outputDir;
+    private $outputPath;
 
     /**
-     * @param string $templateDir The path containing twig templates
-     * @param string $outputDir The render output path
+     * @param string $templatesPath The path containing twig templates
+     * @param string $outputPath The render output path
      */
-    public function __construct(string $templateDir, string $outputDir)
+    public function __construct(string $templatesPath, string $outputPath)
     {
-        $this->outputDir = $outputDir;
-        if (!is_dir($this->outputDir)) {
-            mkdir($this->outputDir, 0777, true);
+        $this->outputPath = $outputPath;
+        if (!is_dir($this->outputPath)) {
+            mkdir($this->outputPath, 0777, true);
         }
 
-        if (!is_dir($this->outputDir)) {
-            throw new InvalidArgumentException("Unable to create output directory {$outputDir}");
+        if (!is_dir($this->outputPath)) {
+            throw new InvalidArgumentException("Unable to create output directory {$outputPath}");
         }
 
-        $this->twig = $this->createTwig($templateDir);
+        $this->twig = $this->createTwig($templatesPath);
     }
 
     /**
@@ -56,25 +56,25 @@ class TwigRenderer
      */
     public function render(string $template, string $filename, array $context = []): void
     {
-        $path = getcwd() . DS . $this->outputDir . DS . $filename;
+        $path = getcwd() . DS . $this->outputPath . DS . $filename;
         $file = fopen($path, 'wb');
         try {
             fwrite($file, $this->twig->render($template, $context));
         } catch (\Error $e) {
             api_log('error', "Unable to render {$template}.");
-            api_log('error', (string)$e);
+            throw $e;
         }
         fclose($file);
     }
 
     /**
-     * @param string $templateDir Twig template directory
+     * @param string $templatesPath Twig template directory
      * @return \Twig\Environment
      */
-    protected function createTwig(string $templateDir): Environment
+    protected function createTwig(string $templatesPath): Environment
     {
         $twig = new Environment(
-            new FilesystemLoader($templateDir)
+            new FilesystemLoader($templatesPath)
         );
 
         $twig->addExtension(new MarkdownExtension());

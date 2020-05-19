@@ -27,7 +27,7 @@ class Generator
     public function __construct(SourceLoader $loader, array $config)
     {
         $this->loader = $loader;
-        $this->renderer = new TwigRenderer($config['templateDir'], $config['outputDir']);
+        $this->renderer = new TwigRenderer($config['templates'], $config['output']);
         $this->renderer->getTwig()->addExtension(new ReflectionExtension($loader));
         $this->renderer->getTwig()->addGlobal('config', $config['globals']);
     }

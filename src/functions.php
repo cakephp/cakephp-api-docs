@@ -9,6 +9,7 @@ use Cake\Log\Log;
  * @param string $level Log level
  * @param string $message Log message
  * @param array $context Log context
+ * @return void
  */
 function api_log(string $level, string $message, array $context = [])
 {

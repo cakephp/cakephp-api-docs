@@ -1,7 +1,9 @@
 # CakePHP API docs
 
+templates: 'templates'
+
 globals:
-    title: 'CakePHP'
+    project: 'CakePHP'
     release: 'Strawberry'
     version_links:
         '4.0': '../4.0'

@@ -74,7 +74,7 @@ class ReflectionExtension extends AbstractExtension
                 return $url;
             }),
             new TwigFilter('ns_to_url', function ($namespace) {
-                $name = str_replace('\\', '.', (string)$namespace);
+                $name = str_replace('\\', '.', substr((string)$namespace, 1));
                 $url = "namespace-{$name}.html";
 
                 return $url;

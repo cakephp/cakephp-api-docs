@@ -56,16 +56,15 @@ install: composer.phar
 
 static-%:
 	mkdir -p $(BUILD_DIR)/$*
-	cp -r templates/static/* $(BUILD_DIR)/$*
+	cp -r static/* $(BUILD_DIR)/$*
 
 define build4x
 build-$(VERSION): install static-$(VERSION)
-	cd $(SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(SOURCE_DIR) && php $(PHP_DIR)/composer.phar update
+	#cd $(SOURCE_DIR) && git checkout -f $(TAG)
+	#cd $(SOURCE_DIR) && php $(PHP_DIR)/composer.phar update
 
 	php bin/apitool.php generate --config config/cakephp.neon --version $(VERSION) \
-		--template-dir templates/common --output-dir $(BUILD_DIR)/$(VERSION)  \
-		$(SOURCE_DIR)/src
+		--output $(BUILD_DIR)/$(VERSION) $(SOURCE_DIR)/src
 endef
 
 # Build all the versions in a loop.

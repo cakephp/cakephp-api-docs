@@ -179,7 +179,7 @@ class SourceLoader
         foreach (range(0, 2) as $parentNum) {
             $autoloadPath = $vendorDir . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
             if (file_exists($autoloadPath)) {
-                api_log('info', "Found vendor autoload at {$autoloadPath}.");
+                api_log('notice', "Found vendor autoload at {$autoloadPath}.");
                 $this->classLoader = require $autoloadPath;
                 $this->classLoader->unregister();
                 break;
@@ -188,7 +188,7 @@ class SourceLoader
         }
 
         if ($this->classLoader === null) {
-            api_log('info', 'No vendor autoload found. Dependencies will not be parsed.');
+            api_log('notice', 'No vendor autoload found. Dependencies will not be parsed.');
         }
     }
 
