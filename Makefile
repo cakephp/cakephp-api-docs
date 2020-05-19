@@ -60,8 +60,8 @@ static-%:
 
 define build4x
 build-$(VERSION): install static-$(VERSION)
-	#cd $(SOURCE_DIR) && git checkout -f $(TAG)
-	#cd $(SOURCE_DIR) && php $(PHP_DIR)/composer.phar update
+	cd $(SOURCE_DIR) && git checkout -f $(TAG)
+	cd $(SOURCE_DIR) && php $(PHP_DIR)/composer.phar update
 
 	php bin/apitool.php generate --config config/cakephp.neon --version $(VERSION) \
 		--output $(BUILD_DIR)/$(VERSION) $(SOURCE_DIR)/src
