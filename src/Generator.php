@@ -5,7 +5,9 @@ namespace Cake\ApiDocs;
 
 use Cake\ApiDocs\Twig\Extension\ReflectionExtension;
 use Cake\ApiDocs\Twig\TwigRenderer;
+use Cake\ApiDocs\Util\ClassLikeCollapser;
 use Cake\ApiDocs\Util\SourceLoader;
+use phpDocumentor\Reflection\Element;
 use phpDocumentor\Reflection\Php\Namespace_;
 
 class Generator
@@ -14,6 +16,11 @@ class Generator
      * @var \Cake\ApiDocs\Util\SourceLoader
      */
     protected $loader;
+
+    /**
+     * @var \Cake\ApiDocs\Util\ClassLikeCollapser
+     */
+    protected $collapser;
 
     /**
      * @var \Cake\ApiDocs\Twig\TwigRenderer
@@ -27,6 +34,7 @@ class Generator
     public function __construct(SourceLoader $loader, array $config)
     {
         $this->loader = $loader;
+        $this->collapser = new ClassLikeCollapser($loader);
         $this->renderer = new TwigRenderer($config['templates'], $config['output']);
         $this->renderer->getTwig()->addExtension(new ReflectionExtension($loader));
         $this->renderer->getTwig()->addGlobal('config', $config['globals']);
@@ -40,6 +48,11 @@ class Generator
         $this->renderOverview();
         foreach ($this->loader->getNamespaces() as $namespace) {
             $this->renderNamespace($namespace);
+        }
+        foreach ($this->loader->getFiles() as $file) {
+            foreach ($file->getClasses() as $class) {
+                $this->renderClassLike('class', $class);
+            }
         }
     }
 
@@ -72,25 +85,39 @@ class Generator
     protected function renderNamespace(Namespace_ $namespace): void
     {
         $context = [
-            'fqsen' => (string)$namespace->getFqsen(),
             'namespace' => $namespace,
         ];
-        $filename = 'namespace-' . str_replace('\\', '.', substr((string)$namespace->getFqsen(), 1)) . '.html';
+        $filename = $this->getFilename('namespace', (string)$namespace->getFqsen());
         $this->renderer->render('namespace.twig', $filename, $context);
     }
 
-    /*
-    private function renderClassLike(ClassLikeContext $context): void
+    /**
+     * @param string $type file type
+     * @param \phpDocumentor\Reflection\Php\Class_|\phpDocumentor\Reflection\Php\Interface_|\phpDocumentor\Reflection\Php\Trait_ $classlike classlike
+     * @return void
+     */
+    protected function renderClassLike(string $type, Element $classlike): void
     {
-        $fqsen = $context->getFqsen();
-        $filename = 'class-' . str_replace('\\', '.', substr($fqsen, 1)) . '.html';
-
-        $this->renderer->render('classlike.twig', $filename, [
-            'fqsen' => $fqsen,
-            'object' => $context,
-        ]);
+        $context = [
+            'type' => $type,
+            'classlike' => $classlike,
+            'collapsed' => $this->collapser->collapse($classlike),
+        ];
+        $filename = $this->getFilename($type, (string)$classlike->getFqsen());
+        $this->renderer->render('classlike.twig', $filename, $context);
     }
 
+    /**
+     * @param string $type file type
+     * @param string $fqsen fqsen
+     * @return string
+     */
+    protected function getFilename(string $type, string $fqsen): string
+    {
+        return "{$type}-" . str_replace('\\', '.', substr($fqsen, 1)) . '.html';
+    }
+
+    /*
     private function renderSearch(array $namespaces): void
     {
         $elements = [];

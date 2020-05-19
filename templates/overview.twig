@@ -11,7 +11,7 @@
 		<ul class="summary-list">
 			{% for namespace in namespaces %}
 				<li>
-					<a href="{{ namespace|ns_to_url }}">{{ namespace|to_name }}</a>
+					<a href="{{ namespace|ns_to_url }}">{{ namespace|to_path }}</a>
 				</li>
 			{% endfor %}
 		</ul>
@@ -21,7 +21,7 @@
 		<ul class="summary-list">
 			{% for function in functions %}
 				<li>
-					<a href="{{ function|to_url }}">{{ function|to_name }}</a>
+					<a href="{{ function|to_url }}">{{ function|to_path }}</a>
 				</li>
 			{% endfor %}
 		</ul>
@@ -31,7 +31,7 @@
 		<ul class="summary-list">
 			{% for constant in constants %}
 				<li>
-					<a href="{{ constant|to_url }}">{{ constant|to_name }}</a>
+					<a href="{{ constant|to_url }}">{{ constant|to_path }}</a>
 				</li>
 			{% endfor %}
 		</ul>

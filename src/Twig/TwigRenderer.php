@@ -61,7 +61,7 @@ class TwigRenderer
         try {
             fwrite($file, $this->twig->render($template, $context));
         } catch (\Error $e) {
-            api_log('error', "Unable to render {$template}.");
+            api_log('error', "Unable to render {$filename}.");
             throw $e;
         }
         fclose($file);

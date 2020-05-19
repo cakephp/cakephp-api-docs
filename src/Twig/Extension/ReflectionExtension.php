@@ -5,6 +5,8 @@ namespace Cake\ApiDocs\Twig\Extension;
 
 use Cake\ApiDocs\Util\LoadedFqsen;
 use Cake\ApiDocs\Util\SourceLoader;
+use phpDocumentor\Reflection\DocBlock;
+use phpDocumentor\Reflection\Element;
 use phpDocumentor\Reflection\Php\Class_;
 use phpDocumentor\Reflection\Php\Constant;
 use phpDocumentor\Reflection\Php\Function_;
@@ -38,10 +40,42 @@ class ReflectionExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-            new TwigFilter('to_name', function ($fqsen) {
-                return substr((string)$fqsen, 1);
+            new TwigFilter('to_path', function ($source) {
+                if ($source instanceof Element) {
+                    $source = (string)$source->getFqsen();
+                }
+                if ($source instanceof LoadedFqsen) {
+                    $source = (string)$source->getElement()->getFqsen();
+                }
+
+                return substr((string)$source, 1);
+            }),
+            new TwigFilter('to_name', function ($source) {
+                if ($source instanceof Element) {
+                    $source = (string)$source->getFqsen();
+                }
+                if ($source instanceof LoadedFqsen) {
+                    $source = (string)$source->getElement()->getFqsen();
+                }
+
+                $name = explode('::', substr((string)$source, strrpos((string)$source, '\\') + 1));
+
+                return end($name);
+            }),
+            new TwigFilter('to_namespace', function ($source) {
+                if ($source instanceof Element) {
+                    $source = (string)$source->getFqsen();
+                }
+                if ($source instanceof LoadedFqsen) {
+                    $source = (string)$source->getElement()->getFqsen();
+                }
+
+                return substr((string)$source, 0, strrpos((string)$source, '\\'));
             }),
             new TwigFilter('to_url', function ($source) {
+                if ($source instanceof Element) {
+                    $source = (string)$source->getFqsen();
+                }
                 if (!($source instanceof LoadedFqsen)) {
                     $source = $this->loader->find((string)$source);
                 }
@@ -71,18 +105,45 @@ class ReflectionExtension extends AbstractExtension
 
                 return $url;
             }),
-            new TwigFilter('ns_to_url', function ($namespace) {
-                $name = str_replace('\\', '.', substr((string)$namespace, 1));
+            new TwigFilter('ns_to_url', function ($source) {
+                if ($source instanceof Element) {
+                    $source = (string)$source->getFqsen();
+                }
+
+                $name = str_replace('\\', '.', substr((string)$source, 1));
                 $url = "namespace-{$name}.html";
 
                 return $url;
             }),
             new TwigFilter('docblock', function ($source) {
+                if ($source instanceof Element) {
+                    $source = (string)$source->getFqsen();
+                }
                 if (!($source instanceof LoadedFqsen)) {
                     $source = $this->loader->find((string)$source);
                 }
 
-                return $source->getElement()->getDocBlock();
+                return $source->getElement()->getDocBlock() ?? new DocBlock();
+            }),
+            new TwigFilter('tags', function ($source, $name = null, $single = false) {
+                if (!($source instanceof DocBlock)) {
+                    if ($source instanceof Element) {
+                        $source = (string)$source->getFqsen();
+                    }
+                    if (!($source instanceof LoadedFqsen)) {
+                        $source = $this->loader->find((string)$source);
+                    }
+                    $source = $source->getElement()->getDocBlock() ?? new DocBlock();
+                }
+
+                $tags = [];
+                foreach ($source->getTags() as $tag) {
+                    if ($tag->getName() === $name) {
+                        $tags[] = $tag;
+                    }
+                }
+
+                return $single ? (empty($tags) ? null : $tags[0]) : $tags;
             }),
         ];
     }
@@ -94,6 +155,10 @@ class ReflectionExtension extends AbstractExtension
     {
         return [
             new TwigTest('in_project', function ($source) {
+                if ($source instanceof Element) {
+                    $source = (string)$source->getFqsen();
+                }
+
                 if (!($source instanceof LoadedFqsen)) {
                     $source = $this->loader->find((string)$source);
                 }

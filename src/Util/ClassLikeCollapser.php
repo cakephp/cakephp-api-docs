@@ -32,23 +32,23 @@ class ClassLikeCollapser
     /**
      * Collapsed inheritance tree for class like fqsens.
      *
-     * @param string $fqsen fqsen
+     * @param \phpDocumentor\Reflection\Php\Class_|\phpDocumentor\Reflection\Php\Interface_|\phpDocumentor\Reflection\Php\Trait_ $classlike classlike
      * @return \Cake\ApiDocs\Util\CollapsedClassLike
      * @throws \InvalidArgumentException When cannot find $fqsen
      */
-    public function collapse(string $fqsen): CollapsedClassLike
+    public function collapse($classlike): CollapsedClassLike
     {
-        $source = $this->loader->find($fqsen);
-        if (!$source) {
-            throw new InvalidArgumentException("Unable to find {$fqsen}.");
+        if (
+            !($classlike instanceof Class_) &&
+            !($classlike instanceof Interface_) &&
+            !($classlike instanceof Trait_)
+        ) {
+            throw new InvalidArgumentException("{$classlike->getFqsen()} is not a class-like fqsen.");
         }
 
-        if (
-            !($source->getElement() instanceof Class_) &&
-            !($source->getElement() instanceof Interface_) &&
-            !($source->getElement() instanceof Trait_)
-        ) {
-            throw new InvalidArgumentException("{$fqsen} is not a class-like fqsen.");
+        $source = $this->loader->find((string)$classlike->getFqsen());
+        if (!$source) {
+            throw new InvalidArgumentException("Unable to find {$classlike->getFqsen()}.");
         }
 
         $inheritance = $this->getInheritance($source);
@@ -76,6 +76,7 @@ class ClassLikeCollapser
                 }
             }
         }
+        sort($elements);
 
         foreach ($elements as &$sources) {
             $docBlock = $this->collapseDocBlock($sources);
@@ -109,13 +110,13 @@ class ClassLikeCollapser
 
             if ($docBlock->getSummary() === '{@inheritDoc}') {
                 $description .= $docBlock->getDescription()->getBodyTemplate();
-                $tags += $docBlock->getTags();
+                $tags = array_merge($docBlock->getTags());
                 continue;
             }
 
             $summary = $docBlock->getSummary();
             $description = $docBlock->getDescription()->getBodyTemplate() . $description;
-            $tags += $docBlock->getTags();
+            $tags = array_merge($tags, $docBlock->getTags());
             break;
         }
 
