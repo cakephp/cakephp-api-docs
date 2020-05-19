@@ -9,11 +9,9 @@ use phpDocumentor\Reflection\Php\Class_;
 use phpDocumentor\Reflection\Php\Constant;
 use phpDocumentor\Reflection\Php\Function_;
 use phpDocumentor\Reflection\Php\Interface_;
-use phpDocumentor\Reflection\Php\Namespace_;
 use phpDocumentor\Reflection\Php\Trait_;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
-use Twig\TwigFunction;
 use Twig\TwigTest;
 
 /**
