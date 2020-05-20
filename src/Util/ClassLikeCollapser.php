@@ -76,7 +76,7 @@ class ClassLikeCollapser
                 }
             }
         }
-        sort($elements);
+        ksort($elements);
 
         foreach ($elements as &$sources) {
             $docBlock = $this->collapseDocBlock($sources);
@@ -106,11 +106,11 @@ class ClassLikeCollapser
             }
 
             $summary = $docBlock->getSummary();
-            $description = $docBlock->getDescription()->getBodyTemplate() . $description;
+            $description = $docBlock->getDescription()->getBodyTemplate() . ($description ? '' : "\n{$description}");
             $description_tags = array_merge($description_tags, $docBlock->getDescription()->getTags());
             $tags = array_merge($tags, $docBlock->getTags());
 
-            if (preg_match('/@inheritDoc/i', $docBlock->getSummary()) === false) {
+            if (!preg_match('/@inheritDoc/i', $docBlock->getSummary())) {
                 break;
             }
         }
