@@ -6,6 +6,7 @@ namespace Cake\ApiDocs\Twig\Extension;
 use Cake\ApiDocs\Util\LoadedFqsen;
 use Cake\ApiDocs\Util\SourceLoader;
 use phpDocumentor\Reflection\DocBlock;
+use phpDocumentor\Reflection\DocBlock\Tags\InvalidTag;
 use phpDocumentor\Reflection\Element;
 use phpDocumentor\Reflection\Php\Class_;
 use phpDocumentor\Reflection\Php\Constant;
@@ -79,6 +80,9 @@ class ReflectionExtension extends AbstractExtension
                 if (!($source instanceof LoadedFqsen)) {
                     $source = $this->loader->find((string)$source);
                 }
+                if ($source === null) {
+                    return '';
+                }
 
                 $type = '';
                 $linkElement = $source->getParent() ?? $source->getElement();
@@ -144,6 +148,26 @@ class ReflectionExtension extends AbstractExtension
                 }
 
                 return $single ? (empty($tags) ? null : $tags[0]) : $tags;
+            }),
+            new TwigFilter('param', function ($source, $name) {
+                if (!($source instanceof DocBlock)) {
+                    if ($source instanceof Element) {
+                        $source = (string)$source->getFqsen();
+                    }
+                    if (!($source instanceof LoadedFqsen)) {
+                        $source = $this->loader->find((string)$source);
+                    }
+                    $source = $source->getElement()->getDocBlock() ?? new DocBlock();
+                }
+
+                $params = $source->getTagsByName('param');
+                foreach ($params as $param) {
+                    if (!($param instanceof InvalidTag) && $param->getVariableName() === $name) {
+                        return $param;
+                    }
+                }
+
+                return null;
             }),
         ];
     }

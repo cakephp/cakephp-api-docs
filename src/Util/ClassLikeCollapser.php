@@ -96,6 +96,7 @@ class ClassLikeCollapser
     {
         $summary = '';
         $description = '';
+        $description_tags = [];
         $tags = [];
         foreach ($sources as $source) {
             /** @var \phpDocumentor\Reflection\DocBlock $docBlock */
@@ -104,23 +105,17 @@ class ClassLikeCollapser
                 break;
             }
 
-            if ($docBlock->getTagsByName('inheritDoc')) {
-                continue;
-            }
-
-            if ($docBlock->getSummary() === '{@inheritDoc}') {
-                $description .= $docBlock->getDescription()->getBodyTemplate();
-                $tags = array_merge($docBlock->getTags());
-                continue;
-            }
-
             $summary = $docBlock->getSummary();
             $description = $docBlock->getDescription()->getBodyTemplate() . $description;
+            $description_tags = array_merge($description_tags, $docBlock->getDescription()->getTags());
             $tags = array_merge($tags, $docBlock->getTags());
-            break;
+
+            if (preg_match('/@inheritDoc/i', $docBlock->getSummary()) === false) {
+                break;
+            }
         }
 
-        return new DocBlock($summary, new Description($description), $tags);
+        return new DocBlock($summary, new Description($description, $description_tags), $tags);
     }
 
     /**
