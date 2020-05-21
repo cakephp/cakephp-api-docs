@@ -21,8 +21,8 @@
 	{% endif %}
     #}
 
-	{% macro section(title, elements = []) %}
-		{% if elements|length > 0 %}
+	{% macro section(title, elements) %}
+		{% if elements is not empty %}
 			<div class="section">
 				<h3>{{ title }} summary</h3>
 				<ul class="summary-list">

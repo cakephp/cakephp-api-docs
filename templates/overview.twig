@@ -16,25 +16,24 @@
 			{% endfor %}
 		</ul>
 	</div>
-	<div class="section" id="functions">
-		<h3>Functions summary</h3>
-		<ul class="summary-list">
-			{% for function in functions %}
-				<li>
-					<a href="{{ function|to_url }}">{{ function|to_path }}</a>
-				</li>
-			{% endfor %}
-		</ul>
-	</div>
-	<div class="section" id="constants">
-		<h3>Constants summary</h3>
-		<ul class="summary-list">
-			{% for constant in constants %}
-				<li>
-					<a href="{{ constant|to_url }}">{{ constant|to_path }}</a>
-				</li>
-			{% endfor %}
-		</ul>
-	</div>
+
+	{% macro section(title, elements) %}
+		{% if elements is not empty %}
+			<div class="section">
+				<h3>{{ title }} summary</h3>
+				<ul class="summary-list">
+					{% for element in elements %}
+						<li>
+							{{ element|to_path }}
+                            {{ element|docblock.summary|markdown_to_html }}
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+		{% endif %}
+	{% endmacro %}
+
+	{{ _self.section('Functions', functions) }}
+	{{ _self.section('Constants', constants) }}
 </div>
 {% endblock %}
