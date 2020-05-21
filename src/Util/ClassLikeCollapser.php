@@ -81,9 +81,9 @@ class ClassLikeCollapser
         foreach ($inheritance as $source) {
             if (method_exists($source->getElement(), 'getConstants')) {
                 foreach ($source->getElement()->getConstants() as $fqsen => $element) {
-                    $source = $this->loader->find((string)$fqsen);
-                    if ((string)$source->getElement()->getVisibility() !== 'private') {
-                        $elements[$element->getName()][] = $source;
+                    $constant = $this->loader->find((string)$fqsen);
+                    if ((string)$constant->getElement()->getVisibility() !== 'private') {
+                        $elements[$element->getName()][] = $constant;
                     }
                 }
             }

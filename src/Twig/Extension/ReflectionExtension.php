@@ -5,6 +5,7 @@ namespace Cake\ApiDocs\Twig\Extension;
 
 use Cake\ApiDocs\Util\LoadedFqsen;
 use Cake\ApiDocs\Util\SourceLoader;
+use InvalidArgumentException;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\Element;
 use phpDocumentor\Reflection\Php\Class_;
@@ -127,11 +128,12 @@ class ReflectionExtension extends AbstractExtension
                 }
                 if (!($source instanceof LoadedFqsen)) {
                     $source = $this->loader->find((string)$source);
-
-                    return $source->getElement()->getDocBlock() ?? new DocBlock();
+                    if ($source === null) {
+                        throw new InvalidArgumentException("Could not find {$source}.");
+                    }
                 }
 
-                throw new InvalidArgumentException("Could not find {$source}.");
+                return $source->getElement()->getDocBlock() ?? new DocBlock();
             }),
             new TwigFilter('tags', function ($source, $name = null, $single = false) {
                 if (!($source instanceof DocBlock)) {

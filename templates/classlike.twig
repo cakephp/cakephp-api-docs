@@ -1,7 +1,7 @@
 {% extends 'layout.twig' %}
 
 {% block title %}
-	{{ type|capitalize ~ ' ' ~ classlike.fqsen|to_name }}
+	{{ type|capitalize ~ ' ' ~ collapsed.source|to_name }}
 {% endblock %}
 
 {% block content %}
@@ -9,8 +9,8 @@
 	<h1>{{ block('title') }}</h1>
 
 	<div class="description">
-		{{ classlike|docblock.summary|markdown_to_html }}
-		{{ classlike|docblock.description|markdown_to_html }}
+		{{ collapsed.source|docblock.summary|markdown_to_html }}
+		{{ collapsed.source|docblock.description|markdown_to_html }}
 	</div>
 
 	{#{{ macros.showInheritanceTree(classlike.inheritanceTree) }}#}
@@ -68,23 +68,23 @@
 
 	<div class="info">
         {% if type == 'class' %}
-            {% if classlike.final %}
+            {% if collapsed.source.element.final %}
 			    <b>Final</b><br>
             {% endif %}
-            {% if classlike.abstract %}
+            {% if collapsed.source.element.abstract %}
 			    <b>Abstract</b><br>
             {% endif %}
         {% endif %}
 
-		<b>Namespace:</b> <a href="{{ classlike|to_namespace|ns_to_url }}">{{ classlike|to_namespace|to_path }}</a><br>
+		<b>Namespace:</b> <a href="{{ collapsed.source|to_namespace|ns_to_url }}">{{ collapsed.source|to_namespace|to_path }}</a><br>
 
-		{% for tag in classlike.tags('deprecated') %}
+		{% for tag in collapsed.source.tags('deprecated') %}
 			<b>Deprecated since {{ tag.version }}:</b> {{ tag.description }}<br>
 		{% endfor %}
-		{% for tag in classlike.tags('see') %}
+		{% for tag in collapsed.source.tags('see') %}
             <b>See:</b> {{ tag.reference ~ ' ' ~ tag.description }}<br>
         {% endfor %}
-		{% for tag in classlike.tags('link') %}
+		{% for tag in collapsed.source.tags('link') %}
             <b>Link:</b> <a href="{{ tag.link }}">{{ tag.link }}</a> {{ tag.description }}<br>
 		{% endfor %}
 	</div>

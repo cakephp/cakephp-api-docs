@@ -6,9 +6,12 @@ namespace Cake\ApiDocs;
 use Cake\ApiDocs\Twig\Extension\ReflectionExtension;
 use Cake\ApiDocs\Twig\TwigRenderer;
 use Cake\ApiDocs\Util\ClassLikeCollapser;
+use Cake\ApiDocs\Util\CollapsedClassLike;
 use Cake\ApiDocs\Util\SourceLoader;
-use phpDocumentor\Reflection\Element;
+use phpDocumentor\Reflection\Php\Class_;
+use phpDocumentor\Reflection\Php\Interface_;
 use phpDocumentor\Reflection\Php\Namespace_;
+use phpDocumentor\Reflection\Php\Trait_;
 
 class Generator
 {
@@ -49,17 +52,27 @@ class Generator
         foreach ($this->loader->getNamespaces() as $namespace) {
             $this->renderNamespace($namespace);
         }
+
+        $all = [];
         foreach ($this->loader->getFiles() as $file) {
             foreach ($file->getClasses() as $class) {
-                $this->renderClassLike('class', $class);
+                $collapsed = $this->collapser->collapse($class);
+                $this->renderClassLike('class', $collapsed);
+                $all[] = $collapsed;
             }
             foreach ($file->getInterfaces() as $interface) {
-                $this->renderClassLike('interface', $interface);
+                $collapsed = $this->collapser->collapse($interface);
+                $this->renderClassLike('interface', $collapsed);
+                $all[] = $collapsed;
             }
             foreach ($file->getTraits() as $trait) {
-                $this->renderClassLike('trait', $trait);
+                $collapsed = $this->collapser->collapse($trait);
+                $this->renderClassLike('trait', $collapsed);
+                $all[] = $collapsed;
             }
         }
+
+        $this->renderSearch($all);
     }
 
     /**
@@ -99,18 +112,49 @@ class Generator
 
     /**
      * @param string $type file type
-     * @param \phpDocumentor\Reflection\Php\Class_|\phpDocumentor\Reflection\Php\Interface_|\phpDocumentor\Reflection\Php\Trait_ $classlike classlike
+     * @param \Cake\ApiDocs\Util\CollapsedClassLike $collapsed collapsed classlike
      * @return void
      */
-    protected function renderClassLike(string $type, Element $classlike): void
+    protected function renderClassLike(string $type, CollapsedClassLike $collapsed): void
     {
         $context = [
             'type' => $type,
-            'classlike' => $classlike,
-            'collapsed' => $this->collapser->collapse($classlike),
+            'collapsed' => $collapsed,
         ];
-        $filename = $this->getFilename($type, (string)$classlike->getFqsen());
+        $filename = $this->getFilename($type, $collapsed->getSource()->getFqsen());
         $this->renderer->render('classlike.twig', $filename, $context);
+    }
+
+    /**
+     * @param \Cake\ApiDocs\Util\CollapsedClassLike[] $all all collapsed
+     * @return void
+     */
+    protected function renderSearch(array $all): void
+    {
+        $entries = [];
+        foreach ($all as $collapsed) {
+            $source = $collapsed->getSource();
+            foreach (['getConstants', 'getProperties', 'getMethods'] as $getter) {
+                foreach ($collapsed->{$getter}() as $element) {
+                    $declaration = $element['source'];
+
+                    if ($declaration->getInProject()) {
+                        $type = '';
+                        if ($declaration->getParent() instanceof Class_) {
+                            $type = 'c';
+                        } elseif ($declaration->getParent() instanceof Interface_) {
+                            $type = 'i';
+                        } elseif ($declaration->getParent() instanceof Trait_) {
+                            $type = 't';
+                        }
+
+                        $fqsen = substr($declaration->getFqsen(), 1);
+                        $entries[$fqsen] = [$type, $fqsen];
+                    }
+                }
+            }
+        }
+        $this->renderer->render('searchlist.twig', 'searchlist.js', ['entries' => json_encode(array_values($entries))]);
     }
 
     /**
@@ -124,28 +168,6 @@ class Generator
     }
 
     /*
-    private function renderSearch(array $namespaces): void
-    {
-        $elements = [];
-        foreach ($namespaces as $namespace) {
-            foreach (['constants', 'properties', 'methods'] as $attribute) {
-                foreach (['classes', 'traits'] as $type) {
-                    foreach ($namespace->{'get' . $type}() as $class) {
-                        foreach ($class->{'get' . $attribute}() as $element) {
-                            $elements[] = ['c', substr($element->getFqsen(), 1)];
-                        }
-                    }
-                }
-            }
-            foreach ($namespace->getInterfaces() as $interface) {
-                foreach ($interface->getConstants() as $element) {
-                    $elements[] = ['c', substr($element->getFqsen(), 1)];
-                }
-            }
-        }
-        $this->renderer->render('searchlist.twig', 'searchlist.js', ['elements' => json_encode($elements)]);
-    }
-
     private function buildTree(array $namespaces): Node
     {
         $unique = [];
