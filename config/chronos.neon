@@ -1,0 +1,10 @@
+# CakePHP API docs
+
+templates: 'templates'
+
+globals:
+    project: 'Chronos'
+    release: ''
+    version_links:
+        '2.0': '../2.0'
+        '1.x': '../1.x'
