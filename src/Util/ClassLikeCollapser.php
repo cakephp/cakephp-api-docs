@@ -6,9 +6,9 @@ namespace Cake\ApiDocs\Util;
 use InvalidArgumentException;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\DocBlock\Description;
+use phpDocumentor\Reflection\DocBlock\Tags\InvalidTag;
 use phpDocumentor\Reflection\DocBlock\Tags\Param;
 use phpDocumentor\Reflection\DocBlock\Tags\Var_;
-use phpDocumentor\Reflection\DocBlock\Tags\InvalidTag;
 use phpDocumentor\Reflection\Element;
 use phpDocumentor\Reflection\Php\Class_;
 use phpDocumentor\Reflection\Php\Constant;
@@ -16,7 +16,6 @@ use phpDocumentor\Reflection\Php\Interface_;
 use phpDocumentor\Reflection\Php\Method;
 use phpDocumentor\Reflection\Php\Property;
 use phpDocumentor\Reflection\Php\Trait_;
-use phpDocumentor\Reflection\Php\Visibility;
 use phpDocumentor\Reflection\Types\Mixed_;
 
 /**
@@ -233,7 +232,7 @@ class ClassLikeCollapser
     /**
      * Checks if a docblock is inheriting.
      *
-     * @param \phpDocumentor\Reflection\DocBlock $docblock docblock
+     * @param \phpDocumentor\Reflection\DocBlock $docBlock docblock
      * @return bool
      */
     protected function isDocBockInheriting(DocBlock $docBlock): bool

@@ -121,7 +121,7 @@
 			{% for property in collapsed.properties %}
 				<li class="clearfix">
 					<div class="name">
-                        <a href="{{ property.source|to_url }}">{{ property.source|to_name }}</a>
+                        <a href="{{ property.source|to_url }}">${{ property.source|to_name }}</a>
 
 						<span class="attributes">
 							<span class="label">{{ property.source.element.visibility }}</span>
@@ -155,7 +155,7 @@
 			{% for method in collapsed.methods %}
 				<li class="clearfix">
 					<h5 class="method-name">
-                    <a href="{{ method.source|to_url }}">{{ method.source|to_name }}</a>
+                    <a href="{{ method.source|to_url }}">{{ method.source|to_name }}()</a>
 
                     {% if method.source.element.abstract %}
                         <span class="label">abstract</span>
@@ -191,7 +191,7 @@
 			<div class="method-detail">
 				<a id="{{ method.source|to_name }}"></a>
 				<h3 class="method-name">
-					{{ method.source|to_name }}
+					{{ method.source|to_name }}()
 
                     {% if method.source.element.abstract %}
                         <span class="label">abstract</span>
@@ -216,7 +216,7 @@
 					<a href="{{ method.source|to_url }}" class="permalink" title="Permalink to this method">¶</a>
 				</h3>
 				<p class="method-signature">
-					{{ method.source|to_name[:-2] }}(
+					{{ method.source|to_name }}(
 						{% for argument in method.source.element.arguments %}
 							{{ argument.type }}
 								<var>${{ argument.name }}</var>{{ loop.last?'':',' }}
@@ -237,8 +237,7 @@
 									<code>{{ method.docBlock|param(argument.name).type ?? argument.type }}</code>
 									<var>${{ argument.name }}</var>
 									{% if argument.default is not empty %}
-										<span class="label">optional</span>
-										{{ argument.default }}
+                                        <span class="label">optional</span>
 									{% endif %}
 								</dt>
 								<dd>{{ (method.docBlock|param(argument.name).description ?? '')|markdown_to_html }}</dd>
@@ -251,7 +250,7 @@
 					{% if return is not empty and return.type != 'void' %}
 						<h6>Returns</h6>
 						<div class="list">
-							{{ return.type }}<br>
+							<code>{{ return.type }}</code><br>
 							{{ (return.description ?? '')|markdown_to_html }}
 						</div>
 					{% endif %}
@@ -260,7 +259,7 @@
 						<h6>Throws</h6>
 						<div class="list">
 							{% for throw in method.docBlock|tags('throws') %}
-								<a href="{{ throw.type|to_url }}">{{ throw.type|to_name }}</a><br>
+								<code>{{ throw.type|to_path }}</code><br>
 								{{ throw.description }}{{ loop.last?'':'<br>' }}
 							{% endfor %}
 						</div>
@@ -291,45 +290,38 @@
 	</div>
     {% endif %}
 
-    {#
+    {% if collapsed.properties is not empty %}
 	<div class="section">
 		<h2>Property Detail</h2>
-		{% for property in classlike.properties %}
+		{% for property in collapsed.properties %}
 			<div class="property-detail">
-				<a id="{{ property.fqsen|name(true) }}"></a>
+				<a id="{{ property.source|to_name }}"></a>
 				<h3 class="property-name">
-					<var>{{ property.name }}</var>
-					<a href="{{ property.fqsen|fqsen_url }}" class="permalink" title="Permalink to this method">¶</a>
-				</h3>
+					<var>${{ property.source|to_name }}</var>
+					<a href="{{ property.source|to_url }}" class="permalink" title="Permalink to this method">¶</a>
 
-				<div class="attributes">
-					<span class="label">{{ property.visibility }}</span>
+					<span class="label">{{ property.source.element.visibility }}</span>
 
-					{% if property.modifiers.static is defined %}
+					{% if property.source.element.static %}
 						<span class="label">static</span>
 					{% endif %}
-					{% if property.annotations.annotated is defined %}
+					{% if property.source.element.annotated %}
 						<span class="label">annotated</span>
 					{% endif %}
-
-					{{ property.type }}
-				</div>
+                </h3>
 
 				<div class="description detailed">
-					{{ property.summary|markdown_to_html }}
-					{{ property.description|markdown_to_html }}
+					{{ property.docBlock.summary|markdown_to_html }}
+					{{ property.docBlock.description|markdown_to_html }}
 
-					{% if method.annotations.var is defined %}
-						<h6>Type</h6>
-						<div class="list">
-							{{ method.annotations.var.type }}<br>
-							{{ method.annotations.var.description|markdown_to_html }}
-						</div>
-					{% endif %}
+                    <h6>Type</h6>
+                    <div class="list">
+                        <code>{{ property.docBlock|tags('var', true).type }}</code><br>
+                    </div>
 				</div>
 			</div>
 		{% endfor %}
 	</div>
-    #}
+    {% endif %}
 </div>
 {% endblock %}

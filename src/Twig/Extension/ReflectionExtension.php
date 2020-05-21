@@ -6,7 +6,6 @@ namespace Cake\ApiDocs\Twig\Extension;
 use Cake\ApiDocs\Util\LoadedFqsen;
 use Cake\ApiDocs\Util\SourceLoader;
 use phpDocumentor\Reflection\DocBlock;
-use phpDocumentor\Reflection\DocBlock\Tags\InvalidTag;
 use phpDocumentor\Reflection\Element;
 use phpDocumentor\Reflection\Php\Class_;
 use phpDocumentor\Reflection\Php\Constant;
@@ -43,35 +42,38 @@ class ReflectionExtension extends AbstractExtension
         return [
             new TwigFilter('to_path', function ($source) {
                 if ($source instanceof Element) {
-                    $source = (string)$source->getFqsen();
-                }
-                if ($source instanceof LoadedFqsen) {
-                    $source = (string)$source->getElement()->getFqsen();
+                    $fqsen = (string)$source->getFqsen();
+                } elseif ($source instanceof LoadedFqsen) {
+                    $fqsen = (string)$source->getElement()->getFqsen();
+                } else {
+                    $fqsen = (string)$source;
                 }
 
-                return substr((string)$source, 1);
+                return substr($fqsen, 1);
             }),
             new TwigFilter('to_name', function ($source) {
                 if ($source instanceof Element) {
-                    $source = (string)$source->getFqsen();
-                }
-                if ($source instanceof LoadedFqsen) {
-                    $source = (string)$source->getElement()->getFqsen();
+                    $fqsen = (string)$source->getFqsen();
+                } elseif ($source instanceof LoadedFqsen) {
+                    $fqsen = (string)$source->getElement()->getFqsen();
+                } else {
+                    $fqsen = (string)$source;
                 }
 
-                $name = explode('::', substr((string)$source, strrpos((string)$source, '\\') + 1));
+                $name = explode('::', substr($fqsen, strrpos($fqsen, '\\') + 1));
 
-                return end($name);
+                return preg_replace('/[\$\(\)]/', '', end($name));
             }),
             new TwigFilter('to_namespace', function ($source) {
                 if ($source instanceof Element) {
-                    $source = (string)$source->getFqsen();
-                }
-                if ($source instanceof LoadedFqsen) {
-                    $source = (string)$source->getElement()->getFqsen();
+                    $fqsen = (string)$source->getFqsen();
+                } elseif ($source instanceof LoadedFqsen) {
+                    $fqsen = (string)$source->getElement()->getFqsen();
+                } else {
+                    $fqsen = (string)$source;
                 }
 
-                return substr((string)$source, 0, strrpos((string)$source, '\\'));
+                return substr($fqsen, 0, strrpos($fqsen, '\\'));
             }),
             new TwigFilter('to_url', function ($source) {
                 if ($source instanceof Element) {
@@ -99,8 +101,8 @@ class ReflectionExtension extends AbstractExtension
                 }
 
                 $parts = explode('::', substr($source->getFqsen(), 1), 2);
-                $name = str_replace('\\', '.', str_replace('()', '', $parts[0]));
-                $anchor = count($parts) == 2 ? $parts[1] : '';
+                $name = preg_replace(['/\\\\/', '/[\$\(\)]/'], ['.', ''], $parts[0]);
+                $anchor = preg_replace('/[\$\(\)]/', '', count($parts) == 2 ? $parts[1] : '');
 
                 $url = "{$type}-{$name}.html";
                 if ($anchor) {
@@ -121,13 +123,15 @@ class ReflectionExtension extends AbstractExtension
             }),
             new TwigFilter('docblock', function ($source) {
                 if ($source instanceof Element) {
-                    $source = (string)$source->getFqsen();
+                    return $source->getDocBlock() ?? new DocBlock();
                 }
                 if (!($source instanceof LoadedFqsen)) {
                     $source = $this->loader->find((string)$source);
+
+                    return $source->getElement()->getDocBlock() ?? new DocBlock();
                 }
 
-                return $source->getElement()->getDocBlock() ?? new DocBlock();
+                throw new InvalidArgumentException("Could not find {$source}.");
             }),
             new TwigFilter('tags', function ($source, $name = null, $single = false) {
                 if (!($source instanceof DocBlock)) {
@@ -162,12 +166,12 @@ class ReflectionExtension extends AbstractExtension
 
                 $params = $source->getTagsByName('param');
                 foreach ($params as $param) {
-                    if (!($param instanceof InvalidTag) && $param->getVariableName() === $name) {
+                    if ($param->getVariableName() === $name) {
                         return $param;
                     }
                 }
 
-                return null;
+                throw new InvalidArgumentException("Function does not have `{$name}` argument.");
             }),
         ];
     }
