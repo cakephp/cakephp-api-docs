@@ -261,11 +261,11 @@ $(function() {
 
     // Search autocompletion
     var autocompleteFound = false;
-    var autocompleteFiles = {'c': 'class', 'co': 'constant', 'f': 'function'};
+    var autocompleteFiles = {'c': 'class', 'i': 'interface', 't': 'trait', 'co': 'constant', 'f': 'function'};
 
     var $search = $('.search input[name=q]');
     $search
-        .autocomplete(searchEntries.elements, {
+        .autocomplete(searchEntries.entries, {
             matchContains: true,
             scrollHeight: 200,
             max: 20,
