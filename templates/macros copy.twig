@@ -3,7 +3,7 @@
         {% set isLast = (node|children('class') is empty) %}
         <dd style="padding-left:{{ nodeCount * 30}}px">
             {% if nodeCount > 0 %}
-                <img src="resources/inherit.png" alt="Extended by">
+                <img src="../../resources/inherit.png" alt="Extended by">
             {% endif %}
             {{ isLast?'<b>':'' }}<span>{{ _self.linkFqsen(node.fqsen) }}</span>{{ isLast?'</b>':'' }}
             {% if node|children('interface') is not empty %}

@@ -42,7 +42,7 @@ RUN cd /chronos && git fetch origin
 
 RUN cd /data \
   && ls -lah \
-  && make clean build-all SOURCE_DIR=/cakephp CHRONOS_SOURCE_DIR=/chronos \
+  && make clean build-all CAKEPHP_SOURCE_DIR=/cakephp CHRONOS_SOURCE_DIR=/chronos \
   && make deploy DEPLOY_DIR=/var/www/html
 
 RUN rm /var/www/html/index.nginx-debian.html \
