@@ -53,6 +53,12 @@ class Generator
             foreach ($file->getClasses() as $class) {
                 $this->renderClassLike('class', $class);
             }
+            foreach ($file->getInterfaces() as $interface) {
+                $this->renderClassLike('interface', $interface);
+            }
+            foreach ($file->getTraits() as $trait) {
+                $this->renderClassLike('trait', $trait);
+            }
         }
     }
 

@@ -101,8 +101,8 @@ class ReflectionExtension extends AbstractExtension
                 }
 
                 $parts = explode('::', substr($source->getFqsen(), 1), 2);
-                $name = preg_replace(['/\\\\/', '/[\$\(\)]/'], ['.', ''], $parts[0]);
-                $anchor = preg_replace('/[\$\(\)]/', '', count($parts) == 2 ? $parts[1] : '');
+                $name = preg_replace(['/\\\\/', '/[\(\)]/'], ['.', ''], $parts[0]);
+                $anchor = preg_replace('/[\(\)]/', '', count($parts) == 2 ? $parts[1] : '');
 
                 $url = "{$type}-{$name}.html";
                 if ($anchor) {

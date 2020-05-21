@@ -295,7 +295,7 @@
 		<h2>Property Detail</h2>
 		{% for property in collapsed.properties %}
 			<div class="property-detail">
-				<a id="{{ property.source|to_name }}"></a>
+				<a id="${{ property.source|to_name }}"></a>
 				<h3 class="property-name">
 					<var>${{ property.source|to_name }}</var>
 					<a href="{{ property.source|to_url }}" class="permalink" title="Permalink to this method">¶</a>

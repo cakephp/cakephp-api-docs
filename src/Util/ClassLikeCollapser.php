@@ -10,12 +10,15 @@ use phpDocumentor\Reflection\DocBlock\Tags\InvalidTag;
 use phpDocumentor\Reflection\DocBlock\Tags\Param;
 use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use phpDocumentor\Reflection\Element;
+use phpDocumentor\Reflection\Fqsen;
+use phpDocumentor\Reflection\Php\Argument;
 use phpDocumentor\Reflection\Php\Class_;
 use phpDocumentor\Reflection\Php\Constant;
 use phpDocumentor\Reflection\Php\Interface_;
 use phpDocumentor\Reflection\Php\Method;
 use phpDocumentor\Reflection\Php\Property;
 use phpDocumentor\Reflection\Php\Trait_;
+use phpDocumentor\Reflection\Php\Visibility;
 use phpDocumentor\Reflection\Types\Mixed_;
 
 /**
@@ -62,27 +65,145 @@ class ClassLikeCollapser
 
         return new CollapsedClassLike(
             $source,
-            $this->getElements($inheritance, 'getConstants'),
-            $this->getElements($inheritance, 'getProperties'),
-            $this->getElements($inheritance, 'getMethods')
+            $this->getConstants($inheritance),
+            $this->getProperties($inheritance),
+            $this->getMethods($inheritance)
         );
     }
 
     /**
      * @param array $inheritance collapsed inheritance tree
-     * @param string $getter element getter
      * @return array
      */
-    protected function getElements(array $inheritance, string $getter): array
+    protected function getConstants(array $inheritance): array
     {
         $elements = [];
         foreach ($inheritance as $source) {
-            if (method_exists($source->getElement(), $getter)) {
-                foreach ($source->getElement()->{$getter}() as $fqsen => $element) {
+            if (method_exists($source->getElement(), 'getConstants')) {
+                foreach ($source->getElement()->getConstants() as $fqsen => $element) {
                     $source = $this->loader->find((string)$fqsen);
                     if ((string)$source->getElement()->getVisibility() !== 'private') {
                         $elements[$element->getName()][] = $source;
                     }
+                }
+            }
+        }
+        ksort($elements);
+
+        foreach ($elements as &$sources) {
+            $docBlock = $this->collapseDocBlock($sources);
+            $docBlock = $this->validateDocBlock($sources[0], $docBlock);
+            $sources = ['source' => $sources[0], 'docBlock' => $docBlock];
+        }
+
+        return $elements;
+    }
+
+    /**
+     * @param array $inheritance collapsed inheritance tree
+     * @return array
+     */
+    protected function getProperties(array $inheritance): array
+    {
+        $elements = [];
+        foreach ($inheritance as $source) {
+            if (method_exists($source->getElement(), 'getProperties')) {
+                foreach ($source->getElement()->getProperties() as $fqsen => $element) {
+                    $property = $this->loader->find((string)$fqsen);
+                    if ((string)$property->getElement()->getVisibility() !== 'private') {
+                        $elements[$element->getName()][] = $property;
+                    }
+                }
+            }
+
+            if ($source->getElement()->getDocBlock()) {
+                foreach ($source->getElement()->getDocBlock()->getTagsByName('property') as $tag) {
+                    $fqsen = new Fqsen($source->getFqsen() . '::$' . $tag->getVariableName());
+                    $property = new Property(
+                        $fqsen,
+                        new Visibility('public'),
+                        new DocBlock((string)$tag->getDescription(), null, [
+                            new Var_($tag->getVariableName(), $tag->getType()),
+                        ]),
+                        null,
+                        false,
+                        null,
+                        $tag->getType()
+                    );
+                    $elements[$fqsen->getName()][] = new LoadedFqsen(
+                        (string)$fqsen,
+                        $property,
+                        $source->getElement(),
+                        $source->getFile(),
+                        $source->getInProject()
+                    );
+                }
+            }
+        }
+        ksort($elements);
+
+        foreach ($elements as &$sources) {
+            $docBlock = $this->collapseDocBlock($sources);
+            $docBlock = $this->validateDocBlock($sources[0], $docBlock);
+            $sources = ['source' => $sources[0], 'docBlock' => $docBlock];
+        }
+
+        return $elements;
+    }
+
+    /**
+     * @param array $inheritance collapsed inheritance tree
+     * @return array
+     */
+    protected function getMethods(array $inheritance): array
+    {
+        $elements = [];
+        foreach ($inheritance as $source) {
+            if (method_exists($source->getElement(), 'getMethods')) {
+                foreach ($source->getElement()->getMethods() as $fqsen => $element) {
+                    $method = $this->loader->find((string)$fqsen);
+                    if ((string)$method->getElement()->getVisibility() !== 'private') {
+                        $elements[$element->getName()][] = $method;
+                    }
+                }
+            }
+
+            if ($source->getElement()->getDocBlock()) {
+                foreach ($source->getElement()->getDocBlock()->getTagsByName('method') as $tag) {
+                    if ($source->getInProject() && (string)$tag->getDescription() === '') {
+                        api_log(
+                            'warning',
+                            "Missing description for @method `{$tag->getMethodName()}` on `{$source->getFqsen()}`."
+                        );
+                    }
+
+                    $params = [];
+                    foreach ($tag->getArguments() as $argument) {
+                        $params[] = new Param($argument['name'], $argument['type'], false);
+                    }
+
+                    $fqsen = new Fqsen($source->getFqsen() . '::' . $tag->getMethodName() . '()');
+                    $method = new Method(
+                        $fqsen,
+                        new Visibility('public'),
+                        new DocBlock((string)$tag->getDescription(), null, $params),
+                        false,
+                        $tag->isStatic(),
+                        false,
+                        null,
+                        $tag->getReturnType()
+                    );
+                    foreach ($tag->getArguments() as $argument) {
+                        $method->addArgument(new Argument($argument['name'], $argument['type']));
+                    }
+
+                    $elements[$fqsen->getName()][] = new LoadedFqsen(
+                        (string)$fqsen,
+                        $method,
+                        $source->getElement(),
+                        $source->getFile(),
+                        $source->getInProject()
+                    );
                 }
             }
         }

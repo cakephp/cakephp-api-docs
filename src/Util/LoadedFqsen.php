@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Cake\ApiDocs\Util;
 
 use phpDocumentor\Reflection\Element;
+use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Php\File;
 
 /**
@@ -14,12 +15,12 @@ class LoadedFqsen
     /**
      * @var string
      */
-    protected $name;
+    protected $fqsen;
 
     /**
      * @var string
      */
-    protected $fqsen;
+    protected $name;
 
     /**
      * @var \phpDocumentor\Reflection\Element
@@ -51,17 +52,11 @@ class LoadedFqsen
     public function __construct(string $fqsen, Element $element, ?Element $parent, ?File $file, bool $inProject)
     {
         $this->fqsen = $fqsen;
+        $this->name = (new Fqsen($fqsen))->getName();
         $this->element = $element;
         $this->parent = $parent;
         $this->file = $file;
         $this->inProject = $inProject;
-
-        $parts = explode('::', $fqsen);
-        if (count($parts) > 1) {
-            $this->name = end($parts);
-        } else {
-            $this->name = substr($fqsen, strrpos($fqsen, '\\') + 1);
-        }
     }
 
     /**
@@ -101,7 +96,7 @@ class LoadedFqsen
      */
     public function getFile(): ?File
     {
-        return $this->name;
+        return $this->file;
     }
 
     /**
