@@ -241,7 +241,7 @@ class ClassLikeCollapser
             $tags = $docBlock->getTagsByName('var');
             if (count($tags) === 0) {
                 if ($source->getInProject()) {
-                    api_log('warning', "Missing @var for `{$source->getFqsen()}`.");
+                    api_log('error', "Missing @var for `{$source->getFqsen()}`. Using `mixed.`");
                 }
                 $addedTags[] = new Var_($source->getElement()->getName(), new Mixed_());
             }
@@ -262,7 +262,7 @@ class ClassLikeCollapser
                         $source->getInProject() &&
                         !($source->getParent() instanceof Trait_ && $this->isDocBockInheriting($docBlock))
                     ) {
-                        api_log('warning', "Missing @param for `{$argument->getName()}` in `{$source->getFqsen()}`.");
+                        api_log('error', "Missing @param for `{$argument->getName()}` in `{$source->getFqsen()}`.");
                     }
                     $addedTags[] = new Param($argument->getName(), $argument->getType(), $argument->isVariadic());
                 }
