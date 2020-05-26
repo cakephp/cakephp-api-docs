@@ -11,7 +11,7 @@ job('API - Rebuild API docs 4.x') {
       remote {
         github(REPO_NAME)
       }
-      branch('master')
+      branch('2.x')
     }
     git {
       remote {
