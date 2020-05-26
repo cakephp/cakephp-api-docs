@@ -2,9 +2,9 @@ def final REPO_NAME = 'cakephp/cakephp-api-docs'
 def final CAKE_REPO_NAME = 'cakephp/cakephp'
 def final CHRONOS_REPO_NAME = 'cakephp/chronos'
 
-job('API - Rebuild All API docs') {
+job('API - Rebuild API docs 4.x') {
   description('''\
-  Will delete all API doc websites and rebuild them. Useful for fixing templates.
+  Will delete the 4.x API doc websites and rebuild them.
   ''')
   multiscm {
     git {
@@ -17,7 +17,7 @@ job('API - Rebuild All API docs') {
       remote {
         github(CAKE_REPO_NAME)
       }
-      branches('master', '3.next', '2.x', '2.next')
+      branches('master', '3.x')
     }
     git {
       remote {
@@ -42,7 +42,8 @@ git add "$GIT_COMMIT"
 git commit --author "Jenkins <ci@cakephp.org>" -m "Regenerate for commit $GIT_COMMIT"
 
 git remote rm origin
-git remote | grep dokku || git remote add dokku dokku@new.cakephp.org:api
+git remote rm dokku || true
+git remote | grep dokku || git remote add dokku dokku@new.cakephp.org:api-4
 git push -fv dokku master
 rm -rf /tmp/apidocs-$GIT_COMMIT
     ''')
