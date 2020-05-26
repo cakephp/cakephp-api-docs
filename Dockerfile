@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y \
     php-bz2 \
     php-json \
     php-mbstring \
+    php-intl \
     php-zip \
     php-xml \
     php-fpm \
