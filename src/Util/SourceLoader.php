@@ -212,7 +212,7 @@ class SourceLoader
     protected function loadReflection(): void
     {
         $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($this->sourceDir),
+            new RecursiveDirectoryIterator($this->sourceDir)
         );
 
         $files = [];
