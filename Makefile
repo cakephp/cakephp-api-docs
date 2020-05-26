@@ -1,5 +1,6 @@
 CAKEPHP_SOURCE_DIR='../cakephp'
 CHRONOS_SOURCE_DIR='../chronos'
+ELASTIC_SOURCE_DIR='../elastic-search'
 BUILD_DIR=./build/api
 DEPLOY_DIR=./website
 PHP_DIR=$(PWD)
@@ -10,9 +11,11 @@ PHP_DIR=$(PWD)
 .ALL: help
 
 # Versions that can be built.
-CAKEPHP_VERSIONS = 4.0 4.1
+CAKEPHP_VERSIONS = 3.8 3.9 4.0 4.1
 
-CHRONOS_VERSIONS = 2.0
+CHRONOS_VERSIONS = 2.x
+
+ELASTIC_VERSIONS = 3.x
 
 help:
 	@echo "CakePHP API Documentation generator"
@@ -79,12 +82,26 @@ build-chronos-$(VERSION): $(BUILD_DIR) install
 		--output $(BUILD_DIR)/chronos/$(VERSION) $(CHRONOS_SOURCE_DIR)/src
 endef
 
+define elastic
+build-elastic-$(VERSION): $(BUILD_DIR) install
+	cd $(ELASTIC_SOURCE_DIR) && git checkout -f $(TAG)
+	cd $(ELASTIC_SOURCE_DIR) && php $(PHP_DIR)/composer.phar update
+	cp -r static/* $(BUILD_DIR)
+
+	php bin/apitool.php generate --config config/elastic.neon --version $(VERSION) \
+		--output $(BUILD_DIR)/elastic-search/$(VERSION) $(ELASTIC_SOURCE_DIR)/src
+endef
+
 # Build all the versions in a loop.
 build-all: $(foreach version, $(CAKEPHP_VERSIONS), build-cakephp-$(version)) $(foreach version, $(CHRONOS_VERSIONS), build-chronos-$(version))
 
 # Generate build targets for cakephp
 TAG:=origin/3.x
 VERSION:=3.8
+$(eval $(cakephp))
+
+TAG:=origin/3.next
+VERSION:=3.9
 $(eval $(cakephp))
 
 TAG:=origin/master
@@ -97,5 +114,10 @@ $(eval $(cakephp))
 
 # Generate build targets for chronos
 TAG:=origin/master
-VERSION:=2.0
+VERSION:=2.x
 $(eval $(chronos))
+
+# Generate build targets for elastic-search
+TAG:=origin/master
+VERSION:=3.x
+$(eval $(elastic))

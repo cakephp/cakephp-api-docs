@@ -3,8 +3,7 @@
 templates: 'templates'
 
 globals:
-    project: 'Chronos'
+    project: 'Elastic Search'
     release: ''
     version_links:
-        '2.x': '../2.x'
-        '1.x': '../1.x'
+        '3.x': '../3.x'
