@@ -37,6 +37,7 @@ job('API - Rebuild API docs 4.x') {
 rm -rf /tmp/apidocs-$GIT_COMMIT
 git clone https://github.com/cakephp/cakephp-api-docs.git /tmp/apidocs-$GIT_COMMIT
 cd /tmp/apidocs-$GIT_COMMIT
+git checkout 2.x
 touch "$GIT_COMMIT"
 git add "$GIT_COMMIT"
 git commit --author "Jenkins <ci@cakephp.org>" -m "Regenerate for commit $GIT_COMMIT"
@@ -44,7 +45,7 @@ git commit --author "Jenkins <ci@cakephp.org>" -m "Regenerate for commit $GIT_CO
 git remote rm origin
 git remote rm dokku || true
 git remote | grep dokku || git remote add dokku dokku@apps.cakephp.org:api-4
-git push -fv dokku master
+git push -fv dokku 2.x:master
 rm -rf /tmp/apidocs-$GIT_COMMIT
     ''')
   }
