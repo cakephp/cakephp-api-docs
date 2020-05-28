@@ -71,7 +71,7 @@ build-cakephp-$(VERSION): install
 endef
 
 define chronos
-build-chronos-$(VERSION): $(BUILD_DIR) install
+build-chronos-$(VERSION): install
 	cd $(CHRONOS_SOURCE_DIR) && git checkout -f $(TAG)
 	cd $(CHRONOS_SOURCE_DIR) && php $(PHP_DIR)/composer.phar update
 	mkdir -p $(BUILD_DIR)/chronos/$(VERSION)
@@ -82,7 +82,7 @@ build-chronos-$(VERSION): $(BUILD_DIR) install
 endef
 
 define elastic
-build-elastic-$(VERSION): $(BUILD_DIR) install
+build-elastic-$(VERSION): install
 	cd $(ELASTIC_SOURCE_DIR) && git checkout -f $(TAG)
 	cd $(ELASTIC_SOURCE_DIR) && php $(PHP_DIR)/composer.phar update
 	mkdir -p $(BUILD_DIR)/elastic-search/$(VERSION)
