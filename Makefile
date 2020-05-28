@@ -53,9 +53,6 @@ deploy: $(DEPLOY_DIR)
 	done
 
 
-$(BUILD_DIR):
-	mkdir -p $(BUILD_DIR)
-
 composer.phar:
 	curl -sS https://getcomposer.org/installer | php
 
@@ -63,10 +60,11 @@ install: composer.phar
 	php composer.phar install
 
 define cakephp
-build-cakephp-$(VERSION): $(BUILD_DIR) install
+build-cakephp-$(VERSION): install
 	cd $(CAKEPHP_SOURCE_DIR) && git checkout -f $(TAG)
 	cd $(CAKEPHP_SOURCE_DIR) && php $(PHP_DIR)/composer.phar update
-	cp -r static/* $(BUILD_DIR)
+	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
+	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
 
 	php bin/apitool.php generate --config config/cakephp.neon --version $(VERSION) \
 		--output $(BUILD_DIR)/cakephp/$(VERSION) $(CAKEPHP_SOURCE_DIR)/src
@@ -76,7 +74,8 @@ define chronos
 build-chronos-$(VERSION): $(BUILD_DIR) install
 	cd $(CHRONOS_SOURCE_DIR) && git checkout -f $(TAG)
 	cd $(CHRONOS_SOURCE_DIR) && php $(PHP_DIR)/composer.phar update
-	cp -r static/* $(BUILD_DIR)
+	mkdir -p $(BUILD_DIR)/chronos/$(VERSION)
+	cp -r static/assets/* $(BUILD_DIR)/chronos/$(VERSION)
 
 	php bin/apitool.php generate --config config/chronos.neon --version $(VERSION) \
 		--output $(BUILD_DIR)/chronos/$(VERSION) $(CHRONOS_SOURCE_DIR)/src
@@ -86,7 +85,8 @@ define elastic
 build-elastic-$(VERSION): $(BUILD_DIR) install
 	cd $(ELASTIC_SOURCE_DIR) && git checkout -f $(TAG)
 	cd $(ELASTIC_SOURCE_DIR) && php $(PHP_DIR)/composer.phar update
-	cp -r static/* $(BUILD_DIR)
+	mkdir -p $(BUILD_DIR)/elastic-search/$(VERSION)
+	cp -r static/assets/* $(BUILD_DIR)/elastic-search/$(VERSION)
 
 	php bin/apitool.php generate --config config/elastic.neon --version $(VERSION) \
 		--output $(BUILD_DIR)/elastic-search/$(VERSION) $(ELASTIC_SOURCE_DIR)/src
