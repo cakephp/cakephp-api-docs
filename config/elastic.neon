@@ -1,9 +1,0 @@
-# CakePHP API docs
-
-templates: 'templates'
-
-globals:
-    project: 'Elastic Search'
-    release: ''
-    version_links:
-        '3.x': '../3.x'

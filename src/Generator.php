@@ -22,6 +22,7 @@ use Cake\ApiDocs\Twig\TwigRenderer;
 use Cake\ApiDocs\Util\ClassLikeCollapser;
 use Cake\ApiDocs\Util\CollapsedClassLike;
 use Cake\ApiDocs\Util\SourceLoader;
+use Cake\Core\Configure;
 use phpDocumentor\Reflection\Php\Class_;
 use phpDocumentor\Reflection\Php\Interface_;
 use phpDocumentor\Reflection\Php\Namespace_;
@@ -46,15 +47,14 @@ class Generator
 
     /**
      * @param \Cake\ApiDocs\Util\SourceLoader $loader source loader
-     * @param array $config config
      */
-    public function __construct(SourceLoader $loader, array $config)
+    public function __construct(SourceLoader $loader)
     {
         $this->loader = $loader;
         $this->collapser = new ClassLikeCollapser($loader);
-        $this->renderer = new TwigRenderer($config['templates'], $config['output']);
+        $this->renderer = new TwigRenderer();
         $this->renderer->getTwig()->addExtension(new ReflectionExtension($loader));
-        $this->renderer->getTwig()->addGlobal('config', $config['globals']);
+        $this->renderer->getTwig()->addGlobal('config', Configure::read('globals'));
     }
 
     /**

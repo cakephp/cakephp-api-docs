@@ -7,6 +7,8 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 use Cake\ApiDocs\Application;
 use Cake\Console\CommandRunner;
 
+define('CONFIG', dirname(__DIR__) . '/config/');
+
 // Build the runner with an application and root executable name.
 $runner = new CommandRunner(new Application(), 'apitool');
 exit($runner->run($argv));

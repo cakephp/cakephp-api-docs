@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Cake\ApiDocs\Twig;
 
+use Cake\Core\Configure;
 use InvalidArgumentException;
 use Twig\Environment;
 use Twig\Extra\Markdown\MarkdownExtension;
@@ -35,21 +36,20 @@ class TwigRenderer
     private $outputPath;
 
     /**
-     * @param string $templatesPath The path containing twig templates
-     * @param string $outputPath The render output path
+     * Constructor
      */
-    public function __construct(string $templatesPath, string $outputPath)
+    public function __construct()
     {
-        $this->outputPath = $outputPath;
+        $this->outputPath = Configure::read('output');
         if (!is_dir($this->outputPath)) {
             mkdir($this->outputPath, 0777, true);
         }
 
         if (!is_dir($this->outputPath)) {
-            throw new InvalidArgumentException("Unable to create output directory {$outputPath}");
+            throw new InvalidArgumentException("Unable to create output directory `{$this->outputPath}`.");
         }
 
-        $this->twig = $this->createTwig($templatesPath);
+        $this->twig = $this->createTwig(Configure::read('templates'));
     }
 
     /**
@@ -96,39 +96,4 @@ class TwigRenderer
 
         return $twig;
     }
-
-    /*
-    private function addFilters(): void
-    {
-        $this->twig->addFilter(new TwigFilter('fqsen', function (string $fqsen) {
-            return substr($fqsen, 1);
-        }));
-
-        $this->twig->addFilter(new TwigFilter('name', function (string $fqsen, bool $strip = false) {
-            $parts = explode('::', $fqsen);
-            if (count($parts) > 1) {
-                $name = end($parts);
-                if ($strip) {
-                    if ($name[0] === '$') {
-                        $name = substr($name, 1);
-                    }
-                    if ($name[-1] === ')') {
-                        $name = substr($name, 0, -2);
-                    }
-                }
-
-                return $name;
-            }
-
-            return substr($fqsen, strrpos($fqsen, '\\') + 1);
-        }));
-    }
-
-    private function addTests(): void
-    {
-        $this->twig->addTest(new TwigTest('startOf', function (string $start, ?string $whole) {
-            return Strings::startsWith($whole ?? '', $start);
-        }));
-    }
-    */
 }

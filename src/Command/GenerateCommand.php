@@ -23,8 +23,8 @@ use Cake\Console\Arguments;
 use Cake\Console\BaseCommand;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
-use Nette\Neon\Neon;
-use Nette\Utils\FileSystem;
+use Cake\Core\Configure;
+use Cake\Core\Configure\Engine\PhpConfig;
 
 class GenerateCommand extends BaseCommand
 {
@@ -48,11 +48,6 @@ class GenerateCommand extends BaseCommand
             'help' => 'The current version.',
         ]);
 
-        $parser->addOption('templates', [
-            'required' => true,
-            'help' => 'The twig template path.',
-        ]);
-
         $parser->addOption('output', [
             'required' => true,
             'help' => 'The html output path.',
@@ -66,11 +61,11 @@ class GenerateCommand extends BaseCommand
      */
     public function execute(Arguments $args, ConsoleIo $io): ?int
     {
-        $config = $this->loadConfig($args);
+        $this->configure($args);
 
         $sourcePath = $args->getArgumentAt(0);
         $loader = new SourceLoader($sourcePath);
-        $generator = new Generator($loader, $config);
+        $generator = new Generator($loader);
         $generator->generate();
 
         return static::CODE_SUCCESS;
@@ -78,20 +73,14 @@ class GenerateCommand extends BaseCommand
 
     /**
      * @param \Cake\Console\Arguments $args The command line arguments
-     * @return array
+     * @return void
      */
-    protected function loadConfig(Arguments $args): array
+    protected function configure(Arguments $args): void
     {
-        $config = FileSystem::read($args->getOption('config'));
-        $config = Neon::decode($config);
-        $config = $config + [
-            'templates' => $args->getOption('templates'),
-            'output' => $args->getOption('output'),
-        ];
-        $config['globals'] = $config['globals'] + [
-            'version' => $args->getOption('version'),
-        ];
+        Configure::config('default', new PhpConfig());
+        Configure::load($args->getOption('config'), 'default', false);
 
-        return $config;
+        Configure::write('output', $args->getOption('output'));
+        Configure::write('globals.version', $args->getOption('version'));
     }
 }
