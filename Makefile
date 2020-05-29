@@ -66,7 +66,7 @@ build-cakephp-$(VERSION): install
 	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
 
-	php bin/apitool.php generate --config config/cakephp.neon --version $(VERSION) \
+	php bin/apitool.php generate --config cakephp --version $(VERSION) \
 		--output $(BUILD_DIR)/cakephp/$(VERSION) $(CAKEPHP_SOURCE_DIR)/src
 endef
 
@@ -77,7 +77,7 @@ build-chronos-$(VERSION): install
 	mkdir -p $(BUILD_DIR)/chronos/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/chronos/$(VERSION)
 
-	php bin/apitool.php generate --config config/chronos.neon --version $(VERSION) \
+	php bin/apitool.php generate --config chronos --version $(VERSION) \
 		--output $(BUILD_DIR)/chronos/$(VERSION) $(CHRONOS_SOURCE_DIR)/src
 endef
 
@@ -88,7 +88,7 @@ build-elastic-$(VERSION): install
 	mkdir -p $(BUILD_DIR)/elastic-search/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/elastic-search/$(VERSION)
 
-	php bin/apitool.php generate --config config/elastic.neon --version $(VERSION) \
+	php bin/apitool.php generate --config elastic --version $(VERSION) \
 		--output $(BUILD_DIR)/elastic-search/$(VERSION) $(ELASTIC_SOURCE_DIR)/src
 endef
 

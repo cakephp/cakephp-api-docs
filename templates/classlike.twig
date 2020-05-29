@@ -217,10 +217,9 @@
 				</h3>
 				<p class="method-signature">
 					{{ method.source|to_name }}(
-						{% for argument in method.source.element.arguments %}
-							{{ argument.type }}
-								<var>${{ argument.name }}</var>{{ loop.last?'':',' }}
-						{% endfor %}
+						{%- for argument in method.source.element.arguments %}
+							{{- argument.type }} <var>${{ argument.name }}</var>{{ loop.last?'':', ' }}
+						{%- endfor -%}
 					)
 				</p>
 
