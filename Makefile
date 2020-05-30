@@ -13,9 +13,9 @@ PHP_DIR=$(PWD)
 # Versions that can be built.
 CAKEPHP_VERSIONS = 3.8 3.9 4.0 4.1
 
-CHRONOS_VERSIONS = 2.x
+CHRONOS_VERSIONS = 1.x 2.x
 
-ELASTIC_VERSIONS = 3.x
+ELASTIC_VERSIONS = 2.x 3.x
 
 help:
 	@echo "CakePHP API Documentation generator"
@@ -113,11 +113,19 @@ VERSION:=4.1
 $(eval $(cakephp))
 
 # Generate build targets for chronos
+TAG:=origin/1.x
+VERSION:=1.x
+$(eval $(chronos))
+
 TAG:=origin/master
 VERSION:=2.x
 $(eval $(chronos))
 
 # Generate build targets for elastic-search
+TAG:=origin/2.x
+VERSION:=2.x
+$(eval $(elastic))
+
 TAG:=origin/master
 VERSION:=3.x
 $(eval $(elastic))
