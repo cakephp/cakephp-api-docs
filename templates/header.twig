@@ -120,24 +120,6 @@
 											<li><a href="{{ url }}">{{ name }}</a></li>
 										{% endfor %}
 									</ul>
-								{#
-									{var $versions = $config->template->options->versions}
-									{var $activeVersion = $config->template->options->activeVersion}
-									{if $activeVersion != 'master' && !empty($versions)}
-										<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-											{$activeVersion} <i class="fa fa-menu-en fa-chevron-down"></i>
-										</a>
-										<ul class="dropdown-menu">
-											{foreach $versions as $ver}
-												{if !empty($activeUrl)}
-													<li><a href="../{$ver}/{$activeUrl}">{$ver}</a></li>
-												{else}
-													<li><a href="../{$ver}">{$ver}</a></li>
-												{/if}
-											{/foreach}
-										</ul>
-									{/if}
-								#}
 								</li>
 							</ul>
 						</li>

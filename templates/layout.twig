@@ -37,9 +37,20 @@
                     <div id="groups">
                         <h3 class="nav-title">Namespaces</h3>
                         <ul class="nav-list">
-                            {#
-                            {{ _self.showTree(namespaceTree, fqsen ?? '') }}
-                            #}
+                            {% macro ns_list(fqsen, alwaysShowChildren = false) %}
+                                {% set isActive = fqsen is startof(activeFqsen) %}
+                                <li class="{{ isActive ? 'active' : '' }}">
+                                    <a href="{{ fqsen|ns_to_url }}">{{ fqsen|to_name }}</a>
+                                    {% if isActive or alwaysShowChildren %}
+                                    <ul>
+                                        {% for child in fqsen|ns_to_children %}
+                                            {{ _self.ns_list(child) }}
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
+                                </li>
+                            {% endmacro %}
+                            {{ _self.ns_list(projectFqsen, true) }}
                         </ul>
                     </div>
                 </div>

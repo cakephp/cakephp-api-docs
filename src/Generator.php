@@ -62,6 +62,9 @@ class Generator
      */
     public function generate(): void
     {
+        $this->renderer->getTwig()->addGlobal('projectFqsen', array_key_first($this->loader->getNamespaces()));
+        $this->renderer->getTwig()->addGlobal('activeFqsen', '');
+
         $this->renderOverview();
         foreach ($this->loader->getNamespaces() as $namespace) {
             $this->renderNamespace($namespace);
@@ -117,6 +120,8 @@ class Generator
      */
     protected function renderNamespace(Namespace_ $namespace): void
     {
+        $this->renderer->setGlobal('activeFqsen', (string)$namespace->getFqsen());
+
         $context = [
             'namespace' => $namespace,
         ];
@@ -131,6 +136,8 @@ class Generator
      */
     protected function renderClassLike(string $type, CollapsedClassLike $collapsed): void
     {
+        $this->renderer->setGlobal('activeFqsen', $collapsed->getSource()->getFqsen());
+
         $context = [
             'type' => $type,
             'collapsed' => $collapsed,
@@ -152,7 +159,7 @@ class Generator
                 foreach ($collapsed->{$getter}() as $element) {
                     $declaration = $element['source'];
 
-                    if ($declaration->getInProject()) {
+                    if ($declaration->inProject()) {
                         $type = '';
                         if ($declaration->getParent() instanceof Class_) {
                             $type = 'c';
@@ -180,67 +187,4 @@ class Generator
     {
         return "{$type}-" . str_replace('\\', '.', substr($fqsen, 1)) . '.html';
     }
-
-    /*
-    private function buildTree(array $namespaces): Node
-    {
-        $unique = [];
-        foreach ($namespaces as $namespace) {
-            $names = explode('\\', $namespace);
-            foreach (range(2, count($names)) as $length) {
-                $unique[] = implode('\\', array_slice($names, 0, $length));
-            }
-        }
-        $unique = array_unique($unique);
-        sort($unique);
-
-        $nodes = [];
-        foreach ($unique as $namespace) {
-            $parent = substr($namespace, 0, strrpos($namespace, '\\'));
-            $nodes[] = ['name' => $namespace, 'parent' => $parent];
-        }
-        $nodes = new Collection($nodes);
-        $nodes = $nodes->nest('name', 'parent');
-
-        return new Node();
-    }
-
-    private function addFilters(Loader $loader): void
-    {
-        $this->renderer->addFilter(new TwigFilter(
-            'fqsen_url',
-            function (string $fqsen, ?string $type = null) use ($loader) {
-                $parts = explode('::', $fqsen);
-                $objectType = $type;
-                if ($objectType === null) {
-                    $objectType = 'class';
-
-                    [, $inProject] = $loader->getClass($parts[0]);
-                    if (!$inProject) {
-                        return '';
-                    }
-                }
-
-                $url = $objectType . '-' . str_replace('\\', '.', substr($parts[0], 1)) . '.html';
-
-                if (count($parts) > 1) {
-                    $anchor = $parts[1];
-                    if ($anchor[-1] === ')') {
-                        $anchor = substr($anchor, 0, -2);
-                    }
-                    $url .= '#' . $anchor;
-                }
-
-                return $url;
-            }
-        ));
-
-        $this->renderer->addFilter(new TwigFilter(
-            'children',
-            function (FqsenTree $tree, string $type) {
-                return $tree->getChildrenByType($type);
-            }
-        ));
-    }
-    */
 }

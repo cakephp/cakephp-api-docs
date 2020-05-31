@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Cake\ApiDocs\Util;
 
+use Cake\ApiDocs\Reflection\ElementInfo;
 use InvalidArgumentException;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\DocBlock\Description;
@@ -70,7 +71,7 @@ class ClassLikeCollapser
             throw new InvalidArgumentException("{$classlike->getFqsen()} is not a class-like fqsen.");
         }
 
-        $source = $this->loader->find((string)$classlike->getFqsen());
+        $source = $this->loader->getElementInfo((string)$classlike->getFqsen());
         if (!$source) {
             throw new InvalidArgumentException("Unable to find {$classlike->getFqsen()}.");
         }
@@ -95,7 +96,7 @@ class ClassLikeCollapser
         foreach ($inheritance as $source) {
             if (method_exists($source->getElement(), 'getConstants')) {
                 foreach ($source->getElement()->getConstants() as $fqsen => $element) {
-                    $constant = $this->loader->find((string)$fqsen);
+                    $constant = $this->loader->getElementInfo((string)$fqsen);
                     if ((string)$constant->getElement()->getVisibility() !== 'private') {
                         $elements[$element->getName()][] = $constant;
                     }
@@ -123,7 +124,7 @@ class ClassLikeCollapser
         foreach ($inheritance as $source) {
             if (method_exists($source->getElement(), 'getProperties')) {
                 foreach ($source->getElement()->getProperties() as $fqsen => $element) {
-                    $property = $this->loader->find((string)$fqsen);
+                    $property = $this->loader->getElementInfo((string)$fqsen);
                     if ((string)$property->getElement()->getVisibility() !== 'private') {
                         $elements[$element->getName()][] = $property;
                     }
@@ -144,12 +145,12 @@ class ClassLikeCollapser
                         null,
                         $tag->getType()
                     );
-                    $elements[$fqsen->getName()][] = new LoadedFqsen(
+                    $elements[$fqsen->getName()][] = new ElementInfo(
                         (string)$fqsen,
                         $property,
                         $source->getElement(),
                         $source->getFile(),
-                        $source->getInProject()
+                        $source->inProject()
                     );
                 }
             }
@@ -175,7 +176,7 @@ class ClassLikeCollapser
         foreach ($inheritance as $source) {
             if (method_exists($source->getElement(), 'getMethods')) {
                 foreach ($source->getElement()->getMethods() as $fqsen => $element) {
-                    $method = $this->loader->find((string)$fqsen);
+                    $method = $this->loader->getElementInfo((string)$fqsen);
                     if ((string)$method->getElement()->getVisibility() !== 'private') {
                         $elements[$element->getName()][] = $method;
                     }
@@ -184,7 +185,7 @@ class ClassLikeCollapser
 
             if ($source->getElement()->getDocBlock()) {
                 foreach ($source->getElement()->getDocBlock()->getTagsByName('method') as $tag) {
-                    if ($source->getInProject() && (string)$tag->getDescription() === '') {
+                    if ($source->inProject() && (string)$tag->getDescription() === '') {
                         api_log(
                             'warning',
                             "Missing description for @method `{$tag->getMethodName()}` on `{$source->getFqsen()}`."
@@ -211,12 +212,12 @@ class ClassLikeCollapser
                         $method->addArgument(new Argument($argument['name'], $argument['type']));
                     }
 
-                    $elements[$fqsen->getName()][] = new LoadedFqsen(
+                    $elements[$fqsen->getName()][] = new ElementInfo(
                         (string)$fqsen,
                         $method,
                         $source->getElement(),
                         $source->getFile(),
-                        $source->getInProject()
+                        $source->inProject()
                     );
                 }
             }
@@ -235,15 +236,15 @@ class ClassLikeCollapser
     /**
      * Validates docblock against element source and adds placeholders where needed.
      *
-     * @param \Cake\ApiDocs\Util\LoadedFqsen $source source
+     * @param \Cake\ApiDocs\Reflection\ElementInfo $source source
      * @param \phpDocumentor\Reflection\DocBlock $docBlock docblock
      * @return \phpDocumentor\Reflection\DocBlock
      */
-    protected function validateDocBlock(LoadedFqsen $source, DocBlock $docBlock): DocBlock
+    protected function validateDocBlock(ElementInfo $source, DocBlock $docBlock): DocBlock
     {
         foreach ($docBlock->getTags() as $tag) {
             if ($tag instanceof InvalidTag) {
-                if ($source->getInProject()) {
+                if ($source->inProject()) {
                     api_log('warning', "Found invalid @{$tag->getName()} for `{$source->getFqsen()}`.");
                 }
                 $docBlock->removeTag($tag);
@@ -254,7 +255,7 @@ class ClassLikeCollapser
         if ($source->getElement() instanceof Constant || $source->getElement() instanceof Property) {
             $tags = $docBlock->getTagsByName('var');
             if (count($tags) === 0) {
-                if ($source->getInProject()) {
+                if ($source->inProject()) {
                     api_log('error', "Missing @var for `{$source->getFqsen()}`. Using `mixed.`");
                 }
                 $addedTags[] = new Var_($source->getElement()->getName(), new Mixed_());
@@ -273,7 +274,7 @@ class ClassLikeCollapser
                 }
                 if (!$matchedTag) {
                     if (
-                        $source->getInProject() &&
+                        $source->inProject() &&
                         !($source->getParent() instanceof Trait_ && $this->isDocBockInheriting($docBlock))
                     ) {
                         api_log('error', "Missing @param for `{$argument->getName()}` in `{$source->getFqsen()}`.");
@@ -301,7 +302,7 @@ class ClassLikeCollapser
     /**
      * Collapsed doc blocks for element.
      *
-     * @param \Cake\ApiDocs\Util\LoadedFqsen[] $sources sources
+     * @param \Cake\ApiDocs\Reflection\ElementInfo[] $sources sources
      * @return \phpDocumentor\Reflection\DocBlock
      */
     protected function collapseDocBlock(array $sources): DocBlock
@@ -333,10 +334,10 @@ class ClassLikeCollapser
     /**
      * Builds ordered dictionary of collapsed inheritance tree.
      *
-     * @param \Cake\ApiDocs\Util\LoadedFqsen $source loaded fqsen
-     * @return \Cake\ApiDocs\Util\LoadedFqsen[]
+     * @param \Cake\ApiDocs\Reflection\ElementInfo $source loaded fqsen
+     * @return \Cake\ApiDocs\Reflection\ElementInfo[]
      */
-    protected function getInheritanceChain(LoadedFqsen $source): array
+    protected function getInheritanceChain(ElementInfo $source): array
     {
         $walker = function (Element $element, string $getter): array {
             if (!method_exists($element, $getter)) {
@@ -346,7 +347,7 @@ class ClassLikeCollapser
             $inheritance = [];
             $elements = (array)$element->{$getter}();
             foreach ($elements as $fqsen) {
-                $source = $this->loader->find((string)$fqsen);
+                $source = $this->loader->getElementInfo((string)$fqsen);
                 if ($source) {
                     $inheritance += $this->getInheritanceChain($source);
                 }

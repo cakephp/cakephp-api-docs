@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace Cake\ApiDocs\Twig\Extension;
 
-use Cake\ApiDocs\Util\LoadedFqsen;
+use Cake\ApiDocs\Reflection\ElementInfo;
 use Cake\ApiDocs\Util\SourceLoader;
 use InvalidArgumentException;
 use phpDocumentor\Reflection\DocBlock;
@@ -58,7 +58,7 @@ class ReflectionExtension extends AbstractExtension
             new TwigFilter('to_path', function ($source) {
                 if ($source instanceof Element) {
                     $fqsen = (string)$source->getFqsen();
-                } elseif ($source instanceof LoadedFqsen) {
+                } elseif ($source instanceof ElementInfo) {
                     $fqsen = (string)$source->getElement()->getFqsen();
                 } else {
                     $fqsen = (string)$source;
@@ -69,7 +69,7 @@ class ReflectionExtension extends AbstractExtension
             new TwigFilter('to_name', function ($source) {
                 if ($source instanceof Element) {
                     $fqsen = (string)$source->getFqsen();
-                } elseif ($source instanceof LoadedFqsen) {
+                } elseif ($source instanceof ElementInfo) {
                     $fqsen = (string)$source->getElement()->getFqsen();
                 } else {
                     $fqsen = (string)$source;
@@ -82,7 +82,7 @@ class ReflectionExtension extends AbstractExtension
             new TwigFilter('to_namespace', function ($source) {
                 if ($source instanceof Element) {
                     $fqsen = (string)$source->getFqsen();
-                } elseif ($source instanceof LoadedFqsen) {
+                } elseif ($source instanceof ElementInfo) {
                     $fqsen = (string)$source->getElement()->getFqsen();
                 } else {
                     $fqsen = (string)$source;
@@ -94,8 +94,8 @@ class ReflectionExtension extends AbstractExtension
                 if ($source instanceof Element) {
                     $source = (string)$source->getFqsen();
                 }
-                if (!($source instanceof LoadedFqsen)) {
-                    $source = $this->loader->find((string)$source);
+                if (!($source instanceof ElementInfo)) {
+                    $source = $this->loader->getElementInfo((string)$source);
                 }
                 if ($source === null) {
                     return '';
@@ -136,12 +136,19 @@ class ReflectionExtension extends AbstractExtension
 
                 return $url;
             }),
+            new TwigFilter('ns_to_children', function ($source) {
+                if ($source instanceof Element) {
+                    $source = (string)$source->getFqsen();
+                }
+
+                return array_keys($this->loader->getNamespaceInfo($source)->getChildren());
+            }),
             new TwigFilter('docblock', function ($source) {
                 if ($source instanceof Element) {
                     return $source->getDocBlock() ?? new DocBlock();
                 }
-                if (!($source instanceof LoadedFqsen)) {
-                    $source = $this->loader->find((string)$source);
+                if (!($source instanceof ElementInfo)) {
+                    $source = $this->loader->getElementInfo((string)$source);
                     if ($source === null) {
                         throw new InvalidArgumentException("Could not find {$source}.");
                     }
@@ -154,8 +161,8 @@ class ReflectionExtension extends AbstractExtension
                     if ($source instanceof Element) {
                         $source = (string)$source->getFqsen();
                     }
-                    if (!($source instanceof LoadedFqsen)) {
-                        $source = $this->loader->find((string)$source);
+                    if (!($source instanceof ElementInfo)) {
+                        $source = $this->loader->getElementInfo((string)$source);
                     }
                     $source = $source->getElement()->getDocBlock() ?? new DocBlock();
                 }
@@ -174,8 +181,8 @@ class ReflectionExtension extends AbstractExtension
                     if ($source instanceof Element) {
                         $source = (string)$source->getFqsen();
                     }
-                    if (!($source instanceof LoadedFqsen)) {
-                        $source = $this->loader->find((string)$source);
+                    if (!($source instanceof ElementInfo)) {
+                        $source = $this->loader->getElementInfo((string)$source);
                     }
                     $source = $source->getElement()->getDocBlock() ?? new DocBlock();
                 }
@@ -198,16 +205,8 @@ class ReflectionExtension extends AbstractExtension
     public function getTests()
     {
         return [
-            new TwigTest('in_project', function ($source) {
-                if ($source instanceof Element) {
-                    $source = (string)$source->getFqsen();
-                }
-
-                if (!($source instanceof LoadedFqsen)) {
-                    $source = $this->loader->find((string)$source);
-                }
-
-                return $source->getInProject();
+            new TwigTest('startof', function ($left, $right) {
+                return strpos($right, $left) === 0;
             }),
         ];
     }

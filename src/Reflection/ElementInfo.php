@@ -15,16 +15,16 @@ declare(strict_types=1);
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-namespace Cake\ApiDocs\Util;
+namespace Cake\ApiDocs\Reflection;
 
 use phpDocumentor\Reflection\Element;
 use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Php\File;
 
 /**
- * LoadedFqsen
+ * ElementInfo
  */
-class LoadedFqsen
+class ElementInfo
 {
     /**
      * @var string
@@ -116,7 +116,7 @@ class LoadedFqsen
     /**
      * @return bool
      */
-    public function getInProject(): bool
+    public function inProject(): bool
     {
         return $this->inProject;
     }

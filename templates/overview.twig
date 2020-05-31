@@ -6,17 +6,6 @@
 <div id="content">
 	<h1>CakePHP {{ config.version }} Overview</h1>
 
-	<div class="section" id="namespaces">
-		<h3>Namespaces summary</h3>
-		<ul class="summary-list">
-			{% for namespace in namespaces %}
-				<li>
-					<a href="{{ namespace|ns_to_url }}">{{ namespace|to_path }}</a>
-				</li>
-			{% endfor %}
-		</ul>
-	</div>
-
 	{% macro section(title, elements) %}
 		{% if elements is not empty %}
 			<div class="section">
@@ -33,7 +22,7 @@
 		{% endif %}
 	{% endmacro %}
 
-	{{ _self.section('Functions', functions) }}
-	{{ _self.section('Constants', constants) }}
+	{{ _self.section('Global functions', functions) }}
+	{{ _self.section('Global constants', constants) }}
 </div>
 {% endblock %}

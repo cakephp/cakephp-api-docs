@@ -63,6 +63,18 @@ class TwigRenderer
     }
 
     /**
+     * Sets Twig global.
+     *
+     * @param string $name global name
+     * @param mixed $value global value
+     * @return void
+     */
+    public function setGlobal(string $name, $value): void
+    {
+        $this->twig->addGlobal($name, $value);
+    }
+
+    /**
      * @param string $template The twig template name in template path
      * @param string $filename The output filename
      * @param array $context The twig render context

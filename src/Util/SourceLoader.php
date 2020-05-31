@@ -17,9 +17,13 @@ declare(strict_types=1);
 
 namespace Cake\ApiDocs\Util;
 
+use Cake\ApiDocs\Reflection\ElementInfo;
+use Cake\ApiDocs\Reflection\NamespaceInfo;
 use phpDocumentor\Reflection\Element;
 use phpDocumentor\Reflection\File\LocalFile;
+use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Php\File;
+use phpDocumentor\Reflection\Php\Namespace_;
 use phpDocumentor\Reflection\Php\ProjectFactory;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -60,6 +64,16 @@ class SourceLoader
     protected $vendorFiles = [];
 
     /**
+     * @var (null|\Cake\ApiDocs\Reflection\NamespaceInfo)[]
+     */
+    protected $cachedNamespaceInfo = [];
+
+    /**
+     * @var (null|\Cake\ApiDocs\Reflection\ElementInfo)[]
+     */
+    protected $cachedElementInfo = [];
+
+    /**
      * @param string $sourceDir Source directory
      */
     public function __construct(string $sourceDir)
@@ -79,7 +93,7 @@ class SourceLoader
     }
 
     /**
-     * @return \phpDocumentor\Reflection\Php\Namespace_[]
+     * @return \Cake\ApiDocs\Reflection\NamespaceInfo[]
      */
     public function getNamespaces(): array
     {
@@ -88,9 +102,61 @@ class SourceLoader
 
     /**
      * @param string $fqsen fqsen
-     * @return \Cake\ApiDocs\Util\LoadedFqsen|null
+     * @return \Cake\ApiDocs\Reflection\NamespaceInfo|null
      */
-    public function find(string $fqsen): ?LoadedFqsen
+    public function getNamespaceInfo(string $fqsen): ?NamespaceInfo
+    {
+        if (array_key_exists($fqsen, $this->cachedNamespaceInfo)) {
+            return $this->cachedNamespaceInfo[$fqsen];
+        }
+
+        $info = $this->buildNamespaceInfo($fqsen);
+        $this->cachedNamespaceInfo[$fqsen] = $info;
+
+        return $info;
+    }
+
+    /**
+     * @param string $fqsen fqsen
+     * @return \Cake\ApiDocs\Reflection\ElementInfo|null
+     */
+    public function getElementInfo(string $fqsen): ?ElementInfo
+    {
+        if (array_key_exists($fqsen, $this->cachedElementInfo)) {
+            return $this->cachedElementInfo[$fqsen];
+        }
+
+        $info = $this->buildElementInfo($fqsen);
+        $this->cachedElementInfo[$fqsen] = $info;
+
+        return $info;
+    }
+
+    /**
+     * @param string $fqsen fqsen
+     * @return \Cake\ApiDocs\Reflection\NamespaceInfo
+     */
+    protected function buildNamespaceInfo(string $fqsen): NamespaceInfo
+    {
+        $namespace = $this->projectNamespaces[$fqsen];
+        $parent = substr($fqsen, 0, strrpos($fqsen, '\\'));
+        $parent = $this->projectNamespaces[$parent] ?? null;
+
+        $children = [];
+        $quotedFqsen = preg_quote($fqsen);
+        $children = array_filter($this->projectNamespaces, function ($fqsen) use ($quotedFqsen) {
+            return preg_match('/^' . $quotedFqsen . '\\\\[^\\\\]+$/', $fqsen) === 1;
+        }, ARRAY_FILTER_USE_KEY);
+        ksort($children);
+
+        return new NamespaceInfo($fqsen, $namespace, $parent, $children);
+    }
+
+    /**
+     * @param string $fqsen fqsen
+     * @return \Cake\ApiDocs\Reflection\ElementInfo|null
+     */
+    protected function buildElementInfo($fqsen): ?ElementInfo
     {
         $parentFqsen = null;
         $parts = explode('::', $fqsen);
@@ -99,13 +165,13 @@ class SourceLoader
         }
 
         /** @var \phpDocumentor\Reflection\Php\File $file */
-        [$file, $inProject] = $this->findFile($parentFqsen ?? $fqsen);
+        [$file, $inProject] = $this->getFile($parentFqsen ?? $fqsen);
         if (!$file) {
             foreach ($this->projectFiles as $file) {
                 foreach (['constants', 'functions'] as $type) {
                     $element = $file->{'get' . $type}()[$fqsen] ?? null;
                     if ($element) {
-                        return new LoadedFqsen($fqsen, $element, null, $file, true);
+                        return new ElementInfo($fqsen, $element, null, $file, true);
                     }
                 }
             }
@@ -114,12 +180,12 @@ class SourceLoader
         }
 
         if ($parentFqsen) {
-            $parentElement = $this->findClassLike($file, $parentFqsen);
+            $parentElement = $this->getClassLike($file, $parentFqsen);
             foreach (['methods', 'constants', 'properties'] as $type) {
                 if (method_exists($parentElement, 'get' . $type)) {
                     $element = $parentElement->{'get' . $type}()[$fqsen] ?? null;
                     if ($element) {
-                        return new LoadedFqsen($fqsen, $element, $parentElement, $file, $inProject);
+                        return new ElementInfo($fqsen, $element, $parentElement, $file, $inProject);
                     }
                 }
             }
@@ -130,7 +196,7 @@ class SourceLoader
         foreach (['classes', 'interfaces', 'traits', 'constants', 'functions'] as $type) {
             $element = $file->{'get' . $type}()[$fqsen] ?? null;
             if ($element) {
-                return new LoadedFqsen($fqsen, $element, null, $file, $inProject);
+                return new ElementInfo($fqsen, $element, null, $file, $inProject);
             }
         }
 
@@ -142,7 +208,7 @@ class SourceLoader
      * @param string $fqsen The class fqsen
      * @return \phpDocumentor\Reflection\Element|null
      */
-    protected function findClassLike(File $file, string $fqsen): ?Element
+    protected function getClassLike(File $file, string $fqsen): ?Element
     {
         foreach (['classes', 'interfaces', 'traits'] as $type) {
             $class = $file->{'get' . $type}()[$fqsen] ?? null;
@@ -158,7 +224,7 @@ class SourceLoader
      * @param string $fqsen A loadable fqsen
      * @return array
      */
-    protected function findFile(string $fqsen): array
+    protected function getFile(string $fqsen): array
     {
         if ($fqsen[0] === '\\') {
             $fqsen = substr($fqsen, 1);
@@ -227,10 +293,17 @@ class SourceLoader
         }
 
         $project = $this->factory->create('project', $files);
-        $this->projectNamespaces = $project->getNamespaces();
-
         foreach ($project->getFiles() as $path => $file) {
             $this->projectFiles[realpath($path)] = $file;
         }
+
+        foreach ($project->getNamespaces() as $fqsen => $namespace) {
+            $parentFqsen = substr($fqsen, 0, strrpos($fqsen, '\\'));
+            if ($parentFqsen && !isset($project->getNamespaces()[$parentFqsen])) {
+                $this->projectNamespaces[$parentFqsen] = new Namespace_(new Fqsen($parentFqsen));
+            }
+            $this->projectNamespaces[$fqsen] = $namespace;
+        }
+        ksort($this->projectNamespaces);
     }
 }

@@ -17,13 +17,15 @@ declare(strict_types=1);
 
 namespace Cake\ApiDocs\Util;
 
+use Cake\ApiDocs\Reflection\ElementInfo;
+
 /**
  * CollapsedClassLike
  */
 class CollapsedClassLike
 {
     /**
-     * @var \Cake\ApiDocs\Util\LoadedFqsen
+     * @var \Cake\ApiDocs\Reflection\ElementInfo
      */
     protected $source;
 
@@ -43,12 +45,12 @@ class CollapsedClassLike
     protected $methods = [];
 
     /**
-     * @param \Cake\ApiDocs\Util\LoadedFqsen $source loaded fsqen
+     * @param \Cake\ApiDocs\Reflection\ElementInfo $source loaded fsqen
      * @param array $constants constants
      * @param array $properties properties
      * @param array $methods methods
      */
-    public function __construct(LoadedFqsen $source, array $constants, array $properties, array $methods)
+    public function __construct(ElementInfo $source, array $constants, array $properties, array $methods)
     {
         $this->source = $source;
         $this->constants = $constants;
@@ -57,9 +59,9 @@ class CollapsedClassLike
     }
 
     /**
-     * @return \Cake\ApiDocs\Util\LoadedFqsen
+     * @return \Cake\ApiDocs\Reflection\ElementInfo
      */
-    public function getSource(): LoadedFqsen
+    public function getSource(): ElementInfo
     {
         return $this->source;
     }
