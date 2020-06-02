@@ -2,7 +2,7 @@ def final REPO_NAME = 'cakephp/cakephp-api-docs'
 def final CAKE_REPO_NAME = 'cakephp/cakephp'
 def final CHRONOS_REPO_NAME = 'cakephp/chronos'
 
-job('API - Rebuild All API docs') {
+job('API - Rebuild API for 1.x, 2.x and early 3.x') {
   description('''\
   Will delete all API doc websites and rebuild them. Useful for fixing templates.
   ''')
@@ -43,7 +43,7 @@ git commit --author "Jenkins <ci@cakephp.org>" -m "Regenerate for commit $GIT_CO
 
 git remote rm origin
 git remote rm dokku || true
-git remote add dokku dokku@apps.cakephp.org:api
+git remote add dokku dokku@apps.cakephp.org:api-3
 git push -fv dokku master
 rm -rf /tmp/apidocs-$GIT_COMMIT
     ''')
