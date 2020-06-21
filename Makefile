@@ -96,11 +96,11 @@ endef
 build-all: $(foreach version, $(CAKEPHP_VERSIONS), build-cakephp-$(version)) $(foreach version, $(CHRONOS_VERSIONS), build-chronos-$(version))
 
 # Generate build targets for cakephp
-TAG:=origin/3.x
+TAG:=3.8.13
 VERSION:=3.8
 $(eval $(cakephp))
 
-TAG:=origin/3.next
+TAG:=origin/3.x
 VERSION:=3.9
 $(eval $(cakephp))
 
