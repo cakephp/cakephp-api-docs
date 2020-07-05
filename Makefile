@@ -104,12 +104,16 @@ TAG:=origin/3.x
 VERSION:=3.9
 $(eval $(cakephp))
 
-TAG:=origin/master
+TAG:=4.0.9
 VERSION:=4.0
 $(eval $(cakephp))
 
-TAG:=origin/4.next
+TAG:=origin/master
 VERSION:=4.1
+$(eval $(cakephp))
+
+TAG:=origin/4.next
+VERSION:=4.2
 $(eval $(cakephp))
 
 # Generate build targets for chronos
