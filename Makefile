@@ -11,7 +11,7 @@ PHP_DIR=$(PWD)
 .ALL: help
 
 # Versions that can be built.
-CAKEPHP_VERSIONS = 3.8 3.9 4.0 4.1
+CAKEPHP_VERSIONS = 4.1
 
 CHRONOS_VERSIONS = 1.x 2.x
 
@@ -93,7 +93,7 @@ build-elastic-$(VERSION): install
 endef
 
 # Build all the versions in a loop.
-build-all: $(foreach version, $(CAKEPHP_VERSIONS), build-cakephp-$(version)) $(foreach version, $(CHRONOS_VERSIONS), build-chronos-$(version)), $(foreach version, $(ELASTIC_VERSIONS), build-elastic-$(version))
+build-all: $(foreach version, $(CAKEPHP_VERSIONS), build-cakephp-$(version)) $(foreach version, $(CHRONOS_VERSIONS), build-chronos-$(version)) $(foreach version, $(ELASTIC_VERSIONS), build-elastic-$(version))
 
 # Generate build targets for cakephp
 TAG:=3.8.13
