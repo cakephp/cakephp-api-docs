@@ -11,7 +11,7 @@ PHP_DIR=$(PWD)
 .ALL: help
 
 # Versions that can be built.
-CAKEPHP_VERSIONS = 4.1
+CAKEPHP_VERSIONS = 3.8 3.9 4.0 4.1
 
 CHRONOS_VERSIONS = 1.x 2.x
 
