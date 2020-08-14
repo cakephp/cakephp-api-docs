@@ -93,7 +93,7 @@ build-elastic-$(VERSION): install
 endef
 
 # Build all the versions in a loop.
-build-all: $(foreach version, $(CAKEPHP_VERSIONS), build-cakephp-$(version)) $(foreach version, $(CHRONOS_VERSIONS), build-chronos-$(version))
+build-all: $(foreach version, $(CAKEPHP_VERSIONS), build-cakephp-$(version)) $(foreach version, $(CHRONOS_VERSIONS), build-chronos-$(version)), $(foreach version, $(ELASTIC_VERSIONS), build-elastic-$(version))
 
 # Generate build targets for cakephp
 TAG:=3.8.13
