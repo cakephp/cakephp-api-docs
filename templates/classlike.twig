@@ -278,7 +278,7 @@
 						<h6>Links</h6>
 						<div class="list">
 							{% for link in method.docBlock|tags('link') %}
-								<a href="{{ link.link }}">link.link</a><br>
+								<a href="{{ link.link }}">{{ link.link }}</a><br>
 								{{ link.description }}{{ loop.last?'':'<br>' }}
 							{% endfor %}
 						</div>
