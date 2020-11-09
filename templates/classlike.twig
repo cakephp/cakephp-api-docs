@@ -215,13 +215,12 @@
 					</h5>
 					<a href="{{ method.source|to_url }}" class="permalink" title="Permalink to this method">¶</a>
 				</h3>
-				<p class="method-signature">
-					{{ method.source|to_name }}(
-						{%- for argument in method.source.element.arguments %}
-							{{- argument.type }} <var>${{ argument.name }}</var>{{ loop.last?'':', ' }}
-						{%- endfor -%}
-					)
-				</p>
+
+				<pre><code class="language-php">{{ method.source|to_name }}(
+					{%- for argument in method.source.element.arguments %}
+						{{- argument.type }} ${{ argument.name }}{{ loop.last?'':', ' }}
+					{%- endfor -%}
+				)</code></pre>
 
 				<div class="description detailed">
 					{{ method.docBlock.summary|markdown_to_html }}
