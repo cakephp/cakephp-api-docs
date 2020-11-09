@@ -218,7 +218,7 @@
 
 				<pre><code class="language-php">{{ method.source|to_name }}(
 					{%- for argument in method.source.element.arguments %}
-						{{- argument.type }} ${{ argument.name }}{{ loop.last?'':', ' }}
+						{{- argument.type }} {% if argument.isVariadic %}...{% endif %}${{ argument.name }}{{ loop.last?'':', ' }}
 					{%- endfor -%}
 				)</code></pre>
 
@@ -233,7 +233,7 @@
 							{% for argument in method.source.element.arguments %}
 								<dt>
 									<code>{{ method.docBlock|param(argument.name).type ?? argument.type }}</code>
-									<var>${{ argument.name }}</var>
+									{% if argument.isVariadic %}...{% endif %}<var>${{ argument.name }}</var>
 									{% if argument.default is not empty %}
                                         <span class="label">optional</span>
 									{% endif %}
