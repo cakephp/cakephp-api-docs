@@ -80,10 +80,6 @@
         margin-top: 60px;
     }
 
-    #fb-root-face {
-        margin-bottom: 12px;
-    }
-
     #cakefest p {
         text-align: center;
     }
@@ -114,6 +110,14 @@
 
     .social-footer a {
         padding: 10px 6px;
+    }
+
+    .social {
+        margin-bottom: 20px;
+    }
+
+    .social iframe {
+        margin: 5px;
     }
 
 
