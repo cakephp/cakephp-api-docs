@@ -5,7 +5,7 @@
     .description {
         padding: 0;
     }
-    
+
     .logo-cake img {
         margin-top: 20px;
         margin-bottom: 14px;
@@ -80,10 +80,6 @@
         margin-top: 60px;
     }
 
-    #fb-root-face {
-        margin-bottom: 12px;
-    }
-
     #cakefest p {
         text-align: center;
     }
@@ -116,6 +112,13 @@
         padding: 10px 6px;
     }
 
+    .social {
+        margin-bottom: 20px;
+    }
+
+    .social iframe {
+        margin: 5px;
+    }
 
     /* ---------------------- COOK BOOK ------------------------- */
 
