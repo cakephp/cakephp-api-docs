@@ -37,6 +37,7 @@ job('API - Rebuild API for 1.x, 2.x and early 3.x') {
 rm -rf /tmp/apidocs-$GIT_COMMIT
 git clone https://github.com/cakephp/cakephp-api-docs.git /tmp/apidocs-$GIT_COMMIT
 cd /tmp/apidocs-$GIT_COMMIT
+git checkout 1.x
 touch "$GIT_COMMIT"
 git add "$GIT_COMMIT"
 git commit --author "Jenkins <ci@cakephp.org>" -m "Regenerate for commit $GIT_COMMIT"
