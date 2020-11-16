@@ -44,7 +44,7 @@ git commit --author "Jenkins <ci@cakephp.org>" -m "Regenerate for commit $GIT_CO
 git remote rm origin
 git remote rm dokku || true
 git remote add dokku dokku@apps.cakephp.org:api-3
-git push -fv dokku master
+git push -fv dokku 1.x:master
 rm -rf /tmp/apidocs-$GIT_COMMIT
     ''')
   }
