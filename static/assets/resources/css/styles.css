@@ -328,7 +328,7 @@ iframe {
 }
 
 .menu > li > a {
-    padding: 25px 35px;
+    padding: 25px 15px;
     font-size: 13px;
     text-transform: capitalize;
     font-weight:400;
@@ -463,7 +463,7 @@ iframe {
 /* Not actually full, as we're missing some sub-menus */
 .megamenu.full {
     /* Will need to be 100% one day */
-    width: 400px;
+    width: 65%;
     right: 0;
 }
 .megamenu .fa-menu-title {
