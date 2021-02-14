@@ -463,7 +463,7 @@ iframe {
 /* Not actually full, as we're missing some sub-menus */
 .megamenu.full {
     /* Will need to be 100% one day */
-    width: 65%;
+    width: 67%;
     right: 0;
 }
 .megamenu .fa-menu-title {
