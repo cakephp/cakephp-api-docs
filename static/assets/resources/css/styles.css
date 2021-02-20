@@ -1982,6 +1982,8 @@ header {
     margin-top: 0;
     border-top-left-radius: 2px;
     border-top-right-radius: 2px;
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 .nav > li > a:hover,
