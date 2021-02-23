@@ -161,6 +161,15 @@
         float: none;
         margin-left: 0;
     }
+
+    .list,
+    .property-type {
+        overflow-x: auto;
+    }
+
+    h1 {
+        font-size: 34px;
+    }
 }
 
 
