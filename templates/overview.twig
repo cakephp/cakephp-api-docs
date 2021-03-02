@@ -1,28 +1,28 @@
 {% extends 'layout.twig' %}
 
-{% block title 'Overview' %}
+{% block title 'Globals' %}
 
 {% block content %}
 <div id="content">
-	<h1>{{ config.project }} {{ config.version }} Overview</h1>
+  <h1>{{ config.project }} {{ config.version }} Globals</h1>
 
-	{% macro section(title, elements) %}
-		{% if elements is not empty %}
-			<div class="section">
-				<h3>{{ title }} summary</h3>
-				<ul class="summary-list">
-					{% for element in elements %}
-						<li>
-							{{ element|to_path }}
-                            {{ element|docblock.summary|markdown_to_html }}
-						</li>
-					{% endfor %}
-				</ul>
-			</div>
-		{% endif %}
-	{% endmacro %}
+  {% macro section(title, elements) %}
+    {% if elements is not empty %}
+      <div class="section">
+        <h3>{{ title }} summary</h3>
+        <ul class="summary-list">
+          {% for element in elements %}
+            <li>
+              {{ element.name }}
+              {{ element|docblock.summary|markdown_to_html }}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  {% endmacro %}
 
-	{{ _self.section('Global functions', functions) }}
-	{{ _self.section('Global constants', constants) }}
+  {{ _self.section('Global functions', functions) }}
+  {{ _self.section('Global constants', constants) }}
 </div>
 {% endblock %}

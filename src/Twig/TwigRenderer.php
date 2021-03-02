@@ -17,30 +17,35 @@ declare(strict_types=1);
 
 namespace Cake\ApiDocs\Twig;
 
+use Cake\ApiDocs\Twig\Extension\ReflectionExtension;
 use Cake\Core\Configure;
+use Cake\Log\LogTrait;
 use InvalidArgumentException;
+use RuntimeException;
 use Twig\Environment;
 use Twig\Extra\Markdown\MarkdownExtension;
 use Twig\Loader\FilesystemLoader;
 
 class TwigRenderer
 {
+    use LogTrait;
+
     /**
      * @var \Twig\Environment
      */
-    private $twig;
+    protected $twig;
 
     /**
      * @var string
      */
-    private $outputPath;
+    protected $outputPath;
 
     /**
-     * Constructor
+     * @param string $outputPath Output path
      */
-    public function __construct()
+    public function __construct(string $outputPath)
     {
-        $this->outputPath = Configure::read('output');
+        $this->outputPath = $outputPath;
         if (!is_dir($this->outputPath)) {
             mkdir($this->outputPath, 0777, true);
         }
@@ -49,7 +54,8 @@ class TwigRenderer
             throw new InvalidArgumentException("Unable to create output directory `{$this->outputPath}`.");
         }
 
-        $this->twig = $this->createTwig(Configure::read('templates'));
+        $this->createTwig(Configure::read('templates'));
+        $this->twig->addGlobal('config', Configure::read('globals'));
     }
 
     /**
@@ -84,28 +90,25 @@ class TwigRenderer
     {
         $path = getcwd() . DS . $this->outputPath . DS . $filename;
         $file = fopen($path, 'wb');
-        try {
-            fwrite($file, $this->twig->render($template, $context));
-        } catch (\Error $e) {
-            api_log('error', "Unable to render {$filename}.");
-            throw $e;
+        if ($file === false) {
+            throw new RuntimeException("Unable to open `$path` to render template.");
         }
+        fwrite($file, $this->twig->render($template, $context));
         fclose($file);
     }
 
     /**
      * @param string $templatesPath Twig template directory
-     * @return \Twig\Environment
+     * @return void
      */
-    protected function createTwig(string $templatesPath): Environment
+    protected function createTwig(string $templatesPath): void
     {
-        $twig = new Environment(
+        $this->twig = new Environment(
             new FilesystemLoader($templatesPath)
         );
 
-        $twig->addExtension(new MarkdownExtension());
-        $twig->addRuntimeLoader(new TwigRuntimeLoader());
-
-        return $twig;
+        $this->twig->addRuntimeLoader(new TwigRuntimeLoader());
+        $this->twig->addExtension(new MarkdownExtension());
+        $this->twig->addExtension(new ReflectionExtension());
     }
 }

@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Cake\ApiDocs\Command;
 
 use Cake\ApiDocs\Generator;
-use Cake\ApiDocs\Util\SourceLoader;
 use Cake\Console\Arguments;
 use Cake\Console\BaseCommand;
 use Cake\Console\ConsoleIo;
@@ -63,10 +62,9 @@ class GenerateCommand extends BaseCommand
     {
         $this->configure($args);
 
-        $sourcePath = $args->getArgumentAt(0);
-        $loader = new SourceLoader($sourcePath);
-        $generator = new Generator($loader);
-        $generator->generate();
+        $projectPath = $args->getArgumentAt(0);
+        $generator = new Generator($projectPath);
+        $generator->generateAll();
 
         return static::CODE_SUCCESS;
     }

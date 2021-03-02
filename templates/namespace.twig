@@ -1,44 +1,42 @@
 {% extends 'layout.twig' %}
 
-{% block title 'Namespace ' ~ namespace.fqsen|to_path %}
+{% block title 'Namespace ' ~ loaded.fqsen|fqsen_to_name %}
 
 {% block content %}
 <div class="section namespace">
-	<h1>Namespace {{ namespace.fqsen|to_path }}</h1>
+  <h1>Namespace {{ loaded.fqsen|fqsen_to_name }}</h1>
 
-    {#
-	{% if namespace.children|length > 0 %}
-		<div>
-			<h3>Namespaces summary</h3>
-			<ul class="summary-list">
-				{% for child in namespace.children %}
-				<li>
-					{{ macros.linkFqsen(child, 'namespace') }}
-				</li>
-				{% endfor %}
-			</ul>
-		</div>
-	{% endif %}
-    #}
+  {% if loaded.children is not empty %}
+    <div>
+      <h3>Namespaces</h3>
+      <ul class="summary-list">
+        {% for child in loaded.children %}
+        <li>
+          <a href="{{ child.fqsen|fqsen_to_url('namespace') }}">{{ child.fqsen|fqsen_to_name }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
 
-	{% macro section(title, elements) %}
-		{% if elements is not empty %}
-			<div class="section">
-				<h3>{{ title }} summary</h3>
-				<ul class="summary-list">
-					{% for element in elements %}
-						<li>
-							<h5><a href="{{ element|to_url }}">{{ element|to_name }}</a></h5>
-							{{ element|docblock.summary|markdown_to_html }}
-						</li>
-					{% endfor %}
-				</ul>
-			</div>
-		{% endif %}
-	{% endmacro %}
+  {% macro section(title, elements, type) %}
+    {% if elements is not empty %}
+      <div class="section">
+        <h3>{{ title }}</h3>
+        <ul class="summary-list">
+          {% for element in elements %}
+            <li>
+              <h5><a href="{{ element.fqsen|fqsen_to_url(type) }}">{{ element.fqsen|fqsen_to_name }}</a></h5>
+              {{ element|docblock.summary|markdown_to_html }}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  {% endmacro %}
 
-	{{ _self.section('Classes', namespace.classes) }}
-	{{ _self.section('Interfaces', namespace.interfaces) }}
-	{{ _self.section('Traits', namespace.traits) }}
+  {{ _self.section('Interfaces', loaded.interfaces, 'interface') }}
+  {{ _self.section('Classes', loaded.classes, 'class') }}
+  {{ _self.section('Traits', loaded.traits, 'trait') }}
 </div>
 {% endblock %}

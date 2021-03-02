@@ -13,9 +13,10 @@ trim_trailing_whitespace = true
 [*.bat]
 end_of_line = crlf
 
-[*.yml]
+[*.yml, *.yaml]
 indent_size = 2
 
 [*.twig]
+indent_size = 2
 insert_final_newline = false
 trim_trailing_whitespace = false

@@ -3,7 +3,7 @@
 // Elastic Search API docs
 return [
     'templates' => 'templates',
-
+    'namespace' => '\Cake\ElasticSearch',
     'globals' => [
         'project' => 'Elastic Search',
         'release' => '',

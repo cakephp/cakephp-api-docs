@@ -17,16 +17,16 @@ declare(strict_types=1);
 
 namespace Cake\ApiDocs\Twig\Extension;
 
-use Cake\ApiDocs\Reflection\ElementInfo;
-use Cake\ApiDocs\Util\SourceLoader;
-use InvalidArgumentException;
+use Cake\ApiDocs\Reflection\LoadedClass;
+use Cake\ApiDocs\Reflection\LoadedClassLike;
+use Cake\ApiDocs\Reflection\LoadedConstant;
+use Cake\ApiDocs\Reflection\LoadedFunction;
+use Cake\ApiDocs\Reflection\LoadedInterface;
+use Cake\ApiDocs\Reflection\LoadedMethod;
+use Cake\ApiDocs\Reflection\LoadedNamespace;
+use Cake\ApiDocs\Reflection\LoadedProperty;
+use Cake\ApiDocs\Reflection\LoadedTrait;
 use phpDocumentor\Reflection\DocBlock;
-use phpDocumentor\Reflection\Element;
-use phpDocumentor\Reflection\Php\Class_;
-use phpDocumentor\Reflection\Php\Constant;
-use phpDocumentor\Reflection\Php\Function_;
-use phpDocumentor\Reflection\Php\Interface_;
-use phpDocumentor\Reflection\Php\Trait_;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigTest;
@@ -37,164 +37,62 @@ use Twig\TwigTest;
 class ReflectionExtension extends AbstractExtension
 {
     /**
-     * @var \Cake\ApiDocs\Util\SourceLoader
-     */
-    protected $loader;
-
-    /**
-     * @param \Cake\ApiDocs\Util\SourceLoader $loader source loader
-     */
-    public function __construct(SourceLoader $loader)
-    {
-        $this->loader = $loader;
-    }
-
-    /**
      * @inheritDoc
      */
     public function getFilters()
     {
         return [
-            new TwigFilter('to_path', function ($source) {
-                if ($source instanceof Element) {
-                    $fqsen = (string)$source->getFqsen();
-                } elseif ($source instanceof ElementInfo) {
-                    $fqsen = (string)$source->getElement()->getFqsen();
-                } else {
-                    $fqsen = (string)$source;
-                }
-
+            new TwigFilter('fqsen', function (string $fqsen) {
                 return substr($fqsen, 1);
             }),
-            new TwigFilter('to_name', function ($source) {
-                if ($source instanceof Element) {
-                    $fqsen = (string)$source->getFqsen();
-                } elseif ($source instanceof ElementInfo) {
-                    $fqsen = (string)$source->getElement()->getFqsen();
-                } else {
-                    $fqsen = (string)$source;
-                }
-
-                $name = explode('::', substr($fqsen, strrpos($fqsen, '\\') + 1));
-
-                return preg_replace('/[\$\(\)]/', '', end($name));
+            new TwigFilter('fqsen_to_name', function (string $fqsen) {
+                return substr($fqsen, strrpos($fqsen, '\\') + 1);
             }),
-            new TwigFilter('to_namespace', function ($source) {
-                if ($source instanceof Element) {
-                    $fqsen = (string)$source->getFqsen();
-                } elseif ($source instanceof ElementInfo) {
-                    $fqsen = (string)$source->getElement()->getFqsen();
-                } else {
-                    $fqsen = (string)$source;
-                }
-
-                return substr($fqsen, 0, strrpos($fqsen, '\\'));
+            new TwigFilter('fqsen_to_url', function (string $fqsen, string $type) {
+                return sprintf('%s-%s.html', $type, preg_replace('[\\\\]', '.', substr($fqsen, 1)));
             }),
-            new TwigFilter('to_url', function ($source) {
-                if ($source instanceof Element) {
-                    $source = (string)$source->getFqsen();
+            new TwigFilter('docblock', function ($loaded) {
+                if ($loaded instanceof LoadedInterface) {
+                    return $loaded->interface->getDocBlock() ?? new DocBlock();
                 }
-                if (!($source instanceof ElementInfo)) {
-                    $source = $this->loader->getElementInfo((string)$source);
+                if ($loaded instanceof LoadedClass) {
+                    return $loaded->class->getDocBlock() ?? new DocBlock();
                 }
-                if ($source === null) {
-                    return '';
+                if ($loaded instanceof LoadedTrait) {
+                    return $loaded->trait->getDocBlock() ?? new DocBlock();
                 }
-
-                $type = '';
-                $linkElement = $source->getParent() ?? $source->getElement();
-                if ($linkElement instanceof Class_) {
-                    $type = 'class';
-                } elseif ($linkElement instanceof Interface_) {
-                    $type = 'interface';
-                } elseif ($linkElement instanceof Trait_) {
-                    $type = 'trait';
-                } elseif ($linkElement instanceof Function_) {
-                    $type = 'function';
-                } elseif ($linkElement instanceof Constant) {
-                    $type = 'constant';
+                if ($loaded instanceof LoadedConstant) {
+                    return $loaded->constant->getDocBlock() ?? new DocBlock();
                 }
-
-                $parts = explode('::', substr($source->getFqsen(), 1), 2);
-                $name = preg_replace(['/\\\\/', '/[\(\)]/'], ['.', ''], $parts[0]);
-                $anchor = preg_replace('/[\(\)]/', '', count($parts) == 2 ? $parts[1] : '');
-
-                $url = "{$type}-{$name}.html";
-                if ($anchor) {
-                    $url .= "#{$anchor}";
+                if ($loaded instanceof LoadedMethod) {
+                    return $loaded->method->getDocBlock() ?? new DocBlock();
                 }
-
-                return $url;
+                if ($loaded instanceof LoadedProperty) {
+                    return $loaded->property->getDocBlock() ?? new DocBlock();
+                }
+                if ($loaded instanceof LoadedFunction) {
+                    return $loaded->function->getDocBlock() ?? new DocBlock();
+                }
             }),
-            new TwigFilter('ns_to_url', function ($source) {
-                if ($source instanceof Element) {
-                    $source = (string)$source->getFqsen();
-                }
-
-                $name = str_replace('\\', '.', substr((string)$source, 1));
-                $url = "namespace-{$name}.html";
-
-                return $url;
-            }),
-            new TwigFilter('ns_to_children', function ($source) {
-                if ($source instanceof Element) {
-                    $source = (string)$source->getFqsen();
-                }
-
-                return array_keys($this->loader->getNamespaceInfo($source)->getChildren());
-            }),
-            new TwigFilter('docblock', function ($source) {
-                if ($source instanceof Element) {
-                    return $source->getDocBlock() ?? new DocBlock();
-                }
-                if (!($source instanceof ElementInfo)) {
-                    $source = $this->loader->getElementInfo((string)$source);
-                    if ($source === null) {
-                        throw new InvalidArgumentException("Could not find {$source}.");
-                    }
-                }
-
-                return $source->getElement()->getDocBlock() ?? new DocBlock();
-            }),
-            new TwigFilter('tags', function ($source, $name = null, $single = false) {
-                if (!($source instanceof DocBlock)) {
-                    if ($source instanceof Element) {
-                        $source = (string)$source->getFqsen();
-                    }
-                    if (!($source instanceof ElementInfo)) {
-                        $source = $this->loader->getElementInfo((string)$source);
-                    }
-                    $source = $source->getElement()->getDocBlock() ?? new DocBlock();
-                }
-
+            new TwigFilter('get_tags', function ($docblock, $name) {
                 $tags = [];
-                foreach ($source->getTags() as $tag) {
+                foreach ($docblock->getTags() as $tag) {
                     if ($tag->getName() === $name) {
                         $tags[] = $tag;
                     }
                 }
 
-                return $single ? (empty($tags) ? null : $tags[0]) : $tags;
+                return $tags;
             }),
-            new TwigFilter('param', function ($source, $name) {
-                if (!($source instanceof DocBlock)) {
-                    if ($source instanceof Element) {
-                        $source = (string)$source->getFqsen();
-                    }
-                    if (!($source instanceof ElementInfo)) {
-                        $source = $this->loader->getElementInfo((string)$source);
-                    }
-                    $source = $source->getElement()->getDocBlock() ?? new DocBlock();
-                }
-
-                $params = $source->getTagsByName('param');
+            new TwigFilter('param', function ($docblock, $name) {
+                $params = $docblock->getTagsByName('param');
                 foreach ($params as $param) {
                     if ($param->getVariableName() === $name) {
                         return $param;
                     }
                 }
 
-                throw new InvalidArgumentException("Function does not have `{$name}` argument.");
+                return null;
             }),
         ];
     }
@@ -205,8 +103,22 @@ class ReflectionExtension extends AbstractExtension
     public function getTests()
     {
         return [
-            new TwigTest('startof', function ($left, $right) {
-                return strpos($right, $left) === 0;
+            new TwigTest('class', function (LoadedClassLike $loaded) {
+                return $loaded instanceof LoadedClass;
+            }),
+            new TwigTest('in_namespace', function ($loaded, string $namespace) {
+                if ($loaded === null) {
+                    return false;
+                }
+                if (strpos($loaded->fqsen, $namespace) === 0) {
+                    if ($loaded instanceof LoadedNamespace) {
+                        return true;
+                    }
+
+                    return $loaded->fqsen !== $namespace;
+                }
+
+                return false;
             }),
         ];
     }

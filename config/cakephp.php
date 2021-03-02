@@ -3,7 +3,7 @@
 // CakePHP API docs
 return [
     'templates' => 'templates',
-
+    'namespace' => '\Cake',
     'globals' => [
         'project' => 'CakePHP',
         'release' => 'Strawberry',
