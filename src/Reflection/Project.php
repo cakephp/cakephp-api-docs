@@ -151,21 +151,23 @@ class Project
      */
     protected function loadProjectFiles(string $projectPath): void
     {
-        $srcPath = $projectPath . DIRECTORY_SEPARATOR . 'src';
-        $this->log("Loading project files from `$srcPath`.", 'info');
-
-        $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($srcPath)
-        );
-
         $localFiles = [];
-        foreach ($iterator as $entry) {
-            if ($entry->isDir()) {
-                continue;
-            }
+        foreach (Configure::read('sourcePaths') as $sourcePath) {
+            $filesPath = $projectPath . DIRECTORY_SEPARATOR . $sourcePath;
+            $this->log("Loading project files from `$filesPath`.", 'info');
 
-            if (preg_match('/^.+\.php$/i', $entry->getFilename())) {
-                $localFiles[] = new LocalFile((string)$entry);
+            $iterator = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($filesPath)
+            );
+
+            foreach ($iterator as $entry) {
+                if ($entry->isDir()) {
+                    continue;
+                }
+
+                if (preg_match('/^.+\.php$/i', $entry->getFilename())) {
+                    $localFiles[] = new LocalFile((string)$entry);
+                }
             }
         }
 

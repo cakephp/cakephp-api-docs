@@ -4,6 +4,7 @@
 return [
     'templates' => 'templates',
     'namespace' => '\Cake\Chronos',
+    'sourcePaths' => ['src'],
     'globals' => [
         'project' => 'Chronos',
         'release' => '',
