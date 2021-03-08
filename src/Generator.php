@@ -70,12 +70,14 @@ class Generator
         $functions = [];
         foreach ($this->project->getProjectFiles() as $file) {
             foreach ($file->file->getConstants() as $constant) {
-                $constants[] = new LoadedConstant($constant->getName(), (string)$constant->getFqsen(), '\\', $constant);
+                $constants[$constant->getName()] = new LoadedConstant($constant->getName(), (string)$constant->getFqsen(), '\\', $constant);
             }
             foreach ($file->file->getFunctions() as $function) {
-                $functions[] = new LoadedFunction($function->getName(), (string)$function->getFqsen(), '\\', $function);
+                $functions[$function->getName()] = new LoadedFunction($function->getName(), (string)$function->getFqsen(), '\\', $function);
             }
         }
+        ksort($constants);
+        ksort($functions);
 
         $namespaces = $this->project->getProjectNamespaces();
         $this->renderer->render(
