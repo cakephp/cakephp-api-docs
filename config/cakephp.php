@@ -4,6 +4,7 @@
 return [
     'templates' => 'templates',
     'namespace' => '\Cake',
+    'sourcePaths' => ['src', 'config'],
     'globals' => [
         'project' => 'CakePHP',
         'release' => 'Strawberry',
