@@ -15,70 +15,57 @@ declare(strict_types=1);
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-namespace Cake\ApiDocs\Reflection;
+namespace Cake\ApiDocs;
 
-use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Php\Namespace_;
 
 /**
  * NamespaceInfo
  */
-class NamespaceInfo
+class NamespaceTree
 {
-    /**
-     * @var string
-     */
-    protected $fqsen;
-
-    /**
-     * @var string
-     */
-    protected $name;
-
     /**
      * @var \phpDocumentor\Reflection\Php\Namespace_;
      */
     protected $namespace;
 
     /**
-     * @var \phpDocumentor\Reflection\Php\Namespace_|null
+     * @var \Cake\ApiDocs\Util\NamespaceTree|null
      */
     protected $parent;
 
     /**
-     * @var \phpDocumentor\Reflection\Php\Namespace_[]
+     * @var \Cake\ApiDocs\Util\NamespaceTree[]
      */
-    protected $children;
+    protected $children = [];
 
     /**
-     * @param string $fqsen fqsen
+     * @param \Cake\ApiDocs\Util\SourceLoader $sourceLoader source loader
      * @param \phpDocumentor\Reflection\Php\Namespace_ $namespace reflection namespace
-     * @param \phpDocumentor\Reflection\Php\Namespace_|null $parent parent fqsen
-     * @param string[] $children children fqsens
      */
-    public function __construct(string $fqsen, Namespace_ $namespace, ?Namespace_ $parent, array $children)
+    public function __construct(SourceLoader $sourceLoader, Namespace_ $namespace)
     {
-        $this->fqsen = $fqsen;
-        $this->name = (new Fqsen($fqsen))->getName();
         $this->namespace = $namespace;
-        $this->parent = $parent;
-        $this->children = $children;
-    }
 
-    /**
-     * @return string
-     */
-    public function getFqsen(): string
-    {
-        return $this->fqsen;
-    }
+        $fqsen = (string)$namespace->getFqsen();
+        $prevDelimiter = strrpos($fqsen, '\\');
+        if ($prevDelimiter === false || $prevDelimiter === 0) {
+            $parent = $sourceLoader->getNamespaces()[substr($fqsen, 0, $prevDelimiter)] ?? null;
+            if ($parent) {
+                $this->parent = new NamespaceInfo($sourceLoader, $parent);
+            }
+        }
 
-    /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->name;
+        $children = [];
+        $quotedFqsen = preg_quote($fqsen);
+        $children = array_filter($sourceLoader->getNamespaces(), function ($namespace) use ($quotedFqsen) {
+            return preg_match('/^' . $quotedFqsen . '\\\\[^\\\\]+$/', (string)$namespace->getFqsen()) === 1;
+        });
+
+        foreach ($children as $child) {
+            $this->children[(string)$child->getFqsen()] = new NamespaceTree($sourceLoader, $child);
+        }
+        ksort($this->children);
     }
 
     /**
@@ -90,7 +77,7 @@ class NamespaceInfo
     }
 
     /**
-     * @return \phpDocumentor\Reflection\Php\Namespace_|null
+     * @return \Cake\ApiDocs\Util\NamespaceTree|null
      */
     public function getParent(): ?string
     {
@@ -98,7 +85,7 @@ class NamespaceInfo
     }
 
     /**
-     * @return \phpDocumentor\Reflection\Php\Namespace_[]
+     * @return \Cake\ApiDocs\Util\NamespaceTree[]
      */
     public function getChildren(): array
     {

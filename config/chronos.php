@@ -3,7 +3,7 @@
 // Chronos API docs
 return [
     'templates' => 'templates',
-
+    'namespace' => '\Cake\Chronos',
     'globals' => [
         'project' => 'Chronos',
         'release' => '',

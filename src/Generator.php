@@ -17,28 +17,18 @@ declare(strict_types=1);
 
 namespace Cake\ApiDocs;
 
-use Cake\ApiDocs\Twig\Extension\ReflectionExtension;
+use Cake\ApiDocs\Reflection\LoadedConstant;
+use Cake\ApiDocs\Reflection\LoadedFunction;
+use Cake\ApiDocs\Reflection\Project;
 use Cake\ApiDocs\Twig\TwigRenderer;
-use Cake\ApiDocs\Util\ClassLikeCollapser;
-use Cake\ApiDocs\Util\CollapsedClassLike;
-use Cake\ApiDocs\Util\SourceLoader;
 use Cake\Core\Configure;
-use phpDocumentor\Reflection\Php\Class_;
-use phpDocumentor\Reflection\Php\Interface_;
-use phpDocumentor\Reflection\Php\Namespace_;
-use phpDocumentor\Reflection\Php\Trait_;
 
 class Generator
 {
     /**
-     * @var \Cake\ApiDocs\Util\SourceLoader
+     * @var \Cake\ApiDocs\Reflection\Project
      */
-    protected $loader;
-
-    /**
-     * @var \Cake\ApiDocs\Util\ClassLikeCollapser
-     */
-    protected $collapser;
+    protected $project;
 
     /**
      * @var \Cake\ApiDocs\Twig\TwigRenderer
@@ -46,145 +36,207 @@ class Generator
     protected $renderer;
 
     /**
-     * @param \Cake\ApiDocs\Util\SourceLoader $loader source loader
+     * @param string $projectPath Project path
      */
-    public function __construct(SourceLoader $loader)
+    public function __construct(string $projectPath)
     {
-        $this->loader = $loader;
-        $this->collapser = new ClassLikeCollapser($loader);
-        $this->renderer = new TwigRenderer();
-        $this->renderer->getTwig()->addExtension(new ReflectionExtension($loader));
-        $this->renderer->getTwig()->addGlobal('config', Configure::read('globals'));
+        $this->project = new Project($projectPath);
+        $this->renderer = new TwigRenderer(Configure::read('output'));
     }
 
     /**
+     * Generates all files.
+     *
      * @return void
      */
-    public function generate(): void
+    public function generateAll(): void
     {
-        $this->renderer->getTwig()->addGlobal('projectFqsen', array_key_first($this->loader->getNamespaces()));
-        $this->renderer->getTwig()->addGlobal('activeFqsen', '');
-
-        $this->renderOverview();
-        foreach ($this->loader->getNamespaces() as $namespace) {
-            $this->renderNamespace($namespace);
-        }
-
-        $all = [];
-        foreach ($this->loader->getFiles() as $file) {
-            foreach ($file->getClasses() as $class) {
-                $collapsed = $this->collapser->collapse($class);
-                $this->renderClassLike('class', $collapsed);
-                $all[] = $collapsed;
-            }
-            foreach ($file->getInterfaces() as $interface) {
-                $collapsed = $this->collapser->collapse($interface);
-                $this->renderClassLike('interface', $collapsed);
-                $all[] = $collapsed;
-            }
-            foreach ($file->getTraits() as $trait) {
-                $collapsed = $this->collapser->collapse($trait);
-                $this->renderClassLike('trait', $collapsed);
-                $all[] = $collapsed;
-            }
-        }
-
-        $this->renderSearch($all);
+        $this->generateOverview();
+        $this->generateNamespaces();
+        $this->generateInterfaces();
+        $this->generateClasses();
+        $this->generateTraits();
+        $this->generateSearch();
     }
 
     /**
+     * Generate overview page with globals.
+     *
      * @return void
      */
-    protected function renderOverview(): void
+    public function generateOverview(): void
     {
-        $functions = [];
         $constants = [];
-        foreach ($this->loader->getFiles() as $file) {
-            $functions = array_merge($functions, array_keys($file->getFunctions()));
-            $constants = array_merge($constants, array_keys($file->getConstants()));
+        $functions = [];
+        foreach ($this->project->getProjectFiles() as $file) {
+            foreach ($file->file->getConstants() as $constant) {
+                $constants[] = new LoadedConstant($constant->getName(), (string)$constant->getFqsen(), '\\', $constant);
+            }
+            foreach ($file->file->getFunctions() as $function) {
+                $functions[] = new LoadedFunction($function->getName(), (string)$function->getFqsen(), '\\', $function);
+            }
         }
-        sort($functions);
-        sort($constants);
 
-        $context = [
-            'namespaces' => array_keys($this->loader->getNamespaces()),
-            'functions' => $functions,
-            'constants' => $constants,
-        ];
-        $this->renderer->render('overview.twig', 'index.html', $context);
+        $namespaces = $this->project->getProjectNamespaces();
+        $this->renderer->render(
+            'overview.twig',
+            'index.html',
+            ['constants' => $constants, 'functions' => $functions, 'namespaces' => $namespaces]
+        );
     }
 
     /**
-     * @param \phpDocumentor\Reflection\Php\Namespace_ $namespace namesapce
+     * Geneate all namespaces.
+     *
      * @return void
      */
-    protected function renderNamespace(Namespace_ $namespace): void
+    public function generateNamespaces(): void
     {
-        $this->renderer->setGlobal('activeFqsen', (string)$namespace->getFqsen());
+        $namespaces = $this->project->getProjectNamespaces();
+        $renderNested = function ($loaded, $renderNested) use ($namespaces) {
+            $filename = 'namespace-' . str_replace('\\', '.', substr($loaded->fqsen, 1)) . '.html';
 
-        $context = [
-            'namespace' => $namespace,
-        ];
-        $filename = $this->getFilename('namespace', (string)$namespace->getFqsen());
-        $this->renderer->render('namespace.twig', $filename, $context);
+            $this->renderer->render(
+                'namespace.twig',
+                $filename,
+                ['loaded' => $loaded, 'namespaces' => $namespaces]
+            );
+
+            foreach ($loaded->children as $fqsen => $child) {
+                $renderNested($child, $renderNested);
+            }
+        };
+
+        foreach ($this->project->getProjectNamespaces() as $loaded) {
+            $renderNested($loaded, $renderNested);
+        }
     }
 
     /**
-     * @param string $type file type
-     * @param \Cake\ApiDocs\Util\CollapsedClassLike $collapsed collapsed classlike
+     * Generate all interfaces.
+     *
      * @return void
      */
-    protected function renderClassLike(string $type, CollapsedClassLike $collapsed): void
+    public function generateInterfaces(): void
     {
-        $this->renderer->setGlobal('activeFqsen', $collapsed->getSource()->getFqsen());
+        $namespaces = $this->project->getProjectNamespaces();
+        foreach ($this->project->getProjectFiles() as $file) {
+            foreach ($file->file->getInterfaces() as $fqsen => $interface) {
+                $loaded = $this->project->getLoader()->getInterface($fqsen);
+                $filename = 'interface-' . str_replace('\\', '.', substr($fqsen, 1)) . '.html';
 
-        $context = [
-            'type' => $type,
-            'collapsed' => $collapsed,
-        ];
-        $filename = $this->getFilename($type, $collapsed->getSource()->getFqsen());
-        $this->renderer->render('classlike.twig', $filename, $context);
+                $this->renderer->render(
+                    'interface.twig',
+                    $filename,
+                    ['loaded' => $loaded, 'namespaces' => $namespaces]
+                );
+            }
+        }
     }
 
     /**
-     * @param \Cake\ApiDocs\Util\CollapsedClassLike[] $all all collapsed
+     * Generate all classes.
+     *
      * @return void
      */
-    protected function renderSearch(array $all): void
+    public function generateClasses(): void
     {
-        $entries = [];
-        foreach ($all as $collapsed) {
-            $source = $collapsed->getSource();
-            foreach (['getConstants', 'getProperties', 'getMethods'] as $getter) {
-                foreach ($collapsed->{$getter}() as $element) {
-                    $declaration = $element['source'];
+        $namespaces = $this->project->getProjectNamespaces();
+        foreach ($this->project->getProjectFiles() as $file) {
+            foreach ($file->file->getClasses() as $fqsen => $class) {
+                $loaded = $this->project->getLoader()->getClass($fqsen);
+                $filename = 'class-' . str_replace('\\', '.', substr($fqsen, 1)) . '.html';
 
-                    if ($declaration->inProject()) {
-                        $type = '';
-                        if ($declaration->getParent() instanceof Class_) {
-                            $type = 'c';
-                        } elseif ($declaration->getParent() instanceof Interface_) {
-                            $type = 'i';
-                        } elseif ($declaration->getParent() instanceof Trait_) {
-                            $type = 't';
-                        }
+                $this->renderer->render(
+                    'class.twig',
+                    $filename,
+                    ['loaded' => $loaded, 'namespaces' => $namespaces]
+                );
+            }
+        }
+    }
 
-                        $fqsen = substr($declaration->getFqsen(), 1);
-                        $entries[$fqsen] = [$type, $fqsen];
-                    }
+    /**
+     * Generate all traits.
+     *
+     * @return void
+     */
+    public function generateTraits(): void
+    {
+        $namespaces = $this->project->getProjectNamespaces();
+        foreach ($this->project->getProjectFiles() as $file) {
+            foreach ($file->file->getTraits() as $fqsen => $trait) {
+                $loaded = $this->project->getLoader()->getTrait($fqsen);
+                $filename = 'trait-' . str_replace('\\', '.', substr($fqsen, 1)) . '.html';
+
+                $this->renderer->render(
+                    'trait.twig',
+                    $filename,
+                    ['loaded' => $loaded, 'namespaces' => $namespaces]
+                );
+            }
+        }
+    }
+
+    /**
+     * Geneate a single interface, class or trait.
+     *
+     * @param string $fqsen The interface, class or trait fqsen
+     * @param string $type One of the types listed for fqsen
+     * @return void
+     */
+    public function generateSingle(string $fqsen, string $type): void
+    {
+        $namespaces = $this->project->getProjectNamespaces();
+
+        $loaded = $this->project->getLoader()->{'get' . $type}($fqsen);
+        $filename = $type . '-' . str_replace('\\', '.', substr($fqsen, 1)) . '.html';
+
+        $this->renderer->render(
+            $type . '.twig',
+            $filename,
+            ['loaded' => $loaded, 'namespaces' => $namespaces]
+        );
+    }
+
+    /**
+     * Generates search data.
+     *
+     * @return void
+     */
+    public function generateSearch(): void
+    {
+        $search = [];
+        foreach ($this->project->getProjectFiles() as $file) {
+            foreach ($file->file->getInterfaces() as $interface) {
+                foreach (array_keys($interface->getConstants()) as $fqsen) {
+                    $search[] = ['i', substr($fqsen, 1)];
+                }
+                foreach (array_keys($interface->getMethods()) as $fqsen) {
+                    $search[] = ['i', substr($fqsen, 1)];
+                }
+            }
+            foreach ($file->file->getClasses() as $class) {
+                foreach (array_keys($class->getConstants()) as $fqsen) {
+                    $search[] = ['c', substr($fqsen, 1)];
+                }
+                foreach (array_keys($class->getConstants()) as $fqsen) {
+                    $search[] = ['c', substr($fqsen, 1)];
+                }
+                foreach (array_keys($class->getMethods()) as $fqsen) {
+                    $search[] = ['c', substr($fqsen, 1)];
+                }
+            }
+            foreach ($file->file->getTraits() as $trait) {
+                foreach (array_keys($trait->getProperties()) as $fqsen) {
+                    $search[] = ['t', substr($fqsen, 1)];
+                }
+                foreach (array_keys($trait->getMethods()) as $fqsen) {
+                    $search[] = ['t', substr($fqsen, 1)];
                 }
             }
         }
-        $this->renderer->render('searchlist.twig', 'searchlist.js', ['entries' => json_encode(array_values($entries))]);
-    }
 
-    /**
-     * @param string $type file type
-     * @param string $fqsen fqsen
-     * @return string
-     */
-    protected function getFilename(string $type, string $fqsen): string
-    {
-        return "{$type}-" . str_replace('\\', '.', substr($fqsen, 1)) . '.html';
+        $this->renderer->render('searchlist.twig', 'searchlist.js', ['entries' => json_encode(array_values($search))]);
     }
 }

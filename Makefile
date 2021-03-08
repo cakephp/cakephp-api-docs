@@ -1,6 +1,6 @@
-CAKEPHP_SOURCE_DIR='../cakephp'
-CHRONOS_SOURCE_DIR='../chronos'
-ELASTIC_SOURCE_DIR='../elastic-search'
+CAKEPHP_SOURCE_DIR=../cakephp
+CHRONOS_SOURCE_DIR=../chronos
+ELASTIC_SOURCE_DIR=../elastic-search
 BUILD_DIR=./build/api
 DEPLOY_DIR=./website
 PHP_DIR=$(PWD)
@@ -67,7 +67,7 @@ build-cakephp-$(VERSION): install
 	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
 
 	php bin/apitool.php generate --config cakephp --version $(VERSION) \
-		--output $(BUILD_DIR)/cakephp/$(VERSION) $(CAKEPHP_SOURCE_DIR)/src
+		--output $(BUILD_DIR)/cakephp/$(VERSION) $(CAKEPHP_SOURCE_DIR)
 endef
 
 define chronos
@@ -78,7 +78,7 @@ build-chronos-$(VERSION): install
 	cp -r static/assets/* $(BUILD_DIR)/chronos/$(VERSION)
 
 	php bin/apitool.php generate --config chronos --version $(VERSION) \
-		--output $(BUILD_DIR)/chronos/$(VERSION) $(CHRONOS_SOURCE_DIR)/src
+		--output $(BUILD_DIR)/chronos/$(VERSION) $(CHRONOS_SOURCE_DIR)
 endef
 
 define elastic
@@ -89,7 +89,7 @@ build-elastic-$(VERSION): install
 	cp -r static/assets/* $(BUILD_DIR)/elastic-search/$(VERSION)
 
 	php bin/apitool.php generate --config elastic --version $(VERSION) \
-		--output $(BUILD_DIR)/elastic-search/$(VERSION) $(ELASTIC_SOURCE_DIR)/src
+		--output $(BUILD_DIR)/elastic-search/$(VERSION) $(ELASTIC_SOURCE_DIR)
 endef
 
 # Build all the versions in a loop.
