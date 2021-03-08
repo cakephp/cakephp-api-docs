@@ -33,7 +33,8 @@ RUN git clone https://github.com/cakephp/cakephp.git /cakephp \
   && git fetch origin --tags
 
 RUN git clone https://github.com/cakephp/chronos.git /chronos && \
- git clone https://github.com/cakephp/elastic-search.git /elastic
+  git clone https://github.com/cakephp/elastic-search.git /elastic && \
+  git clone https://github.com/cakephp/queue.git /queue
 
 WORKDIR /data
 
@@ -41,11 +42,12 @@ COPY . /data
 
 RUN cd /cakephp && git fetch origin && \
   cd /chronos && git fetch origin && \
-  cd /elastic && git fetch origin
+  cd /elastic && git fetch origin && \
+  cd /queue && git fetch origin
 
 RUN cd /data \
   && ls -lah \
-  && make clean build-all CAKEPHP_SOURCE_DIR=/cakephp CHRONOS_SOURCE_DIR=/chronos ELASTIC_SOURCE_DIR=/elastic \
+  && make clean build-all CAKEPHP_SOURCE_DIR=/cakephp CHRONOS_SOURCE_DIR=/chronos ELASTIC_SOURCE_DIR=/elastic QUEUE_SOURCE_DIR=/queue \
   && make deploy DEPLOY_DIR=/var/www/html
 
 RUN rm /var/www/html/index.nginx-debian.html \
