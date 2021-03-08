@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     nginx git curl \
     php \
+    php-curl \
     php-bz2 \
     php-json \
     php-mbstring \
