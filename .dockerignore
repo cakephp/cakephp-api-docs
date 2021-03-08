@@ -1,2 +1,5 @@
-.dockerignore
-*Dockerfile*
+/.*
+/composer.phar
+/build
+/vendor
+/website
