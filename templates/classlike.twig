@@ -139,6 +139,7 @@
         <a id="{{ method.name }}"></a>
         <h3 class="method-name">
           {{ method.name }}()
+          <a href="#{{ method.name }}" class="permalink" title="Permalink to this method">¶</a>
 
           {% if method.method.abstract %}
             <span class="label">abstract</span>
@@ -159,8 +160,6 @@
           {% if method|docblock|get_tags('deprecated') is not empty %}
             <span class="label">deprecated</span>
           {% endif %}
-          </h5>
-          <a href="#{{ method.name }}" class="permalink" title="Permalink to this method">¶</a>
         </h3>
 
         <pre><code class="language-php">{{ method.name }}(
@@ -243,7 +242,7 @@
         <a id="${{ property.name }}"></a>
         <h3 class="property-name">
           <var>${{ property.name }}</var>
-          <a href="#${{ property.name }}" class="permalink" title="Permalink to this method">¶</a>
+          <a href="#${{ property.name }}" class="permalink" title="Permalink to this property">¶</a>
 
           <span class="label">{{ property.property.visibility }}</span>
 
