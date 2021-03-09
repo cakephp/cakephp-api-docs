@@ -8,6 +8,13 @@ return [
 
     'templatePath' => 'templates',
     'sourcePaths' => ['src', 'config'],
+    'excludes' => [
+        'namespaces' => [],
+        'names' => [
+            '\Cake\Collection\CollectionTrait',
+            '\Cake\I18n\DateFormatTrait',
+        ],
+    ],
 
     'versions' => [
         '4.2' => '../4.2/',
