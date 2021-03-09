@@ -8,6 +8,15 @@ return [
 
     'templatePath' => 'templates',
     'sourcePaths' => ['src', 'config'],
+    'excludes' => [
+        'namespaces' => [],
+        'names' => [
+            '\Cake\Collection\CollectionTrait',
+            '\Cake\Datasource\EntityTrait',
+            '\Cake\Datasource\QueryTrait',
+            '\Cake\I18n\DateFormatTrait',
+        ],
+    ],
 
     'versions' => [
         '4.2' => '../4.2/',
