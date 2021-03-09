@@ -30,6 +30,7 @@ jobs:
         with:
           php-version: '7.4'
           extensions: mbstring, intl
+          tools: cs2pr
           coverage: none
 
       - name: Get composer cache directory
@@ -50,5 +51,5 @@ jobs:
         run: composer install
 
       - name: Run PHP CodeSniffer
-        run: vendor/bin/phpcs --report=checkstyle src/
+        run: vendor/bin/phpcs -q --report=checkstyle src/
 
