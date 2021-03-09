@@ -178,6 +178,10 @@ class Project
 
         $namespaces = [];
         foreach ($project->getNamespaces() as $fqsen => $namespace) {
+            if (in_array($fqsen, Configure::read('excludes.namespaces', []), true)) {
+                continue;
+            }
+
             $namespaces[$fqsen] = new LoadedNamespace($fqsen, $namespace);
             foreach (array_keys($namespace->getInterfaces()) as $interfaceFqsen) {
                 $namespaces[$fqsen]->interfaces[$interfaceFqsen] = $this->loader->getInterface($interfaceFqsen);
