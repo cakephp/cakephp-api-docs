@@ -1,6 +1,7 @@
 CAKEPHP_SOURCE_DIR=../cakephp
 CHRONOS_SOURCE_DIR=../chronos
 ELASTIC_SOURCE_DIR=../elastic-search
+QUEUE_SOURCE_DIR=../queue
 BUILD_DIR=./build/api
 DEPLOY_DIR=./website
 PHP_DIR=$(PWD)
@@ -16,6 +17,8 @@ CAKEPHP_VERSIONS = 3.8 3.9 4.0 4.1 4.2
 CHRONOS_VERSIONS = 1.x 2.x
 
 ELASTIC_VERSIONS = 2.x 3.x
+
+QUEUE_VERSIONS = 0.x
 
 help:
 	@echo "CakePHP API Documentation generator"
@@ -92,8 +95,19 @@ build-elastic-$(VERSION): install
 		--output $(BUILD_DIR)/elastic-search/$(VERSION) $(ELASTIC_SOURCE_DIR)
 endef
 
+define queue
+build-queue-$(VERSION): install
+	cd $(QUEUE_SOURCE_DIR) && git checkout -f $(TAG)
+	cd $(QUEUE_SOURCE_DIR) && php $(PHP_DIR)/composer.phar update
+	mkdir -p $(BUILD_DIR)/queue/$(VERSION)
+	cp -r static/assets/* $(BUILD_DIR)/queue/$(VERSION)
+
+	php bin/apitool.php generate --config queue --version $(VERSION) \
+		--output $(BUILD_DIR)/queue/$(VERSION) $(QUEUE_SOURCE_DIR)
+endef
+
 # Build all the versions in a loop.
-build-all: $(foreach version, $(CAKEPHP_VERSIONS), build-cakephp-$(version)) $(foreach version, $(CHRONOS_VERSIONS), build-chronos-$(version)) $(foreach version, $(ELASTIC_VERSIONS), build-elastic-$(version))
+build-all: $(foreach version, $(CAKEPHP_VERSIONS), build-cakephp-$(version)) $(foreach version, $(CHRONOS_VERSIONS), build-chronos-$(version)) $(foreach version, $(ELASTIC_VERSIONS), build-elastic-$(version)) $(foreach version, $(QUEUE_VERSIONS), build-queue-$(version))
 
 # Generate build targets for cakephp
 TAG:=3.8.13
@@ -133,3 +147,8 @@ $(eval $(elastic))
 TAG:=origin/master
 VERSION:=3.x
 $(eval $(elastic))
+
+# Generate build targets for queue
+TAG:=origin/master
+VERSION:=0.x
+$(eval $(queue))
