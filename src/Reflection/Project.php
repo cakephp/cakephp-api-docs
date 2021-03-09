@@ -186,12 +186,17 @@ class Project
             foreach (array_keys($namespace->getInterfaces()) as $interfaceFqsen) {
                 $namespaces[$fqsen]->interfaces[$interfaceFqsen] = $this->loader->getInterface($interfaceFqsen);
             }
+            ksort($namespaces[$fqsen]->interfaces);
+
             foreach (array_keys($namespace->getClasses()) as $classFqsen) {
                 $namespaces[$fqsen]->classes[$classFqsen] = $this->loader->getClass($classFqsen);
             }
+            ksort($namespaces[$fqsen]->classes);
+
             foreach (array_keys($namespace->getTraits()) as $traitFqsen) {
                 $namespaces[$fqsen]->traits[$traitFqsen] = $this->loader->getTrait($traitFqsen);
             }
+            ksort($namespaces[$fqsen]->traits);
 
             // Create empty namespace for namespaces that have no files
             if ($fqsen !== Configure::read('namespace')) {
