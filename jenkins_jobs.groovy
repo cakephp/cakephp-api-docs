@@ -2,6 +2,7 @@ def final REPO_NAME = 'cakephp/cakephp-api-docs'
 def final CAKE_REPO_NAME = 'cakephp/cakephp'
 def final CHRONOS_REPO_NAME = 'cakephp/chronos'
 def final ELASTICSEARCH_REPO_NAME = 'cakephp/elastic-search'
+def final QUEUE_REPO_NAME = 'cakephp/queue'
 
 job('API - Rebuild API docs 4.x') {
   description('''\
@@ -29,6 +30,12 @@ job('API - Rebuild API docs 4.x') {
     git {
       remote {
         github(ELASTICSEARCH_REPO_NAME)
+      }
+      branch('master')
+    }
+    git {
+      remote {
+        github(QUEUE_REPO_NAME)
       }
       branch('master')
     }
