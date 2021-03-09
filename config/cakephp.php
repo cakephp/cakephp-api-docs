@@ -12,6 +12,7 @@ return [
         'namespaces' => [],
         'names' => [
             '\Cake\Collection\CollectionTrait',
+            '\Cake\Collection\ExtractTrait',
             '\Cake\Datasource\EntityTrait',
             '\Cake\Datasource\QueryTrait',
             '\Cake\I18n\DateFormatTrait',

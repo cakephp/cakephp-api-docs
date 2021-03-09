@@ -184,16 +184,25 @@ class Project
 
             $namespaces[$fqsen] = new LoadedNamespace($fqsen, $namespace);
             foreach (array_keys($namespace->getInterfaces()) as $interfaceFqsen) {
+                if (isExcluded($interfaceFqsen, false)) {
+                    continue;
+                }
                 $namespaces[$fqsen]->interfaces[$interfaceFqsen] = $this->loader->getInterface($interfaceFqsen);
             }
             ksort($namespaces[$fqsen]->interfaces);
 
             foreach (array_keys($namespace->getClasses()) as $classFqsen) {
+                if (isExcluded($classFqsen, false)) {
+                    continue;
+                }
                 $namespaces[$fqsen]->classes[$classFqsen] = $this->loader->getClass($classFqsen);
             }
             ksort($namespaces[$fqsen]->classes);
 
             foreach (array_keys($namespace->getTraits()) as $traitFqsen) {
+                if (isExcluded($traitFqsen, false)) {
+                    continue;
+                }
                 $namespaces[$fqsen]->traits[$traitFqsen] = $this->loader->getTrait($traitFqsen);
             }
             ksort($namespaces[$fqsen]->traits);
