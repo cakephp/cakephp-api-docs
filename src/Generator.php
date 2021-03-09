@@ -113,8 +113,11 @@ class Generator
     {
         $namespaces = $this->project->getProjectNamespaces();
         $renderNested = function ($loaded, $renderNested) use ($namespaces) {
-            $filename = 'namespace-' . str_replace('\\', '.', substr($loaded->fqsen, 1)) . '.html';
+            if (isExcluded($loaded->fqsen, true)) {
+                return;
+            }
 
+            $filename = 'namespace-' . str_replace('\\', '.', substr($loaded->fqsen, 1)) . '.html';
             $this->renderer->render(
                 'namespace.twig',
                 $filename,
@@ -141,9 +144,12 @@ class Generator
         $namespaces = $this->project->getProjectNamespaces();
         foreach ($this->project->getProjectFiles() as $file) {
             foreach ($file->file->getInterfaces() as $fqsen => $interface) {
+                if (isExcluded($fqsen, false)) {
+                    continue;
+                }
+
                 $loaded = $this->project->getLoader()->getInterface($fqsen);
                 $filename = 'interface-' . str_replace('\\', '.', substr($fqsen, 1)) . '.html';
-
                 $this->renderer->render(
                     'interface.twig',
                     $filename,
@@ -163,9 +169,12 @@ class Generator
         $namespaces = $this->project->getProjectNamespaces();
         foreach ($this->project->getProjectFiles() as $file) {
             foreach ($file->file->getClasses() as $fqsen => $class) {
+                if (isExcluded($fqsen, false)) {
+                    continue;
+                }
+
                 $loaded = $this->project->getLoader()->getClass($fqsen);
                 $filename = 'class-' . str_replace('\\', '.', substr($fqsen, 1)) . '.html';
-
                 $this->renderer->render(
                     'class.twig',
                     $filename,
@@ -185,9 +194,12 @@ class Generator
         $namespaces = $this->project->getProjectNamespaces();
         foreach ($this->project->getProjectFiles() as $file) {
             foreach ($file->file->getTraits() as $fqsen => $trait) {
+                if (isExcluded($fqsen, false)) {
+                    continue;
+                }
+
                 $loaded = $this->project->getLoader()->getTrait($fqsen);
                 $filename = 'trait-' . str_replace('\\', '.', substr($fqsen, 1)) . '.html';
-
                 $this->renderer->render(
                     'trait.twig',
                     $filename,
@@ -228,6 +240,10 @@ class Generator
         $search = [];
         foreach ($this->project->getProjectFiles() as $file) {
             foreach ($file->file->getInterfaces() as $interface) {
+                if (isExcluded((string)$interface->getFqsen(), false)) {
+                    continue;
+                }
+
                 foreach (array_keys($interface->getConstants()) as $fqsen) {
                     $search[] = ['i', substr($fqsen, 1)];
                 }
@@ -236,6 +252,10 @@ class Generator
                 }
             }
             foreach ($file->file->getClasses() as $class) {
+                if (isExcluded((string)$class->getFqsen(), false)) {
+                    continue;
+                }
+
                 foreach (array_keys($class->getConstants()) as $fqsen) {
                     $search[] = ['c', substr($fqsen, 1)];
                 }
@@ -247,6 +267,10 @@ class Generator
                 }
             }
             foreach ($file->file->getTraits() as $trait) {
+                if (isExcluded((string)$trait->getFqsen(), false)) {
+                    continue;
+                }
+
                 foreach (array_keys($trait->getProperties()) as $fqsen) {
                     $search[] = ['t', substr($fqsen, 1)];
                 }
