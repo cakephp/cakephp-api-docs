@@ -37,11 +37,18 @@ class Generator
 
     /**
      * @param string $projectPath Project path
+     * @param string $outputPath Html output path
+     * @param string $templatePath Twig template path
      */
-    public function __construct(string $projectPath)
+    public function __construct(string $projectPath, string $outputPath, string $templatePath)
     {
         $this->project = new Project($projectPath);
-        $this->renderer = new TwigRenderer(Configure::read('output'));
+
+        $globals = [];
+        foreach (['project', 'release', 'version', 'versions', 'namespace'] as $config) {
+            $globals[$config] = Configure::read($config);
+        }
+        $this->renderer = new TwigRenderer($outputPath, $templatePath, $globals);
     }
 
     /**

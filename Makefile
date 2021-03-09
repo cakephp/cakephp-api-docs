@@ -70,7 +70,7 @@ build-cakephp-$(VERSION): install
 	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
 
 	php bin/apitool.php generate --config cakephp --version $(VERSION) \
-		--output $(BUILD_DIR)/cakephp/$(VERSION) $(CAKEPHP_SOURCE_DIR)
+		$(CAKEPHP_SOURCE_DIR) $(BUILD_DIR)/cakephp/$(VERSION)
 endef
 
 define chronos
@@ -81,7 +81,7 @@ build-chronos-$(VERSION): install
 	cp -r static/assets/* $(BUILD_DIR)/chronos/$(VERSION)
 
 	php bin/apitool.php generate --config chronos --version $(VERSION) \
-		--output $(BUILD_DIR)/chronos/$(VERSION) $(CHRONOS_SOURCE_DIR)
+		$(CHRONOS_SOURCE_DIR) $(BUILD_DIR)/chronos/$(VERSION)
 endef
 
 define elastic
@@ -92,7 +92,7 @@ build-elastic-$(VERSION): install
 	cp -r static/assets/* $(BUILD_DIR)/elastic-search/$(VERSION)
 
 	php bin/apitool.php generate --config elastic --version $(VERSION) \
-		--output $(BUILD_DIR)/elastic-search/$(VERSION) $(ELASTIC_SOURCE_DIR)
+		$(ELASTIC_SOURCE_DIR) $(BUILD_DIR)/elastic-search/$(VERSION)
 endef
 
 define queue
@@ -103,7 +103,7 @@ build-queue-$(VERSION): install
 	cp -r static/assets/* $(BUILD_DIR)/queue/$(VERSION)
 
 	php bin/apitool.php generate --config queue --version $(VERSION) \
-		--output $(BUILD_DIR)/queue/$(VERSION) $(QUEUE_SOURCE_DIR)
+		$(QUEUE_SOURCE_DIR) $(BUILD_DIR)/queue/$(VERSION)
 endef
 
 # Build all the versions in a loop.

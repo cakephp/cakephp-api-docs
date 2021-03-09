@@ -32,24 +32,24 @@ class GenerateCommand extends BaseCommand
      */
     protected function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser->addArgument('source', [
+        $parser->addArgument('project-path', [
             'required' => true,
-            'help' => 'The source base path.',
+            'help' => 'The project root path.',
+        ]);
+
+        $parser->addArgument('output-path', [
+            'required' => true,
+            'help' => 'The html output path.',
         ]);
 
         $parser->addOption('config', [
             'required' => true,
-            'help' => 'Config file.',
+            'help' => 'Config name.',
         ]);
 
         $parser->addOption('version', [
             'required' => true,
             'help' => 'The current version.',
-        ]);
-
-        $parser->addOption('output', [
-            'required' => true,
-            'help' => 'The html output path.',
         ]);
 
         return $parser;
@@ -62,8 +62,7 @@ class GenerateCommand extends BaseCommand
     {
         $this->configure($args);
 
-        $projectPath = $args->getArgumentAt(0);
-        $generator = new Generator($projectPath);
+        $generator = new Generator($args->getArgumentAt(0), $args->getArgumentAt(1), Configure::read('templatePath'));
         $generator->generateAll();
 
         return static::CODE_SUCCESS;
@@ -78,7 +77,6 @@ class GenerateCommand extends BaseCommand
         Configure::config('default', new PhpConfig());
         Configure::load($args->getOption('config'), 'default', false);
 
-        Configure::write('output', $args->getOption('output'));
-        Configure::write('globals.version', $args->getOption('version'));
+        Configure::write('version', $args->getOption('version'));
     }
 }

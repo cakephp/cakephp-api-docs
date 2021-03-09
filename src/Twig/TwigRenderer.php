@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Cake\ApiDocs\Twig;
 
 use Cake\ApiDocs\Twig\Extension\ReflectionExtension;
-use Cake\Core\Configure;
 use Cake\Log\LogTrait;
 use InvalidArgumentException;
 use RuntimeException;
@@ -42,8 +41,10 @@ class TwigRenderer
 
     /**
      * @param string $outputPath Output path
+     * @param string $templatePath Twig template path
+     * @param array $globals Twig globals variables
      */
-    public function __construct(string $outputPath)
+    public function __construct(string $outputPath, string $templatePath, array $globals)
     {
         $this->outputPath = $outputPath;
         if (!is_dir($this->outputPath)) {
@@ -54,8 +55,10 @@ class TwigRenderer
             throw new InvalidArgumentException("Unable to create output directory `{$this->outputPath}`.");
         }
 
-        $this->createTwig(Configure::read('templates'));
-        $this->twig->addGlobal('config', Configure::read('globals'));
+        $this->createTwig($templatePath);
+        foreach ($globals as $name => $global) {
+            $this->twig->addGlobal($name, $global);
+        }
     }
 
     /**
@@ -98,13 +101,13 @@ class TwigRenderer
     }
 
     /**
-     * @param string $templatesPath Twig template directory
+     * @param string $templatePath Twig template path
      * @return void
      */
-    protected function createTwig(string $templatesPath): void
+    protected function createTwig(string $templatePath): void
     {
         $this->twig = new Environment(
-            new FilesystemLoader($templatesPath)
+            new FilesystemLoader($templatePath)
         );
 
         $this->twig->addRuntimeLoader(new TwigRuntimeLoader());

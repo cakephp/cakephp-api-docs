@@ -2,15 +2,15 @@
 
 // Chronos API docs
 return [
-    'templates' => 'templates',
+    'project' => 'Chronos',
+    'release' => null,
     'namespace' => '\Cake\Chronos',
+
+    'templatePath' => 'templates',
     'sourcePaths' => ['src'],
-    'globals' => [
-        'project' => 'Chronos',
-        'release' => '',
-        'version_links' => [
-            '2.x' => '../2.x',
-            '1.x' => '../1.x',
-        ],
+
+    'versions' => [
+        '2.x' => '../2.x',
+        '1.x' => '../1.x',
     ],
 ];
