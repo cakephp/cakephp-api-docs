@@ -2279,7 +2279,7 @@ pre::-webkit-scrollbar-thumb:horizontal {
 }
 
 .deprecated {
-    text-decoration: line-through;
+    background: rgb(190, 0, 0);
 }
 
 /*
