@@ -22,6 +22,7 @@ use Cake\Log\LogTrait;
 use phpDocumentor\Reflection\File\LocalFile;
 use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Php\Namespace_;
+use phpDocumentor\Reflection\Php\Project as ReflectionProject;
 use phpDocumentor\Reflection\Php\ProjectFactory;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -176,11 +177,23 @@ class Project
             $this->projectFiles[realpath($path)] = new LoadedFile($file, false);
         }
 
+        $this->loadNamespaces($project);
+    }
+
+    /**
+     * @param \phpDocumentor\Reflection\Php\Project $project Reflection project
+     * @return void
+     */
+    protected function loadNamespaces(ReflectionProject $project): void
+    {
         $namespaces = [];
         foreach ($project->getNamespaces() as $fqsen => $namespace) {
             if (in_array($fqsen, Configure::read('excludes.namespaces', []), true)) {
                 continue;
             }
+
+            // Parent namespaces that have no files are not built by ReflectionProject
+            $this->addMissingParents($fqsen, $namespaces);
 
             $namespaces[$fqsen] = new LoadedNamespace($fqsen, $namespace);
             foreach (array_keys($namespace->getInterfaces()) as $interfaceFqsen) {
@@ -206,14 +219,6 @@ class Project
                 $namespaces[$fqsen]->traits[$traitFqsen] = $this->loader->getTrait($traitFqsen);
             }
             ksort($namespaces[$fqsen]->traits);
-
-            // Create empty namespace for namespaces that have no files
-            if ($fqsen !== Configure::read('namespace')) {
-                $parent = substr($fqsen, 0, strrpos($fqsen, '\\'));
-                if (empty($project->getNamespaces()[$parent])) {
-                    $namespaces[$parent] = new LoadedNamespace($parent, new Namespace_(new Fqsen($parent)));
-                }
-            }
         }
         ksort($namespaces);
 
@@ -227,5 +232,28 @@ class Project
             $parent = substr($fqsen, 0, strrpos($fqsen, '\\'));
             $namespaces[$parent]->children[$fqsen] = $namespace;
         }
+    }
+
+    /**
+     * Add missing parent namespaces.
+     *
+     * @param string $fqsen Namespace fqsen
+     * @param array $namespaces Namespaces
+     * @return void
+     */
+    protected function addMissingParents(string $fqsen, array &$namespaces): void
+    {
+        if ($fqsen === Configure::read('namespace') || $fqsen === '\\') {
+            return;
+        }
+
+        $parent = substr($fqsen, 0, strrpos($fqsen, '\\'));
+        if (isset($namespaces[$parent])) {
+            return;
+        }
+
+        $this->log('Adding missing namespace: ' . $parent, 'info');
+        $namespaces[$parent] = new LoadedNamespace($parent, new Namespace_(new Fqsen($parent)));
+        $this->addMissingParents($parent, $namespaces);
     }
 }
