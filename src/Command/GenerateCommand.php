@@ -63,7 +63,7 @@ class GenerateCommand extends BaseCommand
         $this->configure($args);
 
         $generator = new Generator($args->getArgumentAt(0), $args->getArgumentAt(1), Configure::read('templatePath'));
-        $generator->generateAll();
+        $generator->generate();
 
         return static::CODE_SUCCESS;
     }

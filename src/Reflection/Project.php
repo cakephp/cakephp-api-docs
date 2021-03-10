@@ -70,7 +70,7 @@ class Project
         $this->loader = new Loader($this);
         $this->factory = ProjectFactory::createInstance();
         $this->loadClassLoader($projectPath);
-        $this->loadProjectFiles($projectPath);
+        $this->loadProject($projectPath);
     }
 
     /**
@@ -150,12 +150,12 @@ class Project
      * @param string $projectPath Project path
      * @return void
      */
-    protected function loadProjectFiles(string $projectPath): void
+    protected function loadProject(string $projectPath): void
     {
         $localFiles = [];
         foreach (Configure::read('sourcePaths') as $sourcePath) {
             $filesPath = $projectPath . DIRECTORY_SEPARATOR . $sourcePath;
-            $this->log("Loading project files from `$filesPath`", 'info');
+            $this->log("Loading sources from `$filesPath`", 'info');
 
             $iterator = new RecursiveIteratorIterator(
                 new RecursiveDirectoryIterator($filesPath)
