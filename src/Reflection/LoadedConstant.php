@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Cake\ApiDocs\Reflection;
 
+use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Php\Constant;
 
 class LoadedConstant
@@ -53,5 +54,16 @@ class LoadedConstant
         $this->origin = $origin;
         $this->owner = $owner;
         $this->constant = $constant;
+
+        if ($this->owner !== $this->origin) {
+            $fqsen = $this->owner . '::' . $constant->getFqsen()->getName();
+            $this->constant = new Constant(
+                new Fqsen($fqsen),
+                $constant->getDocBlock(),
+                $constant->getValue(),
+                $constant->getLocation(),
+                $constant->getVisibility()
+            );
+        }
     }
 }

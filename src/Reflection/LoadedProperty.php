@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Cake\ApiDocs\Reflection;
 
+use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Php\Property;
 
 class LoadedProperty
@@ -53,5 +54,18 @@ class LoadedProperty
         $this->origin = $origin;
         $this->owner = $owner;
         $this->property = $property;
+
+        if ($this->owner !== $this->origin) {
+            $fqsen = $this->owner . '::$' . $property->getFqsen()->getName();
+            $this->property = new Property(
+                new Fqsen($fqsen),
+                $property->getVisibility(),
+                $property->getDocBlock(),
+                $property->getDefault(),
+                $property->isStatic(),
+                $property->getLocation(),
+                $property->getType()
+            );
+        }
     }
 }

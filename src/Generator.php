@@ -23,9 +23,12 @@ use Cake\ApiDocs\Reflection\LoadedNamespace;
 use Cake\ApiDocs\Reflection\Project;
 use Cake\ApiDocs\Twig\TwigRenderer;
 use Cake\Core\Configure;
+use Cake\Log\LogTrait;
 
 class Generator
 {
+    use LogTrait;
+
     /**
      * @var \Cake\ApiDocs\Reflection\Project
      */
@@ -111,10 +114,6 @@ class Generator
     {
         $namespaces = $this->project->getProjectNamespaces();
         $renderNested = function ($loaded, $renderNested) use ($namespaces) {
-            if (isExcluded($loaded->fqsen, true)) {
-                return;
-            }
-
             // Render namespace
             $filename = 'namespace-' . str_replace('\\', '.', substr($loaded->fqsen, 1)) . '.html';
             $this->renderer->render(
@@ -147,10 +146,6 @@ class Generator
     public function renderInterfaces(LoadedNamespace $loadedNamespace): void
     {
         foreach ($loadedNamespace->interfaces as $fqsen => $loadedInterface) {
-            if (isExcluded($fqsen, false)) {
-                continue;
-            }
-
             $filename = 'interface-' . str_replace('\\', '.', substr($fqsen, 1)) . '.html';
             $this->renderer->render(
                 'interface.twig',
@@ -169,10 +164,6 @@ class Generator
     public function renderClasses(LoadedNamespace $loadedNamespace): void
     {
         foreach ($loadedNamespace->classes as $fqsen => $loadedClass) {
-            if (isExcluded($fqsen, false)) {
-                continue;
-            }
-
             $filename = 'class-' . str_replace('\\', '.', substr($fqsen, 1)) . '.html';
             $this->renderer->render(
                 'class.twig',
@@ -191,10 +182,6 @@ class Generator
     public function renderTraits(LoadedNamespace $loadedNamespace): void
     {
         foreach ($loadedNamespace->traits as $fqsen => $loadedTrait) {
-            if (isExcluded($fqsen, false)) {
-                continue;
-            }
-
             $filename = 'trait-' . str_replace('\\', '.', substr($fqsen, 1)) . '.html';
             $this->renderer->render(
                 'trait.twig',
@@ -212,46 +199,47 @@ class Generator
     public function renderSearch(): void
     {
         $search = [];
-        foreach ($this->project->getProjectFiles() as $file) {
-            foreach ($file->file->getInterfaces() as $interface) {
-                if (isExcluded((string)$interface->getFqsen(), false)) {
-                    continue;
-                }
+        $addNested = function ($loaded, $addNested) use (&$search) {
+            foreach ($loaded->children as $fqsen => $child) {
+                $addNested($child, $addNested);
+            }
 
-                foreach (array_keys($interface->getConstants()) as $fqsen) {
-                    $search[] = ['i', substr($fqsen, 1)];
+            // Add interface entries
+            foreach ($loaded->interfaces as $loadedInterface) {
+                foreach ($loadedInterface->constants as $loadedConstant) {
+                    $search[] = ['i', substr((string)$loadedConstant->constant->getFqsen(), 1)];
                 }
-                foreach (array_keys($interface->getMethods()) as $fqsen) {
-                    $search[] = ['i', substr($fqsen, 1)];
+                foreach ($loadedInterface->methods as $loadedMethod) {
+                    $search[] = ['i', substr((string)$loadedMethod->method->getFqsen(), 1)];
                 }
             }
-            foreach ($file->file->getClasses() as $class) {
-                if (isExcluded((string)$class->getFqsen(), false)) {
-                    continue;
-                }
 
-                foreach (array_keys($class->getConstants()) as $fqsen) {
-                    $search[] = ['c', substr($fqsen, 1)];
+            // Add class entries
+            foreach ($loaded->classes as $loadedClass) {
+                foreach ($loadedClass->constants as $loadedConstant) {
+                    $search[] = ['c', substr((string)$loadedConstant->constant->getFqsen(), 1)];
                 }
-                foreach (array_keys($class->getConstants()) as $fqsen) {
-                    $search[] = ['c', substr($fqsen, 1)];
+                foreach ($loadedClass->properties as $loadedProperty) {
+                    $search[] = ['c', substr((string)$loadedProperty->property->getFqsen(), 1)];
                 }
-                foreach (array_keys($class->getMethods()) as $fqsen) {
-                    $search[] = ['c', substr($fqsen, 1)];
+                foreach ($loadedClass->methods as $loadedMethod) {
+                    $search[] = ['c', substr((string)$loadedMethod->method->getFqsen(), 1)];
                 }
             }
-            foreach ($file->file->getTraits() as $trait) {
-                if (isExcluded((string)$trait->getFqsen(), false)) {
-                    continue;
-                }
 
-                foreach (array_keys($trait->getProperties()) as $fqsen) {
-                    $search[] = ['t', substr($fqsen, 1)];
+            // Add trait entries
+            foreach ($loaded->traits as $loadedTrait) {
+                foreach ($loadedTrait->properties as $loadedProperty) {
+                    $search[] = ['t', substr((string)$loadedProperty->property->getFqsen(), 1)];
                 }
-                foreach (array_keys($trait->getMethods()) as $fqsen) {
-                    $search[] = ['t', substr($fqsen, 1)];
+                foreach ($loadedTrait->methods as $loadedMethod) {
+                    $search[] = ['t', substr((string)$loadedMethod->method->getFqsen(), 1)];
                 }
             }
+        };
+
+        foreach ($this->project->getProjectNamespaces() as $loaded) {
+            $addNested($loaded, $addNested);
         }
 
         $this->renderer->render('searchlist.twig', 'searchlist.js', ['entries' => json_encode(array_values($search))]);
