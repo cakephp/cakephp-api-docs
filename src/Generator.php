@@ -19,12 +19,16 @@ namespace Cake\ApiDocs;
 
 use Cake\ApiDocs\Reflection\LoadedConstant;
 use Cake\ApiDocs\Reflection\LoadedFunction;
+use Cake\ApiDocs\Reflection\LoadedNamespace;
 use Cake\ApiDocs\Reflection\Project;
 use Cake\ApiDocs\Twig\TwigRenderer;
 use Cake\Core\Configure;
+use Cake\Log\LogTrait;
 
 class Generator
 {
+    use LogTrait;
+
     /**
      * @var \Cake\ApiDocs\Reflection\Project
      */
@@ -56,22 +60,19 @@ class Generator
      *
      * @return void
      */
-    public function generateAll(): void
+    public function generate(): void
     {
-        $this->generateOverview();
-        $this->generateNamespaces();
-        $this->generateInterfaces();
-        $this->generateClasses();
-        $this->generateTraits();
-        $this->generateSearch();
+        $this->renderOverview();
+        $this->renderNamespaces();
+        $this->renderSearch();
     }
 
     /**
-     * Generate overview page with globals.
+     * Renders overview page.
      *
      * @return void
      */
-    public function generateOverview(): void
+    public function renderOverview(): void
     {
         $constants = [];
         $functions = [];
@@ -105,24 +106,26 @@ class Generator
     }
 
     /**
-     * Geneate all namespaces.
+     * Render all namespaces and interfaces, classes and traits owned by interface.
      *
      * @return void
      */
-    public function generateNamespaces(): void
+    public function renderNamespaces(): void
     {
         $namespaces = $this->project->getProjectNamespaces();
         $renderNested = function ($loaded, $renderNested) use ($namespaces) {
-            if (isExcluded($loaded->fqsen, true)) {
-                return;
-            }
-
+            // Render namespace
             $filename = 'namespace-' . str_replace('\\', '.', substr($loaded->fqsen, 1)) . '.html';
             $this->renderer->render(
                 'namespace.twig',
                 $filename,
                 ['loaded' => $loaded, 'namespaces' => $namespaces]
             );
+
+            // Render files owned by namespace
+            $this->renderInterfaces($loaded);
+            $this->renderClasses($loaded);
+            $this->renderTraits($loaded);
 
             foreach ($loaded->children as $fqsen => $child) {
                 $renderNested($child, $renderNested);
@@ -135,149 +138,108 @@ class Generator
     }
 
     /**
-     * Generate all interfaces.
+     * Render all interfaces for namespace.
      *
+     * @param \Cake\ApiDocs\Reflection\LoadedNamespace $loadedNamespace Loaded namespace
      * @return void
      */
-    public function generateInterfaces(): void
+    public function renderInterfaces(LoadedNamespace $loadedNamespace): void
     {
-        $namespaces = $this->project->getProjectNamespaces();
-        foreach ($this->project->getProjectFiles() as $file) {
-            foreach ($file->file->getInterfaces() as $fqsen => $interface) {
-                if (isExcluded($fqsen, false)) {
-                    continue;
-                }
-
-                $loaded = $this->project->getLoader()->getInterface($fqsen);
-                $filename = 'interface-' . str_replace('\\', '.', substr($fqsen, 1)) . '.html';
-                $this->renderer->render(
-                    'interface.twig',
-                    $filename,
-                    ['loaded' => $loaded, 'namespaces' => $namespaces]
-                );
-            }
+        foreach ($loadedNamespace->interfaces as $fqsen => $loadedInterface) {
+            $filename = 'interface-' . str_replace('\\', '.', substr($fqsen, 1)) . '.html';
+            $this->renderer->render(
+                'interface.twig',
+                $filename,
+                ['loaded' => $loadedInterface, 'namespaces' => $this->project->getProjectNamespaces()]
+            );
         }
     }
 
     /**
-     * Generate all classes.
+     * Render all classes for namespace.
      *
+     * @param \Cake\ApiDocs\Reflection\LoadedNamespace $loadedNamespace Loaded namespace
      * @return void
      */
-    public function generateClasses(): void
+    public function renderClasses(LoadedNamespace $loadedNamespace): void
     {
-        $namespaces = $this->project->getProjectNamespaces();
-        foreach ($this->project->getProjectFiles() as $file) {
-            foreach ($file->file->getClasses() as $fqsen => $class) {
-                if (isExcluded($fqsen, false)) {
-                    continue;
-                }
-
-                $loaded = $this->project->getLoader()->getClass($fqsen);
-                $filename = 'class-' . str_replace('\\', '.', substr($fqsen, 1)) . '.html';
-                $this->renderer->render(
-                    'class.twig',
-                    $filename,
-                    ['loaded' => $loaded, 'namespaces' => $namespaces]
-                );
-            }
+        foreach ($loadedNamespace->classes as $fqsen => $loadedClass) {
+            $filename = 'class-' . str_replace('\\', '.', substr($fqsen, 1)) . '.html';
+            $this->renderer->render(
+                'class.twig',
+                $filename,
+                ['loaded' => $loadedClass, 'namespaces' => $this->project->getProjectNamespaces()]
+            );
         }
     }
 
     /**
-     * Generate all traits.
+     * Render all traits for namespace.
      *
+     * @param \Cake\ApiDocs\Reflection\LoadedNamespace $loadedNamespace Loaded namespace
      * @return void
      */
-    public function generateTraits(): void
+    public function renderTraits(LoadedNamespace $loadedNamespace): void
     {
-        $namespaces = $this->project->getProjectNamespaces();
-        foreach ($this->project->getProjectFiles() as $file) {
-            foreach ($file->file->getTraits() as $fqsen => $trait) {
-                if (isExcluded($fqsen, false)) {
-                    continue;
-                }
-
-                $loaded = $this->project->getLoader()->getTrait($fqsen);
-                $filename = 'trait-' . str_replace('\\', '.', substr($fqsen, 1)) . '.html';
-                $this->renderer->render(
-                    'trait.twig',
-                    $filename,
-                    ['loaded' => $loaded, 'namespaces' => $namespaces]
-                );
-            }
+        foreach ($loadedNamespace->traits as $fqsen => $loadedTrait) {
+            $filename = 'trait-' . str_replace('\\', '.', substr($fqsen, 1)) . '.html';
+            $this->renderer->render(
+                'trait.twig',
+                $filename,
+                ['loaded' => $loadedTrait, 'namespaces' => $this->project->getProjectNamespaces()]
+            );
         }
     }
 
     /**
-     * Geneate a single interface, class or trait.
-     *
-     * @param string $fqsen The interface, class or trait fqsen
-     * @param string $type One of the types listed for fqsen
-     * @return void
-     */
-    public function generateSingle(string $fqsen, string $type): void
-    {
-        $namespaces = $this->project->getProjectNamespaces();
-
-        $loaded = $this->project->getLoader()->{'get' . $type}($fqsen);
-        $filename = $type . '-' . str_replace('\\', '.', substr($fqsen, 1)) . '.html';
-
-        $this->renderer->render(
-            $type . '.twig',
-            $filename,
-            ['loaded' => $loaded, 'namespaces' => $namespaces]
-        );
-    }
-
-    /**
-     * Generates search data.
+     * Renders search data.
      *
      * @return void
      */
-    public function generateSearch(): void
+    public function renderSearch(): void
     {
         $search = [];
-        foreach ($this->project->getProjectFiles() as $file) {
-            foreach ($file->file->getInterfaces() as $interface) {
-                if (isExcluded((string)$interface->getFqsen(), false)) {
-                    continue;
-                }
+        $addNested = function ($loaded, $addNested) use (&$search) {
+            foreach ($loaded->children as $fqsen => $child) {
+                $addNested($child, $addNested);
+            }
 
-                foreach (array_keys($interface->getConstants()) as $fqsen) {
-                    $search[] = ['i', substr($fqsen, 1)];
+            // Add interface entries
+            foreach ($loaded->interfaces as $loadedInterface) {
+                foreach ($loadedInterface->constants as $loadedConstant) {
+                    $search[] = ['i', substr((string)$loadedConstant->constant->getFqsen(), 1)];
                 }
-                foreach (array_keys($interface->getMethods()) as $fqsen) {
-                    $search[] = ['i', substr($fqsen, 1)];
+                foreach ($loadedInterface->methods as $loadedMethod) {
+                    $search[] = ['i', substr((string)$loadedMethod->method->getFqsen(), 1)];
                 }
             }
-            foreach ($file->file->getClasses() as $class) {
-                if (isExcluded((string)$class->getFqsen(), false)) {
-                    continue;
-                }
 
-                foreach (array_keys($class->getConstants()) as $fqsen) {
-                    $search[] = ['c', substr($fqsen, 1)];
+            // Add class entries
+            foreach ($loaded->classes as $loadedClass) {
+                foreach ($loadedClass->constants as $loadedConstant) {
+                    $search[] = ['c', substr((string)$loadedConstant->constant->getFqsen(), 1)];
                 }
-                foreach (array_keys($class->getConstants()) as $fqsen) {
-                    $search[] = ['c', substr($fqsen, 1)];
+                foreach ($loadedClass->properties as $loadedProperty) {
+                    $search[] = ['c', substr((string)$loadedProperty->property->getFqsen(), 1)];
                 }
-                foreach (array_keys($class->getMethods()) as $fqsen) {
-                    $search[] = ['c', substr($fqsen, 1)];
+                foreach ($loadedClass->methods as $loadedMethod) {
+                    $search[] = ['c', substr((string)$loadedMethod->method->getFqsen(), 1)];
                 }
             }
-            foreach ($file->file->getTraits() as $trait) {
-                if (isExcluded((string)$trait->getFqsen(), false)) {
-                    continue;
-                }
 
-                foreach (array_keys($trait->getProperties()) as $fqsen) {
-                    $search[] = ['t', substr($fqsen, 1)];
+            // Add trait entries
+            foreach ($loaded->traits as $loadedTrait) {
+                foreach ($loadedTrait->properties as $loadedProperty) {
+                    $search[] = ['t', substr((string)$loadedProperty->property->getFqsen(), 1)];
                 }
-                foreach (array_keys($trait->getMethods()) as $fqsen) {
-                    $search[] = ['t', substr($fqsen, 1)];
+                foreach ($loadedTrait->methods as $loadedMethod) {
+                    $search[] = ['t', substr((string)$loadedMethod->method->getFqsen(), 1)];
                 }
             }
+        };
+
+        foreach ($this->project->getProjectNamespaces() as $loaded) {
+            $addNested($loaded, $addNested);
         }
 
         $this->renderer->render('searchlist.twig', 'searchlist.js', ['entries' => json_encode(array_values($search))]);

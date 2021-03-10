@@ -37,7 +37,7 @@ class LoadedNamespace
     public Namespace_ $element;
 
     /**
-     * @var \phpDocumentor\Reflection\Php\Namespace_[]
+     * @var \Cake\ApiDocs\Reflection\LoadedNamespace[]
      */
     public array $children = [];
 

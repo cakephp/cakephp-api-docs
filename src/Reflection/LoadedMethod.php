@@ -19,6 +19,7 @@ namespace Cake\ApiDocs\Reflection;
 
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\DocBlock\Description;
+use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Php\Method;
 use RuntimeException;
 
@@ -107,8 +108,9 @@ class LoadedMethod
             $definitionBlock->getLocation()
         );
 
+        $fqsen = $this->owner . '::' . $definition->getFqsen()->getName() . '()';
         $this->method = new Method(
-            $definition->getFqsen(),
+            new Fqsen($fqsen),
             $definition->getVisibility(),
             $mergedBlock,
             $definition->isAbstract(),
