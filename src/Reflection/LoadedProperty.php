@@ -17,6 +17,8 @@ declare(strict_types=1);
 
 namespace Cake\ApiDocs\Reflection;
 
+use phpDocumentor\Reflection\DocBlock;
+use phpDocumentor\Reflection\DocBlock\Description;
 use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Php\Property;
 
@@ -38,6 +40,11 @@ class LoadedProperty
     public string $owner;
 
     /**
+     * @var \phpDocumentor\Reflection\Php\Property[]
+     */
+    public array $declarations = [];
+
+    /**
      * @var \phpDocumentor\Reflection\Php\Property
      */
     public Property $property;
@@ -46,26 +53,69 @@ class LoadedProperty
      * @param string $name Property name
      * @param string $origin Fqsen where property was declared
      * @param string $owner Fqsen that is using the property
-     * @param \phpDocumentor\Reflection\Php\Property $property Property instance
      */
-    public function __construct(string $name, string $origin, string $owner, Property $property)
+    public function __construct(string $name, string $origin, string $owner)
     {
         $this->name = $name;
         $this->origin = $origin;
         $this->owner = $owner;
-        $this->property = $property;
+    }
 
-        if ($this->owner !== $this->origin) {
-            $fqsen = $this->owner . '::$' . $property->getFqsen()->getName();
-            $this->property = new Property(
-                new Fqsen($fqsen),
-                $property->getVisibility(),
-                $property->getDocBlock(),
-                $property->getDefault(),
-                $property->isStatic(),
-                $property->getLocation(),
-                $property->getType()
-            );
+    /**
+     * Merge all declarations into single property.
+     *
+     * @return void
+     */
+    public function merge(): void
+    {
+        if (empty($this->declarations)) {
+            throw new RuntimeException("No property declarations found for `$this->name`.");
         }
+
+        $merged = ['summary' => '', 'body' => '', 'bodyTags' => [], 'tags' => []];
+        foreach (array_reverse($this->declarations) as $property) {
+            $docBlock = $property->getDocBlock();
+            if ($docBlock === null) {
+                continue;
+            }
+
+            if (!empty($merged['body'])) {
+                $merged['body'] .= "\n---\n";
+            }
+            $merged['body'] .= $docBlock->getDescription()->getBodyTemplate();
+            $merged['bodyTags'] = array_merge($merged['bodyTags'], $docBlock->getDescription()->getTags());
+            $merged['tags'] = array_merge($merged['tags'], $docBlock->getTags());
+
+            $inheritTags = array_filter($docBlock->getTags(), function ($tag) {
+                if (preg_match('/inheritDoc/i', $tag->getName()) === 1) {
+                    return true;
+                }
+            });
+            if (empty($inheritTags) && preg_match('/@inheritDoc/i', $docBlock->getSummary()) !== 1) {
+                break;
+            }
+        }
+        $merged['summary'] = ($property->getDocBlock() ?? new DocBlock())->getSummary();
+
+        $definition = end($this->declarations);
+        $definitionBlock = $definition->getDocBlock() ?? new DocBlock();
+        $mergedBlock = new DocBlock(
+            $merged['summary'],
+            new Description($merged['body'], $merged['bodyTags']),
+            $merged['tags'],
+            $definitionBlock->getContext(),
+            $definitionBlock->getLocation()
+        );
+
+        $fqsen = $this->owner . '::$' . $definition->getFqsen()->getName();
+        $this->property = new Property(
+            new Fqsen($fqsen),
+            $definition->getVisibility(),
+            $mergedBlock,
+            $definition->getDefault(),
+            $definition->isStatic(),
+            $definition->getLocation(),
+            $definition->getType()
+        );
     }
 }

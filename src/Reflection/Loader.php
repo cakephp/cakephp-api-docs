@@ -171,16 +171,21 @@ class Loader
     protected function addConstants(LoadedClassLike $loadedClassLike, $classLike): void
     {
         foreach ($classLike->getConstants() as $fqsen => $constant) {
-            $loadedConstant = new LoadedConstant(
-                $constant->getName(),
-                $fqsen,
-                $loadedClassLike->fqsen,
-                $constant
-            );
-            $loadedConstant->constant = $constant;
-            $loadedClassLike->constants[$constant->getName()] = $loadedConstant;
+            $loadedConstant = $loadedClassLike->constants[$constant->getName()] ?? null;
+            if ($loadedConstant === null) {
+                $loadedConstant = new LoadedConstant(
+                    $constant->getName(),
+                    $fqsen,
+                    $loadedClassLike->fqsen
+                );
+                $loadedClassLike->constants[$constant->getName()] = $loadedConstant;
+            }
+            $loadedConstant->declarations[] = $constant;
         }
         ksort($loadedClassLike->constants);
+        foreach ($loadedClassLike->constants as $constant) {
+            $constant->merge();
+        }
     }
 
     /**
@@ -191,16 +196,21 @@ class Loader
     protected function addProperties(LoadedClassLike $loadedClassLike, $classLike): void
     {
         foreach ($classLike->getProperties() as $fqsen => $property) {
-            $loadedProperty = new LoadedProperty(
-                $property->getName(),
-                $fqsen,
-                $loadedClassLike->fqsen,
-                $property
-            );
-            $loadedProperty->property = $property;
-            $loadedClassLike->properties[$property->getName()] = $loadedProperty;
+            $loadedProperty = $loadedClassLike->properties[$property->getName()] ?? null;
+            if ($loadedProperty === null) {
+                $loadedProperty = new LoadedProperty(
+                    $property->getName(),
+                    $fqsen,
+                    $loadedClassLike->fqsen
+                );
+                $loadedClassLike->properties[$property->getName()] = $loadedProperty;
+            }
+            $loadedProperty->declarations[] = $property;
         }
         ksort($loadedClassLike->properties);
+        foreach ($loadedClassLike->properties as $property) {
+            $property->merge();
+        }
     }
 
     /**

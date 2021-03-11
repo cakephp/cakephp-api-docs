@@ -17,8 +17,11 @@ declare(strict_types=1);
 
 namespace Cake\ApiDocs\Reflection;
 
+use phpDocumentor\Reflection\DocBlock;
+use phpDocumentor\Reflection\DocBlock\Description;
 use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Php\Constant;
+use RuntimeException;
 
 class LoadedConstant
 {
@@ -38,6 +41,11 @@ class LoadedConstant
     public string $owner;
 
     /**
+     * @var \phpDocumentor\Reflection\Php\Constant[]
+     */
+    public array $declarations = [];
+
+    /**
      * @var \phpDocumentor\Reflection\Php\Constant
      */
     public Constant $constant;
@@ -46,24 +54,67 @@ class LoadedConstant
      * @param string $name Constant name
      * @param string $origin Fqsen where constant was declared
      * @param string $owner Fqsen that is using the method
-     * @param \phpDocumentor\Reflection\Php\Constant $constant Constant instance
      */
-    public function __construct(string $name, string $origin, string $owner, Constant $constant)
+    public function __construct(string $name, string $origin, string $owner)
     {
         $this->name = $name;
         $this->origin = $origin;
         $this->owner = $owner;
-        $this->constant = $constant;
+    }
 
-        if ($this->owner !== $this->origin) {
-            $fqsen = $this->owner . '::' . $constant->getFqsen()->getName();
-            $this->constant = new Constant(
-                new Fqsen($fqsen),
-                $constant->getDocBlock(),
-                $constant->getValue(),
-                $constant->getLocation(),
-                $constant->getVisibility()
-            );
+    /**
+     * Merge all declarations into single constant.
+     *
+     * @return void
+     */
+    public function merge(): void
+    {
+        if (empty($this->declarations)) {
+            throw new RuntimeException("No constant declarations found for `$this->name`.");
         }
+
+        $merged = ['summary' => '', 'body' => '', 'bodyTags' => [], 'tags' => []];
+        foreach (array_reverse($this->declarations) as $constant) {
+            $docBlock = $constant->getDocBlock();
+            if ($docBlock === null) {
+                continue;
+            }
+
+            if (!empty($merged['body'])) {
+                $merged['body'] .= "\n---\n";
+            }
+            $merged['body'] .= $docBlock->getDescription()->getBodyTemplate();
+            $merged['bodyTags'] = array_merge($merged['bodyTags'], $docBlock->getDescription()->getTags());
+            $merged['tags'] = array_merge($merged['tags'], $docBlock->getTags());
+
+            $inheritTags = array_filter($docBlock->getTags(), function ($tag) {
+                if (preg_match('/inheritDoc/i', $tag->getName()) === 1) {
+                    return true;
+                }
+            });
+            if (empty($inheritTags) && preg_match('/@inheritDoc/i', $docBlock->getSummary()) !== 1) {
+                break;
+            }
+        }
+        $merged['summary'] = ($constant->getDocBlock() ?? new DocBlock())->getSummary();
+
+        $definition = end($this->declarations);
+        $definitionBlock = $definition->getDocBlock() ?? new DocBlock();
+        $mergedBlock = new DocBlock(
+            $merged['summary'],
+            new Description($merged['body'], $merged['bodyTags']),
+            $merged['tags'],
+            $definitionBlock->getContext(),
+            $definitionBlock->getLocation()
+        );
+
+        $fqsen = $this->owner . '::' . $definition->getFqsen()->getName();
+        $this->constant = new Constant(
+            new Fqsen($fqsen),
+            $mergedBlock,
+            $definition->getValue(),
+            $definition->getLocation(),
+            $definition->getVisibility()
+        );
     }
 }
