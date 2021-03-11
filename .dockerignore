@@ -1,5 +1,9 @@
-/.*
-/composer.phar
-/build
-/vendor
-/website
+.*
+*.groovy
+composer.phar
+phpcs.xml
+
+build/
+release/
+vendor/
+website/

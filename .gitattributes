@@ -1,21 +1,3 @@
 # Define the line ending behavior of the different file extensions
 # Set default behavior, in case users don't have core.autocrlf set.
 * text=auto eol=lf
-
-# Explicitly declare text files we want to always be normalized and converted
-# to native line endings on checkout.
-*.css text
-*.html text
-*.js text
-*.neon text
-*.php text
-*.twig text
-
-build export-ignore
-release export-ignore
-vendor export-ignore
-.gitattributes export-ignore
-.gitignore export-ignore
-.gitmodules export-ignore
-build.xml export-ignore
-package.xml export-ignore
