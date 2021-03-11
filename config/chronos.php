@@ -8,7 +8,7 @@ return [
 
     'templatePath' => 'templates',
     'sourcePaths' => ['src'],
-    'excludes' => [
+    'exclude' => [
         'namespaces' => ['\Cake\Chronos\Traits'],
         'names' => [],
     ],

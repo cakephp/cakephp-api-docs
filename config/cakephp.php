@@ -8,7 +8,7 @@ return [
 
     'templatePath' => 'templates',
     'sourcePaths' => ['src', 'config'],
-    'excludes' => [
+    'exclude' => [
         'namespaces' => [],
         'names' => [
             '\Cake\Collection\CollectionTrait',

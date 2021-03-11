@@ -188,7 +188,7 @@ class Project
     {
         $namespaces = [];
         foreach ($project->getNamespaces() as $fqsen => $namespace) {
-            if (isExcluded($fqsen, true)) {
+            if (namespaceExcluded($fqsen)) {
                 continue;
             }
 
@@ -223,21 +223,21 @@ class Project
         $loaded = new LoadedNamespace($fqsen, $namespace);
 
         foreach ($namespace->getInterfaces() as $fqsen => $interface) {
-            if (!isExcluded($fqsen, false)) {
+            if (!nameExcluded($fqsen)) {
                 $loaded->interfaces[$fqsen] = $this->loader->getInterface($fqsen);
             }
         }
         ksort($loaded->interfaces);
 
         foreach ($namespace->getClasses() as $fqsen => $class) {
-            if (!isExcluded($fqsen, false)) {
+            if (!nameExcluded($fqsen)) {
                 $loaded->classes[$fqsen] = $this->loader->getClass($fqsen);
             }
         }
         ksort($loaded->classes);
 
         foreach ($namespace->getTraits() as $fqsen => $trait) {
-            if (!isExcluded($fqsen, false)) {
+            if (!nameExcluded($fqsen)) {
                 $loaded->traits[$fqsen] = $this->loader->getTrait($fqsen);
             }
         }
