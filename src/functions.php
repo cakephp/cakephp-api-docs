@@ -18,24 +18,31 @@ declare(strict_types=1);
 use Cake\Core\Configure;
 
 /**
- * @param string $fqsen Fqsen to check if excluded
- * @param bool $isNamespace Whether $fqsen is a namespace
+ * @param string $fqsen Fqsen to check
  * @return bool
  */
-function isExcluded(string $fqsen, bool $isNamespace): bool
+function namespaceExcluded(string $fqsen): bool
 {
-    $namespace = substr($fqsen, 0, strrpos($fqsen, '\\'));
-    if ($isNamespace) {
-        if (in_array($namespace, Configure::read('excludes.namespaces', []), true)) {
-            return true;
-        }
-
-        return in_array($fqsen, Configure::read('excludes.namespaces', []), true);
+    if ($fqsen === Configure::read('namespace')) {
+        return false;
     }
 
-    if (in_array($namespace, Configure::read('excludes.namespaces', []), true)) {
+    if (in_array($fqsen, Configure::read('exclude.namespaces', []), true)) {
         return true;
     }
 
-    return in_array($fqsen, Configure::read('excludes.names', []), true);
+    return namespaceExcluded(substr($fqsen, 0, strrpos($fqsen, '\\')));
+}
+
+/**
+ * @param string $fqsen Fqsen to check
+ * @return bool
+ */
+function nameExcluded(string $fqsen): bool
+{
+    if (in_array($fqsen, Configure::read('exclude.names', []), true)) {
+        return true;
+    }
+
+    return namespaceExcluded(substr($fqsen, 0, strrpos($fqsen, '\\')));
 }
