@@ -85,10 +85,17 @@ class LoadedClassLike
         $this->interfaces[$fqsen] = $other;
         if ($other) {
             $this->interfaces = array_merge($this->interfaces, $other->interfaces);
+
             foreach ($other->constants as $name => $constant) {
-                $this->constants[$name] = clone $constant;
-                $this->constants[$name]->owner = $this->fqsen;
+                if (isset($this->constants[$name])) {
+                    $this->constants[$name]->declarations += $constant->declarations;
+                } else {
+                    $this->constants[$name] = clone $constant;
+                    $this->constants[$name]->owner = $this->fqsen;
+                }
+                $this->constants[$name]->merge();
             }
+
             foreach ($other->methods as $name => $method) {
                 if (isset($this->methods[$name])) {
                     $this->methods[$name]->declarations += $method->declarations;
@@ -96,6 +103,7 @@ class LoadedClassLike
                     $this->methods[$name] = clone $method;
                     $this->methods[$name]->owner = $this->fqsen;
                 }
+                $this->methods[$name]->merge();
             }
         }
     }
@@ -110,11 +118,22 @@ class LoadedClassLike
         $this->extends[$fqsen] = $other;
         if ($other) {
             $this->interfaces = array_merge($this->interfaces, $other->interfaces);
-            $this->constants = array_merge($this->constants, $other->constants);
+
+            foreach ($other->constants as $name => $constant) {
+                if (isset($this->constants[$name])) {
+                    $this->constants[$name]->declarations += $constant->declarations;
+                } else {
+                    $this->constants[$name] = clone $constant;
+                    $this->constants[$name]->owner = $this->fqsen;
+                }
+                $this->constants[$name]->merge();
+            }
+
             foreach ($other->properties as $name => $property) {
                 $this->properties[$name] = clone $property;
                 $this->properties[$name]->owner = $this->fqsen;
             }
+
             foreach ($other->methods as $name => $method) {
                 if (isset($this->methods[$name])) {
                     $this->methods[$name]->declarations += $method->declarations;
@@ -122,6 +141,7 @@ class LoadedClassLike
                     $this->methods[$name] = clone $method;
                     $this->methods[$name]->owner = $this->fqsen;
                 }
+                $this->methods[$name]->merge();
             }
         }
     }

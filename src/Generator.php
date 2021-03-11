@@ -78,12 +78,14 @@ class Generator
         $functions = [];
         foreach ($this->project->getProjectFiles() as $file) {
             foreach ($file->file->getConstants() as $constant) {
-                $constants[$constant->getName()] = new LoadedConstant(
+                $loadedConstant = new LoadedConstant(
                     $constant->getName(),
                     (string)$constant->getFqsen(),
-                    '\\',
-                    $constant
+                    '\\'
                 );
+                $loadedConstant->declarations[] = $constant;
+                $loadedConstant->merge();
+                $constants[$constant->getName()] = $loadedConstant;
             }
             foreach ($file->file->getFunctions() as $function) {
                 $functions[$function->getName()] = new LoadedFunction(
