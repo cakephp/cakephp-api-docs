@@ -1005,13 +1005,13 @@ input[type="email"].big-dog::webkit-input-placeholder {
         border-radius:2px;
     }
 
-    .dropdown-menu>li>a {
+    .dropdown-menu > li > a {
         display: block;
         clear: both;
         font-weight: 400;
         line-height: 1.42857143;
         white-space: nowrap;
-        text-align: center;
+        text-align: left;
     }
 
 
