@@ -24,33 +24,32 @@ class LoadedFunction
     /**
      * @var string
      */
-    public $name;
+    public string $fqsen;
 
     /**
      * @var string
      */
-    public $origin;
+    public string $namespace;
 
     /**
      * @var string
      */
-    public $owner;
+    public string $name;
 
     /**
-     * @var \phpDocumentor\Reflection\Php\Constant
+     * @var \phpDocumentor\Reflection\Php\Function
      */
+    public Function_ $function;
 
     /**
-     * @param string $name Function name
-     * @param string $origin Fqsen where function was declared
-     * @param string $owner Fqsen that is using the function
-     * @param \phpDocumentor\Reflection\Php\Function_ $function Function instance
+     * @param string $fqsen fqsen
+     * @param \phpDocumentor\Reflection\Php\Function_ $function Reflection function
      */
-    public function __construct(string $name, string $origin, string $owner, Function_ $function)
+    public function __construct(string $fqsen, Function_ $function)
     {
-        $this->name = $name;
-        $this->origin = $origin;
-        $this->owner = $owner;
+        $this->fqsen = $fqsen;
+        $this->namespace = substr($this->fqsen, 0, strrpos($this->fqsen, '\\'));
+        $this->name = $function->getName();
         $this->function = $function;
     }
 }

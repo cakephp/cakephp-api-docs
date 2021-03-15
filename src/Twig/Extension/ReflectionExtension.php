@@ -62,13 +62,13 @@ class ReflectionExtension extends AbstractExtension
                     return $loaded->trait->getDocBlock() ?? new DocBlock();
                 }
                 if ($loaded instanceof LoadedConstant) {
-                    return $loaded->constant->getDocBlock() ?? new DocBlock();
+                    return $loaded->docBlock;
                 }
                 if ($loaded instanceof LoadedMethod) {
-                    return $loaded->method->getDocBlock() ?? new DocBlock();
+                    return $loaded->docBlock;
                 }
                 if ($loaded instanceof LoadedProperty) {
-                    return $loaded->property->getDocBlock() ?? new DocBlock();
+                    return $loaded->docBlock;
                 }
                 if ($loaded instanceof LoadedFunction) {
                     return $loaded->function->getDocBlock() ?? new DocBlock();

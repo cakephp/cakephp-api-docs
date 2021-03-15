@@ -18,6 +18,8 @@ declare(strict_types=1);
 namespace Cake\ApiDocs\Reflection;
 
 use Cake\Log\LogTrait;
+use phpDocumentor\Reflection\DocBlock;
+use phpDocumentor\Reflection\DocBlock\Description;
 
 class Loader
 {
@@ -66,14 +68,10 @@ class Loader
         $loaded = new LoadedInterface($fqsen, $loadedFile, $interface);
         $this->cache[$fqsen] = $loaded;
 
-        foreach ($interface->getParents() as $parent) {
-            //$this->log('Adding parent: ' . (string)$parent, 'info');
-            $loadedParent = $this->getInterface((string)$parent);
-            $loaded->addInterface((string)$parent, $loadedParent);
-        }
+        $this->addInterfaces($loaded, $interface->getParents());
 
-        $this->addConstants($loaded, $interface);
-        $this->addMethods($loaded, $interface);
+        $this->addConstants($loaded, $interface->getConstants());
+        $this->addMethods($loaded, $interface->getMethods());
 
         return $loaded;
     }
@@ -103,25 +101,13 @@ class Loader
         $loaded = new LoadedClass($fqsen, $loadedFile, $class);
         $this->cache[$fqsen] = $loaded;
 
-        foreach ($class->getInterfaces() as $interface) {
-            $loadedInterface = $this->getInterface((string)$interface);
-            $loaded->addInterface((string)$interface, $loadedInterface);
-        }
+        $this->addInterfaces($loaded, $class->getInterfaces());
+        $this->addExtends($loaded, (array)$class->getParent());
+        $this->addTraits($loaded, $class->getUsedTraits());
 
-        $extends = $class->getParent();
-        if ($extends) {
-            $loadedExtends = $this->getClass((string)$extends);
-            $loaded->addExtends((string)$extends, $loadedExtends);
-        }
-
-        foreach ($class->getUsedTraits() as $usedTrait) {
-            $loadedTrait = $this->getTrait((string)$usedTrait);
-            $loaded->addTrait((string)$usedTrait, $loadedTrait);
-        }
-
-        $this->addConstants($loaded, $class);
-        $this->addProperties($loaded, $class);
-        $this->addMethods($loaded, $class);
+        $this->addConstants($loaded, $class->getConstants());
+        $this->addProperties($loaded, $class->getProperties());
+        $this->addMethods($loaded, $class->getMethods());
 
         return $loaded;
     }
@@ -151,91 +137,234 @@ class Loader
         $loaded = new LoadedTrait($fqsen, $loadedFile, $trait);
         $this->cache[$fqsen] = $loaded;
 
-        foreach ($trait->getUsedTraits() as $usedTrait) {
-            //$this->log('Adding trait:' . (string)$trait, 'info');
-            $loadedTrait = $this->getTrait((string)$usedTrait);
-            $loaded->addTrait((string)$usedTrait, $loadedTrait);
-        }
+        $this->addTraits($loaded, $trait->getUsedTraits());
 
-        $this->addProperties($loaded, $trait);
-        $this->addMethods($loaded, $trait);
+        $this->addProperties($loaded, $trait->getProperties());
+        $this->addMethods($loaded, $trait->getMethods());
 
         return $loaded;
     }
 
     /**
-     * @param \Cake\ApiDocs\Reflection\LoadedClassLike $loadedClassLike Loaded class-like
-     * @param \phpDocumentor\Reflection\Element $classLike Element instance
+     * @param \Cake\ApiDocs\Reflection\LoadedClassLike $loaded Loaded class-like
+     * @param \phpDocumentor\Reflection\Php\Constant[] $constants Reflection constants
      * @return void
      */
-    protected function addConstants(LoadedClassLike $loadedClassLike, $classLike): void
+    protected function addConstants(LoadedClassLike $loaded, array $constants): void
     {
-        foreach ($classLike->getConstants() as $fqsen => $constant) {
-            $loadedConstant = $loadedClassLike->constants[$constant->getName()] ?? null;
-            if ($loadedConstant === null) {
-                $loadedConstant = new LoadedConstant(
-                    $constant->getName(),
-                    $fqsen,
-                    $loadedClassLike->fqsen
-                );
-                $loadedClassLike->constants[$constant->getName()] = $loadedConstant;
+        foreach ($constants as $fqsen => $constant) {
+            $loadedConstant = $loaded->constants[$constant->getName()] ?? null;
+            if ($loadedConstant) {
+                $loadedConstant->docBlock = $this->mergeDocBlock($loadedConstant->docBlock, $constant->getDocBlock());
+                $loadedConstant->origin = $loaded;
+            } else {
+                $loadedConstant = new LoadedConstant((string)$constant->getFqsen(), $constant, $loaded);
+                $loaded->constants[$constant->getName()] = $loadedConstant;
             }
-            $loadedConstant->declarations[] = $constant;
         }
-        ksort($loadedClassLike->constants);
-        foreach ($loadedClassLike->constants as $constant) {
-            $constant->merge();
+
+        ksort($loaded->constants);
+    }
+
+    /**
+     * @param \Cake\ApiDocs\Reflection\LoadedClassLike $loaded Loaded class-like
+     * @param \phpDocumentor\Reflection\Php\Property[] $properties Reflection properties
+     * @return void
+     */
+    protected function addProperties(LoadedClassLike $loaded, array $properties): void
+    {
+        foreach ($properties as $fqsen => $property) {
+            $loadedProperty = $loaded->properties[$property->getName()] ?? null;
+            if ($loadedProperty) {
+                $loadedProperty->docBlock = $this->mergeDocBlock($loadedProperty->docBlock, $property->getDocBlock());
+                $loadedProperty->origin = $loaded;
+            } else {
+                $loadedProperty = new LoadedProperty((string)$property->getFqsen(), $property, $loaded);
+                $loaded->properties[$property->getName()] = $loadedProperty;
+            }
+        }
+
+        ksort($loaded->properties);
+    }
+
+    /**
+     * @param \Cake\ApiDocs\Reflection\LoadedClassLike $loaded Loaded class-like
+     * @param \phpDocumentor\Reflection\Php\Method[] $methods Reflection methods
+     * @return void
+     */
+    protected function addMethods(LoadedClassLike $loaded, array $methods): void
+    {
+        foreach ($methods as $fqsen => $method) {
+            $loadedMethod = $loaded->methods[$method->getName()] ?? null;
+            if ($loadedMethod) {
+                $loadedMethod->docBlock = $this->mergeDocBlock($loadedMethod->docBlock, $method->getDocBlock());
+                $loadedMethod->origin = $loaded;
+            } else {
+                $loadedMethod = new LoadedMethod((string)$method->getFqsen(), $method, $loaded);
+                $loaded->methods[$method->getName()] = $loadedMethod;
+            }
+        }
+
+        ksort($loaded->methods);
+    }
+
+    /**
+     * @param \phpDocumentor\Reflection\DocBlock $first First docblock
+     * @param \phpDocumentor\Reflection\DocBlock|null $second Second docblock
+     * @return \phpDocumentor\Reflection\DocBlock
+     */
+    protected function mergeDocBlock(DocBlock $first, ?DocBlock $second): DocBlock
+    {
+        if ($second === null) {
+            return $first;
+        }
+
+        $inheritTags = array_filter($second->getTags(), function ($tag) {
+            if (preg_match('/inheritDoc/i', $tag->getName()) === 1) {
+                return true;
+            }
+        });
+
+        if (empty($inheritTags) && preg_match('/{@inheritDoc}/i', $second->getSummary()) == false) {
+            return $second;
+        }
+
+        $summary = $first->getSummary();
+        $body = $first->getDescription()->getBodyTemplate();
+        if (!empty($body) && !empty($second->getDescription()->getBodyTemplate())) {
+            $body .= "\n\n---\n\n";
+        }
+        $body .= $second->getDescription()->getBodyTemplate();
+
+        $description = new Description(
+            $body,
+            array_merge($first->getDescription()->getTags(), $second->getDescription()->getTags())
+        );
+
+        return new DocBlock(
+            $summary,
+            $description,
+            array_merge($first->getTags(), $second->getTags()),
+            $first->getContext(),
+            $second->getLocation()
+        );
+    }
+
+    /**
+     * @param \Cake\ApiDocs\Reflection\LoadedClassLike $loaded Loaded class-like
+     * @param \phpDocumentor\Reflection\Fqsen[] $fqsens Interface fqsens
+     * @return void
+     */
+    protected function addInterfaces(LoadedClassLike $loaded, array $fqsens): void
+    {
+        foreach ($fqsens as $fqsen) {
+            $loadedInterface = $this->getInterface((string)$fqsen);
+            $loaded->interfaces[(string)$fqsen] = $loadedInterface;
+
+            if (!$loadedInterface) {
+                continue;
+            }
+
+            $this->mergeConstants($loaded, $loadedInterface->constants);
+            $this->mergeMethods($loaded, $loadedInterface->methods);
         }
     }
 
     /**
-     * @param \Cake\ApiDocs\Reflection\LoadedClassLike $loadedClassLike Loaded class-like
-     * @param \phpDocumentor\Reflection\Element $classLike Element instance
+     * @param \Cake\ApiDocs\Reflection\LoadedClassLike $loaded Loaded class-like
+     * @param \phpDocumentor\Reflection\Fqsen[] $fqsens Class fqsens
      * @return void
      */
-    protected function addProperties(LoadedClassLike $loadedClassLike, $classLike): void
+    protected function addExtends(LoadedClassLike $loaded, array $fqsens): void
     {
-        foreach ($classLike->getProperties() as $fqsen => $property) {
-            $loadedProperty = $loadedClassLike->properties[$property->getName()] ?? null;
-            if ($loadedProperty === null) {
-                $loadedProperty = new LoadedProperty(
-                    $property->getName(),
-                    $fqsen,
-                    $loadedClassLike->fqsen
-                );
-                $loadedClassLike->properties[$property->getName()] = $loadedProperty;
+        foreach ($fqsens as $fqsen) {
+            $loadedClass = $this->getClass((string)$fqsen);
+            $loaded->extends[(string)$fqsen] = $loadedClass;
+
+            if (!$loadedClass) {
+                continue;
             }
-            $loadedProperty->declarations[] = $property;
-        }
-        ksort($loadedClassLike->properties);
-        foreach ($loadedClassLike->properties as $property) {
-            $property->merge();
+
+            $this->mergeConstants($loaded, $loadedClass->constants);
+            $this->mergeProperties($loaded, $loadedClass->properties);
+            $this->mergeMethods($loaded, $loadedClass->methods);
         }
     }
 
     /**
-     * @param \Cake\ApiDocs\Reflection\LoadedClassLike $loadedClassLike Loaded class-like
-     * @param \phpDocumentor\Reflection\Element $classLike Element instance
+     * @param \Cake\ApiDocs\Reflection\LoadedClassLike $loaded Loaded class-like
+     * @param \phpDocumentor\Reflection\Fqsen[] $fqsens Trait fqsens
      * @return void
      */
-    protected function addMethods(LoadedClassLike $loadedClassLike, $classLike): void
+    protected function addTraits(LoadedClassLike $loaded, array $fqsens): void
     {
-        foreach ($classLike->getMethods() as $fqsen => $method) {
-            $loadedMethod = $loadedClassLike->methods[$method->getName()] ?? null;
-            if ($loadedMethod === null) {
-                $loadedMethod = new LoadedMethod(
-                    $method->getName(),
-                    $fqsen,
-                    $loadedClassLike->fqsen
-                );
-                $loadedClassLike->methods[$method->getName()] = $loadedMethod;
-            }
-            $loadedMethod->declarations[] = $method;
-        }
+        foreach ($fqsens as $fqsen) {
+            $loadedTrait = $this->getTrait((string)$fqsen);
+            $loaded->traits[(string)$fqsen] = $loadedTrait;
 
-        ksort($loadedClassLike->methods);
-        foreach ($loadedClassLike->methods as $method) {
-            $method->merge();
+            if (!$loadedTrait) {
+                continue;
+            }
+
+            $this->mergeProperties($loaded, $loadedTrait->properties);
+            $this->mergeMethods($loaded, $loadedTrait->methods);
         }
+    }
+
+    /**
+     * @param \Cake\ApiDocs\Reflection\LoadedClassLike $loaded Loaded class-like
+     * @param array $loadedConstants Loaded constants
+     * @return void
+     */
+    protected function mergeConstants(LoadedClassLike $loaded, array $loadedConstants): void
+    {
+        foreach ($loadedConstants as $fqsen => $loadedConstant) {
+            $existing = $loaded->constants[$loadedConstant->name] ?? null;
+            if ($existing) {
+                $existing->docBlock = $this->mergeDocBlock($existing->docBlock, $loadedConstant->docBlock);
+            } else {
+                $loaded->constants[$loadedConstant->name] = clone $loadedConstant;
+                $loaded->constants[$loadedConstant->name]->fqsen = $loaded->fqsen . '::' . $loadedConstant->name;
+            }
+        }
+        ksort($loaded->constants);
+    }
+
+    /**
+     * @param \Cake\ApiDocs\Reflection\LoadedClassLike $loaded Loaded class-like
+     * @param array $loadedProperties Loaded properties
+     * @return void
+     */
+    protected function mergeProperties(LoadedClassLike $loaded, array $loadedProperties): void
+    {
+        foreach ($loadedProperties as $fqsen => $loadedProperty) {
+            $existing = $loaded->properties[$loadedProperty->name] ?? null;
+            if ($existing) {
+                $existing->docBlock = $this->mergeDocBlock($existing->docBlock, $loadedProperty->docBlock);
+            } else {
+                $loaded->properties[$loadedProperty->name] = clone $loadedProperty;
+                $loaded->properties[$loadedProperty->name]->fqsen = $loaded->fqsen . '::$' . $loadedProperty->name;
+            }
+        }
+        ksort($loaded->properties);
+    }
+
+    /**
+     * @param \Cake\ApiDocs\Reflection\LoadedClassLike $loaded Loaded class-like
+     * @param array $loadedMethods Loaded methods
+     * @return void
+     */
+    protected function mergeMethods(LoadedClassLike $loaded, array $loadedMethods): void
+    {
+        foreach ($loadedMethods as $fqsen => $loadedMethod) {
+            $existing = $loaded->methods[$loadedMethod->name] ?? null;
+            if ($existing) {
+                $existing->docBlock = $this->mergeDocBlock($existing->docBlock, $loadedMethod->docBlock);
+            } else {
+                $loaded->methods[$loadedMethod->name] = clone $loadedMethod;
+                $loaded->methods[$loadedMethod->name]->fqsen = $loaded->fqsen . '::' . $loadedMethod->name . '()';
+            }
+        }
+        ksort($loaded->methods);
     }
 }

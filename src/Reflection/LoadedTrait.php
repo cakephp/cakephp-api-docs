@@ -21,6 +21,9 @@ use phpDocumentor\Reflection\Php\Trait_;
 
 class LoadedTrait extends LoadedClassLike
 {
+    /**
+     * @var \phpDocumentor\Reflection\Php\Trait_
+     */
     public Trait_ $trait;
 
     /**

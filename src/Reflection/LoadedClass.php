@@ -21,6 +21,9 @@ use phpDocumentor\Reflection\Php\Class_;
 
 class LoadedClass extends LoadedClassLike
 {
+    /**
+     * @var \phpDocumentor\Reflection\Php\Class_
+     */
     public Class_ $class;
 
     /**

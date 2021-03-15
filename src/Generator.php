@@ -78,22 +78,10 @@ class Generator
         $functions = [];
         foreach ($this->project->getProjectFiles() as $file) {
             foreach ($file->file->getConstants() as $constant) {
-                $loadedConstant = new LoadedConstant(
-                    $constant->getName(),
-                    (string)$constant->getFqsen(),
-                    '\\'
-                );
-                $loadedConstant->declarations[] = $constant;
-                $loadedConstant->merge();
-                $constants[$constant->getName()] = $loadedConstant;
+                $constants[$constant->getName()] = new LoadedConstant((string)$constant->getFqsen(), $constant, null);
             }
             foreach ($file->file->getFunctions() as $function) {
-                $functions[$function->getName()] = new LoadedFunction(
-                    $function->getName(),
-                    (string)$function->getFqsen(),
-                    '\\',
-                    $function
-                );
+                $functions[$function->getName()] = new LoadedFunction((string)$function->getFqsen(), $function);
             }
         }
         ksort($constants);

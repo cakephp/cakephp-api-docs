@@ -18,8 +18,6 @@ declare(strict_types=1);
 namespace Cake\ApiDocs\Reflection;
 
 use phpDocumentor\Reflection\DocBlock;
-use phpDocumentor\Reflection\DocBlock\Description;
-use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Php\Property;
 
 class LoadedProperty
@@ -27,22 +25,17 @@ class LoadedProperty
     /**
      * @var string
      */
+    public string $fqsen;
+
+    /**
+     * @var string
+     */
+    public string $namespace;
+
+    /**
+     * @var string
+     */
     public string $name;
-
-    /**
-     * @var string
-     */
-    public string $origin;
-
-    /**
-     * @var string
-     */
-    public string $owner;
-
-    /**
-     * @var \phpDocumentor\Reflection\Php\Property[]
-     */
-    public array $declarations = [];
 
     /**
      * @var \phpDocumentor\Reflection\Php\Property
@@ -50,72 +43,27 @@ class LoadedProperty
     public Property $property;
 
     /**
-     * @param string $name Property name
-     * @param string $origin Fqsen where property was declared
-     * @param string $owner Fqsen that is using the property
+     * @var \phpDocumentor\Reflection\DocBlock
      */
-    public function __construct(string $name, string $origin, string $owner)
-    {
-        $this->name = $name;
-        $this->origin = $origin;
-        $this->owner = $owner;
-    }
+    public DocBlock $docBlock;
 
     /**
-     * Merge all declarations into single property.
-     *
-     * @return void
+     * @var \Cake\ApiDocs\Reflection\LoadedClassLike
      */
-    public function merge(): void
+    public LoadedClassLike $origin;
+
+    /**
+     * @param string $fqsen fqsen
+     * @param \phpDocumentor\Reflection\Php\Property $property Reflection property
+     * @param \Cake\ApiDocs\Reflection\LoadedClassLike $origin Origin loaded class-like
+     */
+    public function __construct(string $fqsen, Property $property, LoadedClassLike $origin)
     {
-        if (empty($this->declarations)) {
-            throw new RuntimeException("No property declarations found for `$this->name`.");
-        }
-
-        $merged = ['summary' => '', 'body' => '', 'bodyTags' => [], 'tags' => []];
-        foreach (array_reverse($this->declarations) as $property) {
-            $docBlock = $property->getDocBlock();
-            if ($docBlock === null) {
-                continue;
-            }
-
-            if (!empty($merged['body'])) {
-                $merged['body'] .= "\n---\n";
-            }
-            $merged['body'] .= $docBlock->getDescription()->getBodyTemplate();
-            $merged['bodyTags'] = array_merge($merged['bodyTags'], $docBlock->getDescription()->getTags());
-            $merged['tags'] = array_merge($merged['tags'], $docBlock->getTags());
-
-            $inheritTags = array_filter($docBlock->getTags(), function ($tag) {
-                if (preg_match('/inheritDoc/i', $tag->getName()) === 1) {
-                    return true;
-                }
-            });
-            if (empty($inheritTags) && preg_match('/@inheritDoc/i', $docBlock->getSummary()) !== 1) {
-                break;
-            }
-        }
-        $merged['summary'] = ($property->getDocBlock() ?? new DocBlock())->getSummary();
-
-        $definition = end($this->declarations);
-        $definitionBlock = $definition->getDocBlock() ?? new DocBlock();
-        $mergedBlock = new DocBlock(
-            $merged['summary'],
-            new Description($merged['body'], $merged['bodyTags']),
-            $merged['tags'],
-            $definitionBlock->getContext(),
-            $definitionBlock->getLocation()
-        );
-
-        $fqsen = $this->owner . '::$' . $definition->getFqsen()->getName();
-        $this->property = new Property(
-            new Fqsen($fqsen),
-            $definition->getVisibility(),
-            $mergedBlock,
-            $definition->getDefault(),
-            $definition->isStatic(),
-            $definition->getLocation(),
-            $definition->getType()
-        );
+        $this->fqsen = $fqsen;
+        $this->namespace = substr($this->fqsen, 0, strrpos($this->fqsen, '\\'));
+        $this->name = $property->getName();
+        $this->property = $property;
+        $this->docBlock = $property->getDocBlock() ?? new DocBlock();
+        $this->origin = $origin;
     }
 }
