@@ -21,6 +21,9 @@ use phpDocumentor\Reflection\Php\Interface_;
 
 class LoadedInterface extends LoadedClassLike
 {
+    /**
+     * @var \phpDocumentor\Reflection\Php\Interface_
+     */
     public Interface_ $interface;
 
     /**

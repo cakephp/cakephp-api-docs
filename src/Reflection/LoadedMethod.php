@@ -18,32 +18,24 @@ declare(strict_types=1);
 namespace Cake\ApiDocs\Reflection;
 
 use phpDocumentor\Reflection\DocBlock;
-use phpDocumentor\Reflection\DocBlock\Description;
-use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Php\Method;
-use RuntimeException;
 
 class LoadedMethod
 {
     /**
      * @var string
      */
+    public string $fqsen;
+
+    /**
+     * @var string
+     */
+    public string $namespace;
+
+    /**
+     * @var string
+     */
     public string $name;
-
-    /**
-     * @var string
-     */
-    public string $origin;
-
-    /**
-     * @var string
-     */
-    public string $owner;
-
-    /**
-     * @var \phpDocumentor\Reflection\Php\Method[]
-     */
-    public array $declarations = [];
 
     /**
      * @var \phpDocumentor\Reflection\Php\Method
@@ -51,76 +43,35 @@ class LoadedMethod
     public Method $method;
 
     /**
-     * @param string $name Method name
-     * @param string $origin Fqsen where method was declared
-     * @param string $owner Fqsen that is using the method
+     * @var \phpDocumentor\Reflection\DocBlock
      */
-    public function __construct(string $name, string $origin, string $owner)
-    {
-        $this->name = $name;
-        $this->origin = $origin;
-        $this->owner = $owner;
-    }
+    public DocBlock $docBlock;
 
     /**
-     * Merge all declarations into single method.
-     *
-     * @return void
+     * @var \Cake\ApiDocs\Reflection\LoadedClassLike
      */
-    public function merge(): void
+    public LoadedClassLike $origin;
+
+    /**
+     * @var \Cake\ApiDocs\Reflection\LoadedInterface|null
+     */
+    public ?LoadedInterface $implements;
+
+    /**
+     * @param string $fqsen fqsen
+     * @param \phpDocumentor\Reflection\Php\Method $method Reflection method
+     * @param \Cake\ApiDocs\Reflection\LoadedClassLike $origin Origin loaded class-like
+     */
+    public function __construct(string $fqsen, Method $method, LoadedClassLike $origin)
     {
-        if (empty($this->declarations)) {
-            throw new RuntimeException("No method declarations found for `$this->name`.");
-        }
-
-        $merged = ['summary' => '', 'body' => '', 'bodyTags' => [], 'tags' => []];
-        foreach (array_reverse($this->declarations) as $method) {
-            $docBlock = $method->getDocBlock();
-            if ($docBlock === null) {
-                continue;
-            }
-
-            if (!empty($merged['body'])) {
-                $merged['body'] .= "\n---\n";
-            }
-            $merged['body'] .= $docBlock->getDescription()->getBodyTemplate();
-            $merged['bodyTags'] = array_merge($merged['bodyTags'], $docBlock->getDescription()->getTags());
-            $merged['tags'] = array_merge($merged['tags'], $docBlock->getTags());
-
-            $inheritTags = array_filter($docBlock->getTags(), function ($tag) {
-                if (preg_match('/inheritDoc/i', $tag->getName()) === 1) {
-                    return true;
-                }
-            });
-            if (empty($inheritTags) && preg_match('/@inheritDoc/i', $docBlock->getSummary()) !== 1) {
-                break;
-            }
-        }
-        $merged['summary'] = ($method->getDocBlock() ?? new DocBlock())->getSummary();
-
-        $definition = end($this->declarations);
-        $definitionBlock = $definition->getDocBlock() ?? new DocBlock();
-        $mergedBlock = new DocBlock(
-            $merged['summary'],
-            new Description($merged['body'], $merged['bodyTags']),
-            $merged['tags'],
-            $definitionBlock->getContext(),
-            $definitionBlock->getLocation()
-        );
-
-        $fqsen = $this->owner . '::' . $definition->getFqsen()->getName() . '()';
-        $this->method = new Method(
-            new Fqsen($fqsen),
-            $definition->getVisibility(),
-            $mergedBlock,
-            $definition->isAbstract(),
-            $definition->isStatic(),
-            $definition->isFinal(),
-            $definition->getLocation(),
-            $definition->getReturnType()
-        );
-        foreach ($definition->getArguments() as $argument) {
-            $this->method->addArgument($argument);
+        $this->fqsen = $fqsen;
+        $this->namespace = substr($this->fqsen, 0, strrpos($this->fqsen, '\\'));
+        $this->name = $method->getName();
+        $this->method = $method;
+        $this->docBlock = $method->getDocBlock() ?? new DocBlock();
+        $this->origin = $origin;
+        if ($origin instanceof LoadedInterface) {
+            $this->implements = $origin;
         }
     }
 }
