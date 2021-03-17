@@ -17,8 +17,6 @@ declare(strict_types=1);
 
 namespace Cake\ApiDocs;
 
-use Cake\ApiDocs\Reflection\LoadedConstant;
-use Cake\ApiDocs\Reflection\LoadedFunction;
 use Cake\ApiDocs\Reflection\LoadedNamespace;
 use Cake\ApiDocs\Reflection\Project;
 use Cake\ApiDocs\Twig\TwigRenderer;
@@ -74,24 +72,11 @@ class Generator
      */
     public function renderOverview(): void
     {
-        $constants = [];
-        $functions = [];
-        foreach ($this->project->getProjectFiles() as $file) {
-            foreach ($file->file->getConstants() as $constant) {
-                $constants[$constant->getName()] = new LoadedConstant((string)$constant->getFqsen(), $constant, null);
-            }
-            foreach ($file->file->getFunctions() as $function) {
-                $functions[$function->getName()] = new LoadedFunction((string)$function->getFqsen(), $function);
-            }
-        }
-        ksort($constants);
-        ksort($functions);
-
         $namespaces = $this->project->getProjectNamespaces();
         $this->renderer->render(
             'overview.twig',
             'index.html',
-            ['constants' => $constants, 'functions' => $functions, 'namespaces' => $namespaces]
+            ['namespaces' => $namespaces]
         );
     }
 
@@ -105,7 +90,8 @@ class Generator
         $namespaces = $this->project->getProjectNamespaces();
         $renderNested = function ($loaded, $renderNested) use ($namespaces) {
             // Render namespace
-            $filename = 'namespace-' . str_replace('\\', '.', substr($loaded->fqsen, 1)) . '.html';
+            $path = $loaded->fqsen === '\\' ? 'Global' : str_replace('\\', '.', substr($loaded->fqsen, 1));
+            $filename = 'namespace-' . $path . '.html';
             $this->renderer->render(
                 'namespace.twig',
                 $filename,

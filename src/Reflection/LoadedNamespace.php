@@ -32,6 +32,11 @@ class LoadedNamespace
     public string $namespace;
 
     /**
+     * @var string
+     */
+    public string $name;
+
+    /**
      * @var \phpDocumentor\Reflection\Php\Namespace_
      */
     public Namespace_ $element;
@@ -40,6 +45,16 @@ class LoadedNamespace
      * @var \Cake\ApiDocs\Reflection\LoadedNamespace[]
      */
     public array $children = [];
+
+    /**
+     * @var \Cake\ApiDocs\Reflection\LoadedConstant[]
+     */
+    public array $constants = [];
+
+    /**
+     * @var \Cake\ApiDocs\Reflection\LoadedFunction[]
+     */
+    public array $functions = [];
 
     /**
      * @var \Cake\ApiDocs\Reflection\LoadedInterface[]
@@ -64,6 +79,7 @@ class LoadedNamespace
     {
         $this->fqsen = $fqsen;
         $this->namespace = substr($this->fqsen, 0, strrpos($this->fqsen, '\\'));
+        $this->name = $element->getName() ? $element->getName() : 'Global';
         $this->element = $element;
     }
 }
