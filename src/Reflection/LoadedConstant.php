@@ -48,9 +48,9 @@ class LoadedConstant
     public DocBlock $docBlock;
 
     /**
-     * @var \Cake\ApiDocs\Reflection\LoadedClassLike|null
+     * @var \Cake\ApiDocs\Reflection\LoadedNamespace|\Cake\ApiDocs\Reflection\LoadedClassLike|null
      */
-    public ?LoadedClassLike $origin;
+    public $origin;
 
     /**
      * @var \Cake\ApiDocs\Reflection\LoadedInterface|null
@@ -60,9 +60,9 @@ class LoadedConstant
     /**
      * @param string $fqsen fqsen
      * @param \phpDocumentor\Reflection\Php\Constant $constant Reflection constant
-     * @param \Cake\ApiDocs\Reflection\LoadedClassLike|null $origin Origin loaded class-like
+     * @param \Cake\ApiDocs\Reflection\LoadedNamespace|\Cake\ApiDocs\Reflection\LoadedClassLike|null $origin Loaded origin
      */
-    public function __construct(string $fqsen, Constant $constant, ?LoadedClassLike $origin)
+    public function __construct(string $fqsen, Constant $constant, $origin)
     {
         $this->fqsen = $fqsen;
         $this->namespace = substr($this->fqsen, 0, strrpos($this->fqsen, '\\'));

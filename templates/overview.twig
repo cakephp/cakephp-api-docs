@@ -4,48 +4,6 @@
 
 {% block content %}
 <div id="content">
-  <h1>{{ project }} {{ version }} Globals</h1>
-
-  {% if functions is not empty %}
-    <div class="section">
-      <h2>Global Functions</h2>
-      <div class="method-detail">
-        {% for function in functions %}
-          <h3 class="method-name">
-            {{ function.name }}()
-
-            {% if function|docblock|get_tags('deprecated') is not empty %}
-              <span class="label">deprecated</span>
-            {% endif %}
-          </h3>
-
-          <pre><code class="language-php">{{ function.name }}(
-            {%- for argument in function.function.arguments %}
-              {{- function|docblock|param(argument.name).type ?? argument.type }} {% if argument.isVariadic %}...{% endif %}${{ argument.name }}{{ loop.last?'':', ' }}
-            {%- endfor -%}
-          )</code></pre>
-
-          <div class="description detailed">
-            {{ function|docblock.summary|markdown_to_html }}
-            {{ function|docblock.description|markdown_to_html }}
-          </div>
-        {% endfor %}
-      </div>
-    </div>
-  {% endif %}
-
-  {% if constants is not empty %}
-    <div class="section">
-      <h2>Global Constants</h2>
-      <ul class="summary-list">
-        {% for constant in constants %}
-          <li>
-            {{ constant.name }}
-            {{ constant|docblock.summary|markdown_to_html }}
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
+  <h1>{{ project }} {{ version }} API Documentation</h1>
 </div>
 {% endblock %}

@@ -52,15 +52,11 @@
           <div id="groups">
             <h3 class="nav-title">Namespaces</h3>
             <ul class="nav-list">
-              {% set isGlobalActive = loaded is not defined %}
-              <li class="{{ isGlobalActive ? 'active' : '' }}">
-                <a href="index.html">Global</a>
-              </li>
               {% macro renderChildren(context, namespace, forceExpand) %}
                 {% set isActive = context.loaded ?? null is in_namespace(namespace.fqsen) %}
                 <li class="{{ isActive ? 'active' : '' }}">
-                  <a href="{{ namespace.fqsen|fqsen_to_url('namespace') }}">{{ namespace.fqsen|fqsen_to_name }}</a>
-                  {% if isActive or forceExpand %}
+                  <a href="{{ namespace.fqsen|fqsen_to_url('namespace') }}">{{ namespace.name }}</a>
+                  {% if isActive or forceExpand and namespace.children %}
                   <ul>
                     {% for child in namespace.children %}
                       {{ _self.renderChildren(context, child) }}

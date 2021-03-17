@@ -49,7 +49,11 @@ class ReflectionExtension extends AbstractExtension
                 return substr($fqsen, strrpos($fqsen, '\\') + 1);
             }),
             new TwigFilter('fqsen_to_url', function (string $fqsen, string $type) {
-                return sprintf('%s-%s.html', $type, preg_replace('[\\\\]', '.', substr($fqsen, 1)));
+                return sprintf(
+                    '%s-%s.html',
+                    $type,
+                    preg_replace('[\\\\]', '.', $fqsen === '\\' ? 'Global' : substr($fqsen, 1))
+                );
             }),
             new TwigFilter('docblock', function ($loaded) {
                 if ($loaded instanceof LoadedInterface) {

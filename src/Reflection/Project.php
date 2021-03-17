@@ -177,7 +177,29 @@ class Project
             $this->projectFiles[realpath($path)] = new LoadedFile($file, false);
         }
 
+        $this->loadGlobalNamespace($project);
         $this->loadNamespaces($project);
+    }
+
+    /**
+     * @param \phpDocumentor\Reflection\Php\Project $project Reflection project
+     * @return void
+     */
+    protected function loadGlobalNamespace(ReflectionProject $project): void
+    {
+        $root = new LoadedNamespace('\\', $project->getRootNamespace());
+        foreach ($project->getFiles() as $file) {
+            foreach ($file->getConstants() as $fqsen => $constant) {
+                $root->constants[$fqsen] = new LoadedConstant((string)$constant->getFqsen(), $constant, $root);
+            }
+            foreach ($file->getFunctions() as $fqsen => $function) {
+                $root->functions[$fqsen] = new LoadedFunction((string)$function->getFqsen(), $function, $root);
+            }
+        }
+        ksort($root->constants);
+        ksort($root->functions);
+
+        $this->projectNamespaces['\\Bla\\Blah'] = $root;
     }
 
     /**
