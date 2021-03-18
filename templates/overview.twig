@@ -4,6 +4,24 @@
 
 {% block content %}
 <div id="content">
-  <h1>{{ project }} {{ version }} API Documentation</h1>
+  <h1>{{ project }} {{ version }} API</h1>
+
+  <h1>Namespace Tree</h1>
+  <ul>
+    {% macro listNamespace(namespace) %}
+      <li>
+        <a href="{{ namespace.fqsen|fqsen_to_url('namespace') }}">{{ namespace.name }}</a>
+        <ul>
+        {% for child in namespace.children %}
+          {{ _self.listNamespace(child) }}
+        {% endfor %}
+        </ul>
+      </li>
+    {% endmacro %}
+
+    {% for namespace in namespaces %}
+      {{ _self.listNamespace(namespace) }}
+    {% endfor %}
+  </ul>
 </div>
 {% endblock %}
