@@ -1,5 +1,3 @@
 {% extends 'classlike.twig' %}
 
-{% block title %}
-  {{ 'Class ' ~ loaded.fqsen|fqsen_to_name }}
-{% endblock %}
+{% set type = 'class' %}

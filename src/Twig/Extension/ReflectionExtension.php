@@ -21,11 +21,9 @@ use Cake\ApiDocs\Reflection\LoadedClass;
 use Cake\ApiDocs\Reflection\LoadedClassLike;
 use Cake\ApiDocs\Reflection\LoadedConstant;
 use Cake\ApiDocs\Reflection\LoadedFunction;
-use Cake\ApiDocs\Reflection\LoadedInterface;
 use Cake\ApiDocs\Reflection\LoadedMethod;
 use Cake\ApiDocs\Reflection\LoadedNamespace;
 use Cake\ApiDocs\Reflection\LoadedProperty;
-use Cake\ApiDocs\Reflection\LoadedTrait;
 use phpDocumentor\Reflection\DocBlock;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -56,14 +54,8 @@ class ReflectionExtension extends AbstractExtension
                 );
             }),
             new TwigFilter('docblock', function ($loaded) {
-                if ($loaded instanceof LoadedInterface) {
-                    return $loaded->interface->getDocBlock() ?? new DocBlock();
-                }
-                if ($loaded instanceof LoadedClass) {
-                    return $loaded->class->getDocBlock() ?? new DocBlock();
-                }
-                if ($loaded instanceof LoadedTrait) {
-                    return $loaded->trait->getDocBlock() ?? new DocBlock();
+                if ($loaded instanceof LoadedClassLike) {
+                    return $loaded->element->getDocBlock() ?? new DocBlock();
                 }
                 if ($loaded instanceof LoadedConstant) {
                     return $loaded->docBlock;
@@ -87,6 +79,15 @@ class ReflectionExtension extends AbstractExtension
                 }
 
                 return $tags;
+            }),
+            new TwigFilter('get_tag', function (DocBlock $docBlock, $name) {
+                foreach ($docBlock->getTags() as $tag) {
+                    if ($tag->getName() === $name) {
+                        return $tag;
+                    }
+                }
+
+                return null;
             }),
             new TwigFilter('param', function ($docblock, $name) {
                 $params = $docblock->getTagsByName('param');

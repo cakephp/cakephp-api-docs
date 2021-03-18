@@ -28,12 +28,11 @@ class LoadedClass extends LoadedClassLike
 
     /**
      * @param string $fqsen fqsen
+     * @param \phpDocumentor\Reflection\Php\Class_ $class Reflection class
      * @param \Cake\ApiDocs\Reflection\LoadedFile $loadedFile Loaded file
-     * @param \phpDocumentor\Reflection\Php\Class_ $class Class instance
      */
-    public function __construct(string $fqsen, LoadedFile $loadedFile, Class_ $class)
+    public function __construct(string $fqsen, Class_ $class, LoadedFile $loadedFile)
     {
-        parent::__construct($fqsen, $loadedFile);
-        $this->class = $class;
+        parent::__construct($fqsen, $class, $loadedFile);
     }
 }

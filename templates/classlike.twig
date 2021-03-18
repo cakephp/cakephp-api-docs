@@ -1,8 +1,17 @@
 {% extends 'layout.twig' %}
 
+{% block title type|capitalize ~ ' ' ~ loaded.name %}
+
 {% block content %}
 <div id="content" class="class">
-  <h1>{{ block('title') }}</h1>
+  <h1>
+    {{ type|capitalize }}
+    {% if loaded|docblock|get_tag('deprecated') %}
+      <div class="deprecated" style="display: inline">{{ loaded.name }}</div>
+    {% else %}
+      {{ loaded.name }}
+    {% endif %}
+  </h1>
 
   <div class="description">
     {{ loaded|docblock.summary|markdown_to_html }}
@@ -13,10 +22,10 @@
 
   <div class="info">
     {% if loaded is class %}
-      {% if loaded.class.final %}
+      {% if loaded.element.final %}
         <b>Final</b><br>
       {% endif %}
-      {% if loaded.class.abstract %}
+      {% if loaded.element.abstract %}
         <b>Abstract</b><br>
       {% endif %}
     {% endif %}
@@ -24,7 +33,7 @@
     <b>Namespace:</b> <a href="{{ loaded.namespace|fqsen_to_url('namespace') }}">{{ loaded.namespace|fqsen }}</a><br>
 
     {% for tag in loaded|docblock|get_tags('deprecated') %}
-      <b class="deprecated">Deprecated since {{ tag.version }}:</b> {{ tag.description }}<br>
+      <b style="color: #be0000">Deprecated ({{ tag.version }}):</b> {{ tag.description }}<br>
     {% endfor %}
 
     {% for tag in loaded|docblock|get_tags('see') %}

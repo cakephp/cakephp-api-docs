@@ -66,6 +66,9 @@ h1, h2, h3, h4, h5, h6 {
     color: #363637;
     margin: 9px 0 9px 0;
 }
+h1 div, h2 div, h3 div, h4 div, h5 div, h6 div {
+    display: inline;
+}
 h1 {
     font-size: 42px;
     line-height: 44px;
@@ -2279,7 +2282,8 @@ pre::-webkit-scrollbar-thumb:horizontal {
 }
 
 .deprecated {
-    background: rgb(190, 0, 0);
+    text-decoration: line-through;
+    color: #be0000;
 }
 
 /*
