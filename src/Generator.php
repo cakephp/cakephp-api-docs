@@ -176,40 +176,44 @@ class Generator
     {
         $search = [];
         $addNested = function ($loaded, $addNested) use (&$search) {
-            foreach ($loaded->children as $fqsen => $child) {
+            foreach ($loaded->children as $child) {
                 $addNested($child, $addNested);
             }
 
             // Add interface entries
             foreach ($loaded->interfaces as $loadedInterface) {
                 foreach ($loadedInterface->constants as $loadedConstant) {
-                    $search[] = ['i', substr((string)$loadedConstant->constant->getFqsen(), 1)];
+                    $search[] = ['i', substr($loadedConstant->fqsen, 1)];
                 }
                 foreach ($loadedInterface->methods as $loadedMethod) {
-                    $search[] = ['i', substr((string)$loadedMethod->method->getFqsen(), 1)];
+                    $search[] = ['i', substr($loadedMethod->fqsen, 1)];
                 }
             }
 
             // Add class entries
             foreach ($loaded->classes as $loadedClass) {
                 foreach ($loadedClass->constants as $loadedConstant) {
-                    $search[] = ['c', substr((string)$loadedConstant->constant->getFqsen(), 1)];
+                    $search[] = ['c', substr($loadedConstant->fqsen, 1)];
                 }
+                /* skip properties to reduce search results
                 foreach ($loadedClass->properties as $loadedProperty) {
-                    $search[] = ['c', substr((string)$loadedProperty->property->getFqsen(), 1)];
+                    $search[] = ['c', substr($loadedProperty->fqsen, 1)];
                 }
+                */
                 foreach ($loadedClass->methods as $loadedMethod) {
-                    $search[] = ['c', substr((string)$loadedMethod->method->getFqsen(), 1)];
+                    $search[] = ['c', substr($loadedMethod->fqsen, 1)];
                 }
             }
 
             // Add trait entries
             foreach ($loaded->traits as $loadedTrait) {
+                /* skip properties to reduce search results
                 foreach ($loadedTrait->properties as $loadedProperty) {
-                    $search[] = ['t', substr((string)$loadedProperty->property->getFqsen(), 1)];
+                    $search[] = ['t', substr($loadedProperty->fqsen, 1)];
                 }
+                */
                 foreach ($loadedTrait->methods as $loadedMethod) {
-                    $search[] = ['t', substr((string)$loadedMethod->method->getFqsen(), 1)];
+                    $search[] = ['t', substr($loadedMethod->fqsen, 1)];
                 }
             }
         };
