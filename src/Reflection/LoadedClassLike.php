@@ -17,6 +17,8 @@ declare(strict_types=1);
 
 namespace Cake\ApiDocs\Reflection;
 
+use phpDocumentor\Reflection\Element;
+
 class LoadedClassLike
 {
     /**
@@ -28,6 +30,16 @@ class LoadedClassLike
      * @var string
      */
     public string $namespace;
+
+    /**
+     * @var string
+     */
+    public string $name;
+
+    /**
+     * @var \phpDocumentor\Reflection\Element
+     */
+    public Element $element;
 
     /**
      * @var \Cake\ApiDocs\Reflection\LoadedFile
@@ -66,12 +78,15 @@ class LoadedClassLike
 
     /**
      * @param string $fqsen fqsen
+     * @param \phpDocumentor\Reflection\Element $element Reflection element
      * @param \Cake\ApiDocs\Reflection\LoadedFile $loadedFile Loaded file
      */
-    public function __construct(string $fqsen, LoadedFile $loadedFile)
+    public function __construct(string $fqsen, Element $element, LoadedFile $loadedFile)
     {
         $this->fqsen = $fqsen;
         $this->namespace = substr($this->fqsen, 0, strrpos($this->fqsen, '\\'));
+        $this->name = $element->getName();
+        $this->element = $element;
         $this->loadedFile = $loadedFile;
     }
 }

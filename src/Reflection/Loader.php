@@ -65,7 +65,7 @@ class Loader
             return null;
         }
 
-        $loaded = new LoadedInterface($fqsen, $loadedFile, $interface);
+        $loaded = new LoadedInterface($fqsen, $interface, $loadedFile);
         $this->cache[$fqsen] = $loaded;
 
         $this->addInterfaces($loaded, $interface->getParents());
@@ -98,7 +98,7 @@ class Loader
             return null;
         }
 
-        $loaded = new LoadedClass($fqsen, $loadedFile, $class);
+        $loaded = new LoadedClass($fqsen, $class, $loadedFile);
         $this->cache[$fqsen] = $loaded;
 
         $this->addInterfaces($loaded, $class->getInterfaces());
@@ -134,7 +134,7 @@ class Loader
             return null;
         }
 
-        $loaded = new LoadedTrait($fqsen, $loadedFile, $trait);
+        $loaded = new LoadedTrait($fqsen, $trait, $loadedFile);
         $this->cache[$fqsen] = $loaded;
 
         $this->addTraits($loaded, $trait->getUsedTraits());

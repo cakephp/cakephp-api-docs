@@ -28,12 +28,11 @@ class LoadedInterface extends LoadedClassLike
 
     /**
      * @param string $fqsen fqsen
+     * @param \phpDocumentor\Reflection\Php\Interface_ $interface Reflection interface
      * @param \Cake\ApiDocs\Reflection\LoadedFile $loadedFile Loaded file
-     * @param \phpDocumentor\Reflection\Php\Interface_ $interface Interface instance
      */
-    public function __construct(string $fqsen, LoadedFile $loadedFile, Interface_ $interface)
+    public function __construct(string $fqsen, Interface_ $interface, LoadedFile $loadedFile)
     {
-        parent::__construct($fqsen, $loadedFile);
-        $this->interface = $interface;
+        parent::__construct($fqsen, $interface, $loadedFile);
     }
 }

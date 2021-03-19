@@ -12,7 +12,7 @@
       <ul class="summary-list">
         {% for child in loaded.children %}
         <li>
-          <a href="{{ child.fqsen|fqsen_to_url('namespace') }}">{{ child.fqsen|fqsen_to_name }}</a>
+          <a href="{{ child.fqsen|fqsen_to_url('namespace') }}">{{ child.name }}</a>
         </li>
         {% endfor %}
       </ul>
@@ -68,7 +68,7 @@
         <ul class="summary-list">
           {% for element in elements %}
             <li>
-              <h5><a href="{{ element.fqsen|fqsen_to_url(type) }}">{{ element.fqsen|fqsen_to_name }}</a></h5>
+              <h5><a href="{{ element.fqsen|fqsen_to_url(type) }}">{{ element.name }}</a></h5>
               {{ element|docblock.summary|markdown_to_html }}
             </li>
           {% endfor %}

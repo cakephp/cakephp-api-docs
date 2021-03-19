@@ -28,12 +28,11 @@ class LoadedTrait extends LoadedClassLike
 
     /**
      * @param string $fqsen fqsen
+     * @param \phpDocumentor\Reflection\Php\Trait_ $trait Reflection trait
      * @param \Cake\ApiDocs\Reflection\LoadedFile $loadedFile Loaded file
-     * @param \phpDocumentor\Reflection\Php\Trait_ $trait Trait instance
      */
-    public function __construct(string $fqsen, LoadedFile $loadedFile, Trait_ $trait)
+    public function __construct(string $fqsen, Trait_ $trait, LoadedFile $loadedFile)
     {
-        parent::__construct($fqsen, $loadedFile);
-        $this->trait = $trait;
+        parent::__construct($fqsen, $trait, $loadedFile);
     }
 }
