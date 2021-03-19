@@ -111,7 +111,7 @@
       {% for method in loaded.methods %}
         <li class="clearfix">
           <h5 class="method-name">
-            <a href="#{{ method.name }}">{{ method.name }}()</a>
+            <a href="#{{ method.name }}()">{{ method.name }}()</a>
 
             {% if method.method.abstract %}
               <span class="label">abstract</span>
@@ -145,10 +145,10 @@
     <h2>Method Detail</h2>
     {% for method in loaded.methods %}
       <div class="method-detail">
-        <a id="{{ method.name }}"></a>
+        <a id="{{ method.name }}()"></a>
         <h3 class="method-name">
           {{ method.name }}()
-          <a href="#{{ method.name }}" class="permalink" title="Permalink to this method">¶</a>
+          <a href="#{{ method.name }}()" class="permalink" title="Permalink to this method">¶</a>
 
           {% if method.method.abstract %}
             <span class="label">abstract</span>
