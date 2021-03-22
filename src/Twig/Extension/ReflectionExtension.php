@@ -25,6 +25,7 @@ use Cake\ApiDocs\Reflection\LoadedMethod;
 use Cake\ApiDocs\Reflection\LoadedNamespace;
 use Cake\ApiDocs\Reflection\LoadedProperty;
 use phpDocumentor\Reflection\DocBlock;
+use phpDocumentor\Reflection\DocBlock\Tags\InvalidTag;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigTest;
@@ -73,7 +74,7 @@ class ReflectionExtension extends AbstractExtension
             new TwigFilter('get_tags', function ($docblock, $name) {
                 $tags = [];
                 foreach ($docblock->getTags() as $tag) {
-                    if ($tag->getName() === $name) {
+                    if (!$tag instanceof InvalidTag && $tag->getName() === $name) {
                         $tags[] = $tag;
                     }
                 }
@@ -82,7 +83,7 @@ class ReflectionExtension extends AbstractExtension
             }),
             new TwigFilter('get_tag', function (DocBlock $docBlock, $name) {
                 foreach ($docBlock->getTags() as $tag) {
-                    if ($tag->getName() === $name) {
+                    if (!$tag instanceof InvalidTag && $tag->getName() === $name) {
                         return $tag;
                     }
                 }
