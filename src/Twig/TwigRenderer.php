@@ -107,7 +107,8 @@ class TwigRenderer
     protected function createTwig(string $templatePath): void
     {
         $this->twig = new Environment(
-            new FilesystemLoader($templatePath)
+            new FilesystemLoader($templatePath),
+            ['strict_variables' => true]
         );
 
         $this->twig->addRuntimeLoader(new TwigRuntimeLoader());

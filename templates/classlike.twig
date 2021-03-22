@@ -53,7 +53,8 @@
       <li class="clearfix">
         <a id="{{ constant.name }}"></a>
         <div class="attributes col-md-2 col-sm-2 p0">
-          <code>{{ constant|docblock|get_tags('var')|first.type }}</code>
+          {% set var = constant|docblock|get_tag('var') %}
+          <code>{{ var ? var.type : 'mixed' }}</code>
         </div>
 
         <div class="name col-md-10 col-sm-10">
@@ -93,7 +94,8 @@
             </span>
           </div>
 
-          <div class="property-type"><code>{{ property|docblock|get_tags('var')|first.type }}</code></div>
+          {% set var = property|docblock|get_tag('var') %}
+          <div class="property-type"><code>{{ var ? var.type : 'mixed' }}</code></div>
 
           <div class="description">
             {{ property|docblock.summary|markdown_to_html }}
@@ -212,7 +214,7 @@
             <h6>Throws</h6>
             <div class="list">
               {% for throw in method|docblock|get_tags('throws') %}
-                <code>{{ throw.type.fqsen }}</code><br>
+                <code>{{ throw.type }}</code><br>
                 {{ throw.description }}{{ loop.last ? '' : '<br>' }}
               {% endfor %}
             </div>
@@ -271,7 +273,8 @@
 
           <h6>Type</h6>
           <div class="list">
-            <code>{{ property|docblock|get_tags('var')|first.type }}</code><br>
+            {% set var = property|docblock|get_tag('var') %}
+            <code>{{ var ? var.type : 'mixed' }}</code><br>
           </div>
         </div>
       </div>
