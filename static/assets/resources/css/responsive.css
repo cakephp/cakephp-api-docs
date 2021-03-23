@@ -178,6 +178,10 @@
 
 @media (min-width:1200px) {
     .row.col-p30 { margin-left:-30px; margin-right:-30px; }
+
+    .row.col-p30 [class*="col-"].business-solution {
+        padding: 0 15px;
+    }
 }
 
 
