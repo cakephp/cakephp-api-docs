@@ -53,6 +53,11 @@ class LoadedProperty
     public LoadedClassLike $origin;
 
     /**
+     * @var string|null
+     */
+    public ?string $annotation = null;
+
+    /**
      * @param string $fqsen fqsen
      * @param \phpDocumentor\Reflection\Php\Property $property Reflection property
      * @param \Cake\ApiDocs\Reflection\LoadedClassLike $origin Origin loaded class-like

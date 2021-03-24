@@ -36,6 +36,10 @@
       <b style="color: #be0000">Deprecated ({{ tag.version }}):</b> {{ tag.description }}<br>
     {% endfor %}
 
+    {% for tag in loaded|docblock|get_tags('experimental') %}
+      <b style="color: #5500be">Experimental:</b> Expect API changes in minor releases.<br>
+    {% endfor %}
+
     {% for tag in loaded|docblock|get_tags('see') %}
       <b>See:</b> {{ tag.reference ~ ' ' ~ tag.description }}<br>
     {% endfor %}
@@ -86,16 +90,14 @@
               {% if property.property.static %}
                 <span class="label">static</span>
               {% endif %}
-              {#
-              {% if property.annotations.annotated is defined %}
-                <span class="label">annotated</span>
+              {% if property.annotation %}
+                <span class="label annotation">@{{ property.annotation }}</span>
               {% endif %}
-              #}
             </span>
           </div>
 
           {% set var = property|docblock|get_tag('var') %}
-          <div class="property-type"><code>{{ var ? var.type : 'mixed' }}</code></div>
+          <div class="property-type"><code>{{ var ? var.type : (property.property.type ?? 'mixed') }}</code></div>
 
           <div class="description">
             {{ property|docblock.summary|markdown_to_html }}
@@ -126,11 +128,9 @@
             {% if method.method.static %}
               <span class="label">static</span>
             {% endif %}
-            {#
-            {% if method.annotations.annotated is defined %}
-              <span class="label">annotated</span>
+            {% if method.annotation %}
+              <span class="label annotation">@{{ method.annotation }}</span>
             {% endif %}
-            #}
             {% if method|docblock|get_tags('deprecated') is not empty %}
               <span class="label">deprecated</span>
             {% endif %}
@@ -163,11 +163,9 @@
           {% if method.method.static %}
             <span class="label">static</span>
           {% endif %}
-          {#
-          {% if method.annotations.annotated is defined %}
-            <span class="label">annotated</span>
+          {% if method.annotation %}
+            <span class="label annotation">{{ method.annotation }}</span>
           {% endif %}
-          #}
           {% if method|docblock|get_tags('deprecated') is not empty %}
             <span class="label">deprecated</span>
           {% endif %}
@@ -260,11 +258,9 @@
           {% if property.property.static %}
             <span class="label">static</span>
           {% endif %}
-          {#
-          {% if property.annotated %}
-            <span class="label">annotated</span>
+          {% if property.annotation %}
+            <span class="label annotation">@{{ property.annotation }}</span>
           {% endif %}
-          #}
         </h3>
 
         <div class="description detailed">
@@ -274,7 +270,7 @@
           <h6>Type</h6>
           <div class="list">
             {% set var = property|docblock|get_tag('var') %}
-            <code>{{ var ? var.type : 'mixed' }}</code><br>
+            <code>{{ var ? var.type : (property.property.type ?? 'mixed') }}</code><br>
           </div>
         </div>
       </div>

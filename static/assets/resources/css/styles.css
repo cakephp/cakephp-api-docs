@@ -2302,6 +2302,11 @@ pre::-webkit-scrollbar-thumb:horizontal {
     line-height: 1.3em;
     vertical-align: middle;
 }
+
+.annotation {
+    background: #fcfcbb;
+}
+
 /* Method descriptions */
 .method-detail {
     margin-bottom: 3em;
