@@ -50,7 +50,7 @@ class Project
     /**
      * @var \Cake\ApiDocs\Reflection\LoadedFile[]
      */
-    protected $projectFiles = [];
+    protected $files = [];
 
     /**
      * @var \Cake\ApiDocs\Reflection\LoadedFile[]
@@ -60,7 +60,7 @@ class Project
     /**
      * @var \Cake\ApiDocs\Reflection\LoadedNamespace[]
      */
-    protected $projectNamespaces = [];
+    protected $namespaces = [];
 
     /**
      * @param string $projectPath Project path
@@ -88,9 +88,9 @@ class Project
      *
      * @return \Cake\ApiDocs\Reflection\LoadedFile[]
      */
-    public function getProjectFiles(): array
+    public function getFiles(): array
     {
-        return $this->projectFiles;
+        return $this->files;
     }
 
     /**
@@ -98,9 +98,9 @@ class Project
      *
      * @return \Cake\ApiDocs\Reflection\LoadedNamespace[]
      */
-    public function getProjectNamespaces(): array
+    public function getNamespaces(): array
     {
-        return $this->projectNamespaces;
+        return $this->namespaces;
     }
 
     /**
@@ -117,8 +117,8 @@ class Project
         }
 
         $path = realpath($path);
-        if (isset($this->projectFiles[$path])) {
-            return $this->projectFiles[$path];
+        if (isset($this->files[$path])) {
+            return $this->files[$path];
         }
 
         if (!isset($this->vendorFiles[$path])) {
@@ -174,7 +174,7 @@ class Project
 
         $project = $this->factory->create('project', $localFiles);
         foreach ($project->getFiles() as $path => $file) {
-            $this->projectFiles[realpath($path)] = new LoadedFile($file, false);
+            $this->files[realpath($path)] = new LoadedFile($file, false);
         }
 
         $this->loadGlobalNamespace($project);
@@ -199,7 +199,7 @@ class Project
         ksort($root->constants);
         ksort($root->functions);
 
-        $this->projectNamespaces['\\Bla\\Blah'] = $root;
+        $this->namespaces['\\'] = $root;
     }
 
     /**
@@ -224,7 +224,7 @@ class Project
         // Create nested array
         foreach ($namespaces as $fqsen => $loaded) {
             if ($fqsen === Configure::read('namespace')) {
-                $this->projectNamespaces[$fqsen] = $loaded;
+                $this->namespaces[$fqsen] = $loaded;
                 continue;
             }
 

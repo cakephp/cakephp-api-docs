@@ -72,7 +72,7 @@ class Generator
      */
     public function renderOverview(): void
     {
-        $namespaces = $this->project->getProjectNamespaces();
+        $namespaces = $this->project->getNamespaces();
         $this->renderer->render(
             'overview.twig',
             'index.html',
@@ -87,7 +87,7 @@ class Generator
      */
     public function renderNamespaces(): void
     {
-        $namespaces = $this->project->getProjectNamespaces();
+        $namespaces = $this->project->getNamespaces();
         $renderNested = function ($loaded, $renderNested) use ($namespaces) {
             // Render namespace
             $path = $loaded->fqsen === '\\' ? 'Global' : str_replace('\\', '.', substr($loaded->fqsen, 1));
@@ -108,7 +108,7 @@ class Generator
             }
         };
 
-        foreach ($this->project->getProjectNamespaces() as $loaded) {
+        foreach ($this->project->getNamespaces() as $loaded) {
             $renderNested($loaded, $renderNested);
         }
     }
@@ -126,7 +126,7 @@ class Generator
             $this->renderer->render(
                 'interface.twig',
                 $filename,
-                ['loaded' => $loadedInterface, 'namespaces' => $this->project->getProjectNamespaces()]
+                ['loaded' => $loadedInterface, 'namespaces' => $this->project->getNamespaces()]
             );
         }
     }
@@ -144,7 +144,7 @@ class Generator
             $this->renderer->render(
                 'class.twig',
                 $filename,
-                ['loaded' => $loadedClass, 'namespaces' => $this->project->getProjectNamespaces()]
+                ['loaded' => $loadedClass, 'namespaces' => $this->project->getNamespaces()]
             );
         }
     }
@@ -162,7 +162,7 @@ class Generator
             $this->renderer->render(
                 'trait.twig',
                 $filename,
-                ['loaded' => $loadedTrait, 'namespaces' => $this->project->getProjectNamespaces()]
+                ['loaded' => $loadedTrait, 'namespaces' => $this->project->getNamespaces()]
             );
         }
     }
@@ -218,7 +218,7 @@ class Generator
             }
         };
 
-        foreach ($this->project->getProjectNamespaces() as $loaded) {
+        foreach ($this->project->getNamespaces() as $loaded) {
             $addNested($loaded, $addNested);
         }
 
