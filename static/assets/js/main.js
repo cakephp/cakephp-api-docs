@@ -302,7 +302,7 @@ $(function() {
         var parts = data[1].split(/::|$/);
         var file = autocompleteFiles[data[0]] + '-' + parts[0].replace(/\\/g, '.') + '.html';
         if (parts[1]) {
-            file += '#' + parts[1].replace(/\(\)/, '');
+            file += '#' + parts[1];
         }
         location.push(file);
         window.location = location.join('/');
