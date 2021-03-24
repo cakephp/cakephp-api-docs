@@ -20,6 +20,10 @@ namespace Cake\ApiDocs\Reflection;
 use Cake\Log\LogTrait;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\DocBlock\Description;
+use phpDocumentor\Reflection\Fqsen;
+use phpDocumentor\Reflection\Php\Method;
+use phpDocumentor\Reflection\Php\Property;
+use phpDocumentor\Reflection\Php\Visibility;
 
 class Loader
 {
@@ -173,11 +177,37 @@ class Loader
      */
     protected function addProperties(LoadedClassLike $loaded, array $properties): void
     {
+        if ($loaded->element->getDocBlock()) {
+            foreach ($loaded->element->getDocBlock()->getTags() as $tag) {
+                if (
+                    !in_array($tag->getName(), ['property', 'property-read', 'property-write'], true) ||
+                    isset($loaded->properties[$tag->getVariableName()])
+                ) {
+                    continue;
+                }
+
+                $fqsen = $loaded->fqsen . '::$' . $tag->getVariableName();
+                $property = new Property(
+                    new Fqsen($fqsen),
+                    new Visibility('public'),
+                    new DocBlock((string)($tag->getDescription() ?: '')),
+                    null,
+                    false,
+                    null,
+                    $tag->getType()
+                );
+                $loadedProperty = new LoadedProperty($fqsen, $property, $loaded);
+                $loadedProperty->annotation = $tag->getName();
+                $loaded->properties[$tag->getVariableName()] = $loadedProperty;
+            }
+        }
+
         foreach ($properties as $fqsen => $property) {
             $loadedProperty = $loaded->properties[$property->getName()] ?? null;
             if ($loadedProperty) {
                 $loadedProperty->docBlock = $this->mergeDocBlock($loadedProperty->docBlock, $property->getDocBlock());
                 $loadedProperty->origin = $loaded;
+                $loadedProperty->annotation = null;
             } else {
                 $loadedProperty = new LoadedProperty((string)$property->getFqsen(), $property, $loaded);
                 $loaded->properties[$property->getName()] = $loadedProperty;
@@ -194,11 +224,35 @@ class Loader
      */
     protected function addMethods(LoadedClassLike $loaded, array $methods): void
     {
+        if ($loaded->element->getDocBlock()) {
+            foreach ($loaded->element->getDocBlock()->getTagsByName('method') as $tag) {
+                if (isset($loaded->methods[$tag->getMethodName()])) {
+                    continue;
+                }
+
+                $fqsen = $loaded->fqsen . '::' . $tag->getMethodName() . '()';
+                $method = new Method(
+                    new Fqsen($fqsen),
+                    new Visibility('public'),
+                    new DocBlock((string)($tag->getDescription() ?: '')),
+                    false,
+                    $tag->isStatic(),
+                    false,
+                    null,
+                    $tag->getReturnType()
+                );
+                $loadedMethod = new LoadedMethod($fqsen, $method, $loaded);
+                $loadedMethod->annotation = 'method';
+                $loaded->methods[$tag->getMethodName()] = $loadedMethod;
+            }
+        }
+
         foreach ($methods as $fqsen => $method) {
             $loadedMethod = $loaded->methods[$method->getName()] ?? null;
             if ($loadedMethod) {
                 $loadedMethod->docBlock = $this->mergeDocBlock($loadedMethod->docBlock, $method->getDocBlock());
                 $loadedMethod->origin = $loaded;
+                $loadedMethod->annotation = null;
             } else {
                 $loadedMethod = new LoadedMethod((string)$method->getFqsen(), $method, $loaded);
                 $loaded->methods[$method->getName()] = $loadedMethod;
@@ -341,6 +395,7 @@ class Loader
             $existing = $loaded->properties[$loadedProperty->name] ?? null;
             if ($existing) {
                 $existing->docBlock = $this->mergeDocBlock($existing->docBlock, $loadedProperty->docBlock);
+                $existing->annotation = $loadedProperty->annotation;
             } else {
                 $loaded->properties[$loadedProperty->name] = clone $loadedProperty;
                 $loaded->properties[$loadedProperty->name]->fqsen = $loaded->fqsen . '::$' . $loadedProperty->name;
@@ -360,6 +415,7 @@ class Loader
             $existing = $loaded->methods[$loadedMethod->name] ?? null;
             if ($existing) {
                 $existing->docBlock = $this->mergeDocBlock($existing->docBlock, $loadedMethod->docBlock);
+                $existing->annotation = $loadedMethod->annotation;
             } else {
                 $loaded->methods[$loadedMethod->name] = clone $loadedMethod;
                 $loaded->methods[$loadedMethod->name]->fqsen = $loaded->fqsen . '::' . $loadedMethod->name . '()';

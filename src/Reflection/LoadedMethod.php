@@ -58,6 +58,11 @@ class LoadedMethod
     public ?LoadedInterface $implements;
 
     /**
+     * @var string|null
+     */
+    public ?string $annotation = null;
+
+    /**
      * @param string $fqsen fqsen
      * @param \phpDocumentor\Reflection\Php\Method $method Reflection method
      * @param \Cake\ApiDocs\Reflection\LoadedClassLike $origin Origin loaded class-like
