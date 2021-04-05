@@ -8,7 +8,7 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#ffffff",
-    "background_color": "#ffffff",
+    "theme_color": "#D33C44",
+    "background_color": "#D33C44",
     "display": "standalone"
 }
