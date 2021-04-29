@@ -321,6 +321,11 @@
     position: relative;
     z-index: auto;
 }
+
+#modal .megamenu {
+    padding-top: 20px;
+}
+
 #modal .megamenu-list {
     padding-top: 5px;
 }
