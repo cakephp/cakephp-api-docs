@@ -1,6 +1,7 @@
 .*
 *.groovy
 composer.phar
+Dockerfile
 phpcs.xml
 
 build/
