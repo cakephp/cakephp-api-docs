@@ -224,6 +224,7 @@ class Project
         // Create nested array
         foreach ($namespaces as $fqsen => $loaded) {
             if ($fqsen === Configure::read('namespace')) {
+                $loaded->name = substr($loaded->fqsen, 1);
                 $this->namespaces[$fqsen] = $loaded;
                 continue;
             }
