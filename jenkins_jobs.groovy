@@ -19,7 +19,7 @@ job('API - Rebuild API docs 4.x') {
       remote {
         github(CAKE_REPO_NAME)
       }
-      branches('master', '4.next')
+      branches('4.x', '4.next')
     }
     git {
       remote {
