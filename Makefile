@@ -114,8 +114,12 @@ TAG:=3.8.13
 VERSION:=3.8
 $(eval $(cakephp))
 
-TAG:=origin/3.x
+TAG:=origin/3.9.10
 VERSION:=3.9
+$(eval $(cakephp))
+
+TAG:=origin/3.x
+VERSION:=3.10
 $(eval $(cakephp))
 
 TAG:=4.0.9
@@ -126,7 +130,7 @@ TAG:=4.1.7
 VERSION:=4.1
 $(eval $(cakephp))
 
-TAG:=origin/master
+TAG:=origin/4.x
 VERSION:=4.2
 $(eval $(cakephp))
 
