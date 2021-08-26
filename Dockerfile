@@ -31,6 +31,7 @@ RUN ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
 ARG GIT_COMMIT=master
 
 ENV GIT_COMMIT ${GIT_COMMIT}
+ENV FORCE_UPDATE "2021-08-26 12:48"
 
 RUN git clone https://github.com/cakephp/cakephp.git /cakephp \
   && git clone https://github.com/cakephp/chronos.git /chronos \
