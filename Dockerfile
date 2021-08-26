@@ -31,16 +31,13 @@ RUN ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
 ARG GIT_COMMIT=master
 
 ENV GIT_COMMIT ${GIT_COMMIT}
-ENV FORCE_UPDATE "2021-08-26 12:48"
+WORKDIR /data
+COPY . /data
 
 RUN git clone https://github.com/cakephp/cakephp.git /cakephp \
   && git clone https://github.com/cakephp/chronos.git /chronos \
   && git clone https://github.com/cakephp/elastic-search.git /elastic \
   && git clone https://github.com/cakephp/queue.git /queue
-
-WORKDIR /data
-
-COPY . /data
 
 RUN ls -lah \
   && make clean build-all CAKEPHP_SOURCE_DIR=/cakephp CHRONOS_SOURCE_DIR=/chronos ELASTIC_SOURCE_DIR=/elastic QUEUE_SOURCE_DIR=/queue \
