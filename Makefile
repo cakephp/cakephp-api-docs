@@ -139,7 +139,7 @@ TAG:=origin/1.x
 VERSION:=1.x
 $(eval $(chronos))
 
-TAG:=origin/master
+TAG:=origin/2.x
 VERSION:=2.x
 $(eval $(chronos))
 
@@ -148,7 +148,7 @@ TAG:=origin/2.x
 VERSION:=2.x
 $(eval $(elastic))
 
-TAG:=origin/master
+TAG:=origin/3.x
 VERSION:=3.x
 $(eval $(elastic))
 
