@@ -25,13 +25,13 @@ job('API - Rebuild API docs 4.x') {
       remote {
         github(CHRONOS_REPO_NAME)
       }
-      branch('1.x', '2.x')
+      branches('1.x', '2.x')
     }
     git {
       remote {
         github(ELASTICSEARCH_REPO_NAME)
       }
-      branch('2.x', '3.x')
+      branches('2.x', '3.x')
     }
     git {
       remote {
