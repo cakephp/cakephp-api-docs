@@ -6,6 +6,7 @@
         "sort-packages": true
     },
     "require": {
+        "php": ">=7.4",
         "cakephp/collection": "^4.0",
         "cakephp/console": "^4.0",
         "composer/composer": "^2.0",
