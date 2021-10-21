@@ -75,6 +75,17 @@ build-cakephp-$(VERSION): install
 		$(CAKEPHP_SOURCE_DIR) $(BUILD_DIR)/cakephp/$(VERSION)
 endef
 
+define cakephp5
+build-cakephp5-$(VERSION): install
+	cd $(CAKEPHP_SOURCE_DIR) && git checkout -f $(TAG)
+	cd $(CAKEPHP_SOURCE_DIR) && $(PHP8) $(COMPOSER) update
+	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
+	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
+
+	$(PHP8) bin/apitool.php generate --config cakephp --version $(VERSION) \
+		$(CAKEPHP_SOURCE_DIR) $(BUILD_DIR)/cakephp/$(VERSION)
+endef
+
 define chronos
 build-chronos-$(VERSION): install
 	cd $(CHRONOS_SOURCE_DIR) && git checkout -f $(TAG)
@@ -139,6 +150,10 @@ $(eval $(cakephp))
 TAG:=origin/4.next
 VERSION:=4.next
 $(eval $(cakephp))
+
+TAG:=origin/5.x
+VERSION:=5.0
+$(eval $(cakephp5))
 
 # Generate build targets for chronos
 TAG:=origin/1.x
