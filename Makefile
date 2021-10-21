@@ -4,7 +4,9 @@ ELASTIC_SOURCE_DIR=../elastic-search
 QUEUE_SOURCE_DIR=../queue
 BUILD_DIR=./build/api
 DEPLOY_DIR=./website
-PHP_DIR=$(PWD)
+PHP8=php
+PHP7=php7
+COMPOSER=$(PWD)/composer.phar
 
 .PHONY: clean help
 .PHONY: build-all
@@ -60,23 +62,23 @@ composer.phar:
 	curl -sS https://getcomposer.org/installer | php
 
 install: composer.phar
-	php composer.phar install
+	$(PHP8) $(COMPOSER) install
 
 define cakephp
 build-cakephp-$(VERSION): install
 	cd $(CAKEPHP_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(CAKEPHP_SOURCE_DIR) && php $(PHP_DIR)/composer.phar update
+	cd $(CAKEPHP_SOURCE_DIR) && $(PHP7) $(COMPOSER) update
 	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
 
-	php bin/apitool.php generate --config cakephp --version $(VERSION) \
+	$(PHP8) bin/apitool.php generate --config cakephp --version $(VERSION) \
 		$(CAKEPHP_SOURCE_DIR) $(BUILD_DIR)/cakephp/$(VERSION)
 endef
 
 define chronos
 build-chronos-$(VERSION): install
 	cd $(CHRONOS_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(CHRONOS_SOURCE_DIR) && php $(PHP_DIR)/composer.phar update
+	cd $(CHRONOS_SOURCE_DIR) && $(PHP7) $(COMPOSER) update
 	mkdir -p $(BUILD_DIR)/chronos/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/chronos/$(VERSION)
 
@@ -87,22 +89,22 @@ endef
 define elastic
 build-elastic-$(VERSION): install
 	cd $(ELASTIC_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(ELASTIC_SOURCE_DIR) && php $(PHP_DIR)/composer.phar update
+	cd $(ELASTIC_SOURCE_DIR) && $(PHP7) $(COMPOSER) update
 	mkdir -p $(BUILD_DIR)/elastic-search/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/elastic-search/$(VERSION)
 
-	php bin/apitool.php generate --config elastic --version $(VERSION) \
+	$(PHP8) bin/apitool.php generate --config elastic --version $(VERSION) \
 		$(ELASTIC_SOURCE_DIR) $(BUILD_DIR)/elastic-search/$(VERSION)
 endef
 
 define queue
 build-queue-$(VERSION): install
 	cd $(QUEUE_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(QUEUE_SOURCE_DIR) && php $(PHP_DIR)/composer.phar update
+	cd $(QUEUE_SOURCE_DIR) && $(PHP7) $(COMPOSER) update
 	mkdir -p $(BUILD_DIR)/queue/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/queue/$(VERSION)
 
-	php bin/apitool.php generate --config queue --version $(VERSION) \
+	$(PHP8) bin/apitool.php generate --config queue --version $(VERSION) \
 		$(QUEUE_SOURCE_DIR) $(BUILD_DIR)/queue/$(VERSION)
 endef
 
