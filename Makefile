@@ -12,7 +12,7 @@ PHP_DIR=$(PWD)
 .ALL: help
 
 # Versions that can be built.
-CAKEPHP_VERSIONS = 3.8 3.9 3.10 4.0 4.1 4.2
+CAKEPHP_VERSIONS = 3.8 3.9 3.10 4.0 4.1 4.2 4.next
 
 CHRONOS_VERSIONS = 1.x 2.x
 
@@ -132,6 +132,10 @@ $(eval $(cakephp))
 
 TAG:=origin/4.x
 VERSION:=4.2
+$(eval $(cakephp))
+
+TAG:=origin/4.next
+VERSION:=4.next
 $(eval $(cakephp))
 
 # Generate build targets for chronos
