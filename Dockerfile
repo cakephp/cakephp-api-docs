@@ -9,6 +9,20 @@ RUN apk add --no-cache \
     make \
     nginx \
     openssh-client \
+    php8 \
+    php8-bz2 \
+    php8-curl \
+    php8-dom \
+    php8-intl \
+    php8-json \
+    php8-mbstring \
+    php8-openssl \
+    php8-phar \
+    php8-simplexml \
+    php8-tokenizer \
+    php8-xml \
+    php8-xmlwriter \
+    php8-zip \
     php7 \
     php7-bz2 \
     php7-curl \
@@ -23,6 +37,8 @@ RUN apk add --no-cache \
     php7-xml \
     php7-xmlwriter \
     php7-zip
+
+RUN ln -sf /usr/bin/php /usr/bin/php8
 
 RUN mkdir /website /root/.ssh
 
