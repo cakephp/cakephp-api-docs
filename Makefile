@@ -14,7 +14,7 @@ COMPOSER=$(PWD)/composer.phar
 .ALL: help
 
 # Versions that can be built.
-CAKEPHP_VERSIONS = 3.8 3.9 3.10 4.0 4.1 4.2 4.next
+CAKEPHP_VERSIONS = 3.8 3.9 3.10 4.0 4.1 4.2 4.3 4.next
 
 CHRONOS_VERSIONS = 1.x 2.x
 
