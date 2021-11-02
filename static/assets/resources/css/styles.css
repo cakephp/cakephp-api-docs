@@ -345,7 +345,7 @@ iframe {
 .menu > li > a:hover,
 .menu > li > a:focus,
 .menu > li:hover > a {
-    color:rgb(208, 208, 207);
+    color: #ffffff;
     -webkit-transition: all .2s ease-out; transition: all .2s ease-out;
 }
 
@@ -649,7 +649,7 @@ iframe {
     }
     .menu > li > a:hover,
     .menu > li > a:focus {
-        color:rgb(191, 191, 191);
+        color: #ffffff;
     }
 
     .submenu,
