@@ -1208,13 +1208,6 @@ input[type="email"].big-dog::webkit-input-placeholder {
     word-spacing:2px;
     padding-bottom: 5px;
 }
-/* specificity needs to be high to get around responsive styles */
-.footer-wrapper .col-p30 .business-solution {
-    padding: 0 20px;
-}
-
-
-
 
 /* Footer links */
 .footer-links {
