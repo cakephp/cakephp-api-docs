@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - 1.x
-  workflow_dispatch:
 
 jobs:
   deploy:
@@ -20,5 +19,4 @@ jobs:
         uses: dokku/github-action@master
         with:
           git_remote_url: 'ssh://dokku@apps.cakephp.org:22/api-3'
-          git_push_flags: '-f'
           ssh_private_key: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
