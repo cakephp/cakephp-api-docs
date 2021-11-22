@@ -998,11 +998,13 @@ input[type="email"].big-dog::webkit-input-placeholder {
     }
 
     .dropdown-menu {
-        min-width:46px;
+        min-width:66px;
         margin: 0;
         background-color: #BDBDB5;
         border:none;
         border-radius:2px;
+        max-height: 300px;
+        overflow-y: auto;
     }
 
     .dropdown-menu>li>a {
