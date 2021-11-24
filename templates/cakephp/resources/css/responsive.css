@@ -192,7 +192,7 @@
     }
 
     .menu > li > a:hover, .menu > li > a:focus, .menu > li:hover > a {
-        color: rgb(202, 202, 202);
+        color: #ffffff;
     }
 
     .menu > li > a {
