@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - 2.x
+  repository_dispatch:
+    types: ['build']
   workflow_dispatch:
 
 jobs:
