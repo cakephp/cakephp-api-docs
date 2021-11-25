@@ -139,7 +139,7 @@ ul ul {
     padding: 0;
 }
 a {
-    color: #2f85ae;
+    color: #2D7EA4;
     text-decoration:none;
     -webkit-transition:all 0.2s linear; transition:all 0.2s linear;
 }
@@ -1239,6 +1239,10 @@ input[type="email"].big-dog::webkit-input-placeholder {
     color: white;
     margin-bottom: 0;
     padding-top: 8px;
+}
+
+.copyright a {
+    color: #53A8D0;
 }
 
 
