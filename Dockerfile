@@ -38,7 +38,7 @@ RUN apk add --no-cache \
     php7-xmlwriter \
     php7-zip
 
-RUN ln -sf /usr/bin/php /usr/bin/php8
+RUN ln -sf /usr/bin/php8 /usr/bin/php
 
 RUN mkdir /website /root/.ssh
 
