@@ -11,28 +11,27 @@ declare(strict_types=1);
  *
  * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  * @link          https://cakephp.org CakePHP(tm) Project
- * @since         1.0.0
+ * @since         2.0.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 namespace Cake\ApiDocs\Reflection;
 
-use phpDocumentor\Reflection\Php\Trait_;
+use Cake\Log\LogTrait;
+use PHPStan\PhpDocParser\Ast\Type\TypeNode;
 
-class LoadedTrait extends LoadedClassLike
+class ReflectedProperty extends ReflectedNode
 {
-    /**
-     * @var \phpDocumentor\Reflection\Php\Trait_
-     */
-    public Trait_ $trait;
+    use ClassElementTrait;
+    use LogTrait;
 
-    /**
-     * @param string $fqsen fqsen
-     * @param \phpDocumentor\Reflection\Php\Trait_ $trait Reflection trait
-     * @param \Cake\ApiDocs\Reflection\LoadedFile $loadedFile Loaded file
-     */
-    public function __construct(string $fqsen, Trait_ $trait, LoadedFile $loadedFile)
-    {
-        parent::__construct($fqsen, $trait, $loadedFile);
-    }
+    public ?TypeNode $type = null;
+
+    public ?TypeNode $nativeType = null;
+
+    public bool $static = false;
+
+    public ?string $default = null;
+
+    public bool $annotated = false;
 }

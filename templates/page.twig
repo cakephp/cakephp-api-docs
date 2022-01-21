@@ -53,22 +53,22 @@
           <div id="groups">
             <h3 class="nav-title">Namespaces</h3>
             <ul class="nav-list">
-              {% macro renderChildren(context, namespace, forceExpand) %}
-                {% set isActive = context.loaded ?? null is in_namespace(namespace.fqsen) %}
+              {% macro listNamespace(namespace, context) %}
+                {% set isActive = context['contextName'] is defined and inNamespace(namespace.name, context['contextName']) %}
                 <li class="{{ isActive ? 'active' : '' }}">
-                  <a href="{{ namespace.fqsen|fqsen_to_url('namespace') }}">{{ namespace.name }}</a>
-                  {% if isActive or forceExpand and namespace.children %}
+                  <a href="{{ namespace.name|namespace_url }}">{{ namespace.displayName }}</a>
+                  {% if isActive and namespace.children %}
                   <ul>
                     {% for child in namespace.children %}
-                      {{ _self.renderChildren(context, child) }}
+                      {{ _self.listNamespace(child, context) }}
                     {% endfor %}
                   </ul>
                   {% endif %}
                 </li>
               {% endmacro %}
 
-              {% for namespace in namespaces %}
-                {{ _self.renderChildren(_context, namespace, true) }}
+              {% for ns in namespaces %}
+                {{ _self.listNamespace(ns, _context) }}
               {% endfor %}
             </ul>
           </div>

@@ -11,160 +11,105 @@ declare(strict_types=1);
  *
  * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  * @link          https://cakephp.org CakePHP(tm) Project
- * @since         1.0.0
+ * @since         2.0.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 namespace Cake\ApiDocs;
 
-use Cake\ApiDocs\Reflection\LoadedNamespace;
-use Cake\ApiDocs\Reflection\Project;
-use Cake\ApiDocs\Twig\TwigRenderer;
-use Cake\Core\Configure;
+use Cake\ApiDocs\Reflection\ReflectedClassLike;
 use Cake\Log\LogTrait;
+use Twig\Environment;
 
 class Generator
 {
     use LogTrait;
 
     /**
-     * @var \Cake\ApiDocs\Reflection\Project
+     * @var \Twig\Environment
      */
-    protected $project;
+    protected Environment $twig;
+
+    protected string $outputDir;
 
     /**
-     * @var \Cake\ApiDocs\Twig\TwigRenderer
+     * @param \Twig\Environment $twig Twig environment
+     * @param string $outputDir Output directory
      */
-    protected $renderer;
-
-    /**
-     * @param string $projectPath Project path
-     * @param string $outputPath Html output path
-     * @param string $templatePath Twig template path
-     */
-    public function __construct(string $projectPath, string $outputPath, string $templatePath)
+    public function __construct(Environment $twig, string $outputDir)
     {
-        $this->project = new Project($projectPath);
+        $this->twig = $twig;
+        $this->outputDir = $outputDir;
+    }
 
-        $globals = [];
-        foreach (['project', 'release', 'version', 'versions', 'namespace'] as $config) {
-            $globals[$config] = Configure::read($config);
+    /**
+     * Render project.
+     *
+     * @param \Cake\ApiDocs\Project $project Project
+     * @return void
+     */
+    public function generate(Project $project): void
+    {
+        $this->log(sprintf('Generating project into `%s`', $this->outputDir), 'info');
+
+        $namespaces = [];
+        if (!$project->globalNamespace->isEmpty()) {
+            $namespaces[] = $project->globalNamespace;
         }
-        $this->renderer = new TwigRenderer($outputPath, $templatePath, $globals);
-    }
+        $namespaces[] = $project->rootNamespace;
+        $this->twig->addGlobal('namespaces', $namespaces);
 
-    /**
-     * Generates all files.
-     *
-     * @return void
-     */
-    public function generate(): void
-    {
-        $this->renderOverview();
-        $this->renderNamespaces();
+        $this->renderTemplate('pages/overview.twig', 'index.html');
+        foreach ($namespaces as $namespace) {
+            $this->renderNamespace($namespace);
+        }
+        /*
         $this->renderSearch();
+        */
     }
 
     /**
-     * Renders overview page.
+     * Render all child namespaces, classes, interfaces and traits in namespace.
      *
+     * @param \Cake\ApiDocs\ProjectNamespace $ns Project namespace
      * @return void
      */
-    public function renderOverview(): void
+    public function renderNamespace(ProjectNamespace $ns): void
     {
-        $namespaces = $this->project->getNamespaces();
-        $this->renderer->render(
-            'overview.twig',
-            'index.html',
-            ['namespaces' => $namespaces]
-        );
-    }
-
-    /**
-     * Render all namespaces and interfaces, classes and traits owned by interface.
-     *
-     * @return void
-     */
-    public function renderNamespaces(): void
-    {
-        $namespaces = $this->project->getNamespaces();
-        $renderNested = function ($loaded, $renderNested) use ($namespaces) {
-            // Render namespace
-            $path = $loaded->fqsen === '\\' ? 'Global' : str_replace('\\', '.', substr($loaded->fqsen, 1));
-            $filename = 'namespace-' . $path . '.html';
-            $this->renderer->render(
-                'namespace.twig',
-                $filename,
-                ['loaded' => $loaded, 'namespaces' => $namespaces]
+        $renderer = function (ProjectNamespace $ns) use (&$renderer): void {
+            $this->renderTemplate(
+                'pages/namespace.twig',
+                sprintf('namespace-%s.html', str_replace('\\', '.', $ns->name ?? $ns->displayName)),
+                ['namespace' => $ns, 'contextName' => $ns->name]
             );
 
-            // Render files owned by namespace
-            $this->renderInterfaces($loaded);
-            $this->renderClasses($loaded);
-            $this->renderTraits($loaded);
+            array_map(fn($interface) => $this->renderClassLike($interface, 'interface'), $ns->interfaces);
+            array_map(fn($class) => $this->renderClassLike($class, 'class'), $ns->classes);
+            array_map(fn($trait) => $this->renderClassLike($trait, 'trait'), $ns->traits);
 
-            foreach ($loaded->children as $fqsen => $child) {
-                $renderNested($child, $renderNested);
+            foreach ($ns->children as $child) {
+                $renderer($child);
             }
         };
 
-        foreach ($this->project->getNamespaces() as $loaded) {
-            $renderNested($loaded, $renderNested);
-        }
+        $renderer($ns);
     }
 
     /**
-     * Render all interfaces for namespace.
+     * Renders class, interface or trait.
      *
-     * @param \Cake\ApiDocs\Reflection\LoadedNamespace $loadedNamespace Loaded namespace
+     * @param \Cake\ApiDocs\Reflection\ReflectedClassLike $ref Reflected classlike
+     * @param string $type Class-like type
      * @return void
      */
-    public function renderInterfaces(LoadedNamespace $loadedNamespace): void
+    protected function renderClassLike(ReflectedClassLike $ref, string $type): void
     {
-        foreach ($loadedNamespace->interfaces as $fqsen => $loadedInterface) {
-            $filename = 'interface-' . str_replace('\\', '.', substr($fqsen, 1)) . '.html';
-            $this->renderer->render(
-                'interface.twig',
-                $filename,
-                ['loaded' => $loadedInterface, 'namespaces' => $this->project->getNamespaces()]
-            );
-        }
-    }
-
-    /**
-     * Render all classes for namespace.
-     *
-     * @param \Cake\ApiDocs\Reflection\LoadedNamespace $loadedNamespace Loaded namespace
-     * @return void
-     */
-    public function renderClasses(LoadedNamespace $loadedNamespace): void
-    {
-        foreach ($loadedNamespace->classes as $fqsen => $loadedClass) {
-            $filename = 'class-' . str_replace('\\', '.', substr($fqsen, 1)) . '.html';
-            $this->renderer->render(
-                'class.twig',
-                $filename,
-                ['loaded' => $loadedClass, 'namespaces' => $this->project->getNamespaces()]
-            );
-        }
-    }
-
-    /**
-     * Render all traits for namespace.
-     *
-     * @param \Cake\ApiDocs\Reflection\LoadedNamespace $loadedNamespace Loaded namespace
-     * @return void
-     */
-    public function renderTraits(LoadedNamespace $loadedNamespace): void
-    {
-        foreach ($loadedNamespace->traits as $fqsen => $loadedTrait) {
-            $filename = 'trait-' . str_replace('\\', '.', substr($fqsen, 1)) . '.html';
-            $this->renderer->render(
-                'trait.twig',
-                $filename,
-                ['loaded' => $loadedTrait, 'namespaces' => $this->project->getNamespaces()]
-            );
-        }
+        $filename = sprintf('%s-%s.html', $type, str_replace('\\', '.', $ref->qualifiedName()));
+        $this->renderTemplate(
+            'pages/classlike.twig',
+            $filename,
+            ['ref' => $ref, 'type' => $type, 'contextName' => $ref->context->namespace]
+        );
     }
 
     /**
@@ -172,7 +117,7 @@ class Generator
      *
      * @return void
      */
-    public function renderSearch(): void
+    protected function renderSearch(): void
     {
         $search = [];
         $addNested = function ($loaded, $addNested) use (&$search) {
@@ -223,5 +168,17 @@ class Generator
         }
 
         $this->renderer->render('searchlist.twig', 'searchlist.js', ['entries' => json_encode(array_values($search))]);
+    }
+
+    /**
+     * @param string $template Twig template name
+     * @param string $filename Output filename
+     * @param array $context Twig render context
+     * @return void
+     */
+    protected function renderTemplate(string $template, string $filename, array $context = []): void
+    {
+        $path = getcwd() . DS . $this->outputDir . DS . $filename;
+        file_put_contents($path, $this->twig->render($template, $context));
     }
 }

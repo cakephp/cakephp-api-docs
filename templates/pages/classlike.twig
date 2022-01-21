@@ -1,0 +1,68 @@
+{% extends 'page.twig' %}
+
+{% block title type|capitalize ~ ' ' ~ ref.name %}
+
+{% block content %}
+<div id="content" class="class">
+  <h1>
+    {{ type|capitalize }}
+    {% if ref.doc.tags.deprecated is defined %}
+      <div class="deprecated" style="display: inline">{{ ref.name }}</div>
+    {% else %}
+      {{ ref.name }}
+    {% endif %}
+  </h1>
+
+  <div class="description">
+    {{ ref.doc.summary|markdown_to_html }}
+    {{ ref.doc.description|markdown_to_html }}
+  </div>
+
+  {#{{ macros.showInheritanceTree(ref.inheritanceTree) }}#}
+
+  <div class="info">
+    {% if ref.final ?? false %}
+      <b>Final</b><br>
+    {% endif %}
+    {% if ref.abstract ?? false %}
+      <b>Abstract</b><br>
+    {% endif %}
+
+    <b>Namespace:</b> <a href="{{ ref.context.namespace|namespace_url }}">{{ ref.context.namespace }}</a><br>
+
+    {% if ref.doc.tags.deprecated is defined %}
+      <b style="color: #be0000">Deprecated:</b> {{ ref.doc.tags.deprecated }}<br>
+    {% endif %}
+
+    {% if ref.doc.tags.experimental is defined %}
+      <b style="color: #5500be">Experimental:</b> Expect API changes in minor releases.<br>
+    {% endif %}
+
+    {% for tag in ref.doc.tags.see|default([]) %}
+      <b>See:</b> {{ tag.value }}<br>
+    {% endfor %}
+
+    {% for tag in ref.doc.tags.link|default([]) %}
+      <b>Link:</b> {{ tag.value }}<br>
+    {% endfor %}
+  </div>
+
+  {% if ref.constants %}
+    {{ include('pages/parts/constant-detail.twig', {constants: ref.constants}) }}
+  {% endif %}
+
+  {% if ref.properties %}
+    {{ include('pages/parts/property-summary.twig', {properties: ref.properties}) }}
+  {% endif %}
+
+  {% if ref.methods %}
+    {{ include('pages/parts/function-summary.twig', {functions: ref.methods}) }}
+
+    {{ include('pages/parts/function-detail.twig', {functions: ref.methods}) }}
+  {% endif %}
+
+  {% if ref.properties %}
+    {{ include('pages/parts/property-detail.twig', {properties: ref.properties}) }}
+  {% endif %}
+</div>
+{% endblock %}

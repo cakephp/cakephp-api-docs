@@ -2,19 +2,23 @@
 
 // Chronos API docs
 return [
-    'project' => 'Chronos',
-    'release' => null,
-    'namespace' => '\Cake\Chronos',
-
-    'templatePath' => 'templates',
-    'sourcePaths' => ['src'],
-    'exclude' => [
-        'namespaces' => ['\Cake\Chronos\Traits'],
-        'names' => [],
+    'Project' => [
+        'namespace' => 'Cake\Chronos',
+        'sourceDirs' => ['src'],
+        'excludePatterns' => [
+            'Cake\Chronos\Traits',
+        ],
     ],
 
-    'versions' => [
-        '2.x' => '../2.x',
-        '1.x' => '../1.x',
+    'Twig' => [
+        'templateDir' => 'templates',
+        'globals' => [
+            'project' => 'Chronos',
+            'release' => null,
+            'versions' => [
+                '2.x' => '../2.x',
+                '1.x' => '../1.x',
+            ],
+        ],
     ],
 ];

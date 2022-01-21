@@ -2,15 +2,21 @@
 
 // Elastic Search API docs
 return [
-    'project' => 'Elastic Search',
-    'release' => null,
-    'namespace' => '\Cake\ElasticSearch',
+    'Project' => [
+        'namespace' => 'Cake\ElasticSearch',
+        'sourceDirs' => ['src'],
+        'excludePatterns' => [],
+    ],
 
-    'templatePath' => 'templates',
-    'sourcePaths' => ['src'],
-
-    'versions' => [
-        '3.x' => '../3.x',
-        '2.x' => '../2.x',
+    'Twig' => [
+        'templateDir' => 'templates',
+        'globals' => [
+            'project' => 'Elastic Search',
+            'release' => null,
+            'versions' => [
+                '3.x' => '../3.x',
+                '2.x' => '../2.x',
+            ],
+        ],
     ],
 ];
