@@ -1,27 +1,25 @@
 {% extends 'layout.twig' %}
 
-{% block title 'Globals' %}
+{% block title 'Overview' %}
 
 {% block content %}
 <div id="content">
-  <h1>{{ project }} {{ version }} API</h1>
+  <h1>{{ config.project }} {{ config.version }} API</h1>
 
   <h2>Namespace Tree</h2>
   <ul>
-    {% macro listNamespace(namespace) %}
+    {% macro showNamespace(namespace) %}
       <li>
-        <a href="{{ namespace.fqsen|fqsen_to_url('namespace') }}">{{ namespace.name }}</a>
+        <a href="{{ namespace.namespaced|namespace_url }}">{{ namespace.name }}</a>
         <ul>
         {% for child in namespace.children %}
-          {{ _self.listNamespace(child) }}
+          {{ _self.showNamespace(child) }}
         {% endfor %}
         </ul>
       </li>
     {% endmacro %}
 
-    {% for namespace in namespaces %}
-      {{ _self.listNamespace(namespace) }}
-    {% endfor %}
+    {{ _self.showNamespace(project.root) }}
   </ul>
 </div>
 {% endblock %}

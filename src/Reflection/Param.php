@@ -17,15 +17,25 @@ declare(strict_types=1);
 
 namespace Cake\ApiDocs\Reflection;
 
-use PhpParser\Node\Stmt\Trait_;
+use PHPStan\PhpDocParser\Ast\Type\TypeNode;
 
-class LoadedTrait extends LoadedClassLike
+class Param
 {
     /**
-     * @inheritDoc
+     * @param string $name Parameter name
+     * @param \PHPStan\PhpDocParser\Ast\Type\TypeNode|null $type Parameter type
+     * @param bool $variadic Variadic parameter
+     * @param bool $reference Reference parameter
+     * @param string|null $default Default value
+     * @param string|null $description Parameter description
      */
-    public function __construct(Trait_ $node, Source $source, Context $context)
-    {
-        parent::__construct($node, $source, $context);
+    public function __construct(
+        public string $name,
+        public ?TypeNode $type = null,
+        public bool $variadic = false,
+        public bool $reference = false,
+        public ?string $default = null,
+        public string $description = ''
+    ) {
     }
 }

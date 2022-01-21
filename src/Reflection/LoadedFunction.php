@@ -17,46 +17,107 @@ declare(strict_types=1);
 
 namespace Cake\ApiDocs\Reflection;
 
-use phpDocumentor\Reflection\Php\Function_;
+use Cake\ApiDocs\DocUtil;
+use Cake\ApiDocs\PrintUtil;
+use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\Stmt\Function_;
+use PHPStan\PhpDocParser\Ast\PhpDoc\ParamTagValueNode;
+use PHPStan\PhpDocParser\Ast\PhpDoc\ReturnTagValueNode;
+use PHPStan\PhpDocParser\Ast\Type\TypeNode;
 
-class LoadedFunction
+class LoadedFunction extends LoadedNode
 {
     /**
-     * @var string
+     * @var array<string, \Cake\ApiDocs\Reflection\Param>
      */
-    public string $fqsen;
+    public array $parameters = [];
+
+    public ?TypeNode $returnType = null;
+
+    public ?string $visibility = null;
+
+    public bool $abstract = false;
+
+    public bool $static = false;
+
+    public bool $annotated = false;
+
+    public ?string $declared = null;
+
+    public ?string $defined = null;
 
     /**
-     * @var string
+     * @param \PhpParser\Node\Stmt\Function_ $node Function node
+     * @param \Cake\ApiDocs\Reflection\Source $source Node source
+     * @param \Cake\ApiDocs\Reflection\Context $context Node context
      */
-    public string $namespace;
-
-    /**
-     * @var string
-     */
-    public string $name;
-
-    /**
-     * @var \phpDocumentor\Reflection\Php\Function
-     */
-    public Function_ $function;
-
-    /**
-     * @var \Cake\ApiDocs\Reflection\LoadedNamespace|null
-     */
-    public ?LoadedNamespace $origin;
-
-    /**
-     * @param string $fqsen fqsen
-     * @param \phpDocumentor\Reflection\Php\Function_ $function Reflection function
-     * @param \Cake\ApiDocs\Reflection\LoadedNamespace|null $origin Loaded origin
-     */
-    public function __construct(string $fqsen, Function_ $function, ?LoadedNamespace $origin)
+    public function __construct(ClassMethod|Function_ $node, Source $source, Context $context)
     {
-        $this->fqsen = $fqsen;
-        $this->namespace = substr($this->fqsen, 0, strrpos($this->fqsen, '\\'));
-        $this->name = $function->getName();
-        $this->function = $function;
-        $this->origin = $origin;
+        parent::__construct($node->name->name, $source, $context, $node->getDocComment()?->getText());
+
+        /** @var \PhpParser\Node\Param $param */
+        foreach ($node->getParams() as $param) {
+            $name = $param->var->name;
+
+            $tag = $this->getParamTag($name);
+            if ($tag) {
+                $this->parameters[$name] = new Param(
+                    $name,
+                    $tag->type,
+                    $param->variadic,
+                    $param->byRef,
+                    $param->default ? PrintUtil::expr($param->default) : null,
+                    $tag->description
+                );
+                continue;
+            }
+
+            $this->parameters[$name] = new Param(
+                $name,
+                $param->type ? DocUtil::parseType(PrintUtil::node($param->type)) : null,
+                $param->variadic,
+                $param->byRef,
+                $param->default ? PrintUtil::expr($param->default) : null
+            );
+        }
+
+        $tag = $this->getReturnTag();
+        if ($tag) {
+            $this->returnType = $tag->type;
+        } else {
+            $this->returnType = $node->returnType ? DocUtil::parseType(PrintUtil::node($node->returnType)) : null;
+        }
+
+        if ($node instanceof ClassMethod) {
+            $this->visibility = $node->isPublic() ? 'public' : ($node->isProtected() ? 'protected' : 'private');
+            $this->abstract = $node->isAbstract();
+            $this->static = $node->isStatic();
+        }
+    }
+
+    /**
+     * @param string $variable Variable name
+     * @return \PHPStan\PhpDocParser\Ast\PhpDoc\ParamTagValueNode|null
+     */
+    protected function getParamTag(string $variable): ?ParamTagValueNode
+    {
+        $variable = '$' . $variable;
+        foreach ($this->doc->node->getParamTagValues() as $tag) {
+            if ($tag->parameterName === $variable) {
+                return $tag;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return \PHPStan\PhpDocParser\Ast\PhpDoc\ReturnTagValueNode|null
+     */
+    protected function getReturnTag(): ?ReturnTagValueNode
+    {
+        $tags = $this->doc->node->getReturnTagValues();
+
+        return $tags[0] ?? null;
     }
 }

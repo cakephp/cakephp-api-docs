@@ -17,27 +17,14 @@ declare(strict_types=1);
 
 namespace Cake\ApiDocs\Reflection;
 
-use phpDocumentor\Reflection\Php\File;
-
-class LoadedFile
+class Source
 {
     /**
-     * @var \phpDocumentor\Reflection\Php\File
+     * @param string $path File path
+     * @param int $startLine Starting line
+     * @param int $endLine Ending line
      */
-    public $file;
-
-    /**
-     * @var bool
-     */
-    public $fromVendor;
-
-    /**
-     * @param \phpDocumentor\Reflection\Php\File $file Reflection file
-     * @param bool $fromVendor Whether the file was loaded from vendor/ directory
-     */
-    public function __construct(File $file, bool $fromVendor)
+    public function __construct(public string $path, public int $startLine, public int $endLine)
     {
-        $this->file = $file;
-        $this->fromVendor = $fromVendor;
     }
 }

@@ -1,0 +1,31 @@
+<div class="section">
+  <h2>Property Summaries</h2>
+  <ul class="member-summary properties">
+    {% for property in properties %}
+      <li class="clearfix">
+        <div class="name">
+        <a href="#${{ property.name }}">${{ property.name }}</a>
+
+          <span class="attributes">
+            <span class="label">{{ property.visibility }}</span>
+
+            {% if property.static %}
+              <span class="label">static</span>
+            {% endif %}
+            {% if property.annotated %}
+              <span class="label annotation">@property</span>
+            {% endif %}
+          </span>
+        </div>
+
+        {% if property.type %}
+        <div class="property-type"><code>{{ property.type }}</code></div>
+        {% endif %}
+
+        <div class="description">
+          {{ property.doc.summary|markdown_to_html }}
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+</div>

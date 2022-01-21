@@ -80,7 +80,7 @@
           <h2>
             <a href="index.html">
               <span class="glyph_range icon-submenu icon-submenu-cook">C</span>
-              {{ project ~ ' ' ~ version ~ ' ' ~ release }}
+              {{ config.project ~ ' ' ~ config.version ~ ' ' ~ config.release }}
               <strong>API</strong>
             </a>
           </h2>
@@ -115,7 +115,7 @@
               <ul class="nav navbar-nav">
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                    {{ project }} <i class="fa fa-menu-en fa-chevron-down"></i>
+                    {{ config.project }} <i class="fa fa-menu-en fa-chevron-down"></i>
                   </a>
                   <ul class="dropdown-menu">
                     <li><a href="/">CakePHP</a></li>
@@ -133,10 +133,10 @@
               <ul class="nav navbar-nav">
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                    {{ version }} <i class="fa fa-menu-en fa-chevron-down"></i>
+                    {{ config.version }} <i class="fa fa-menu-en fa-chevron-down"></i>
                   </a>
                   <ul class="dropdown-menu">
-                    {% for name, url in versions %}
+                    {% for name, url in config.versions %}
                       <li><a href="{{ url }}">{{ name }}</a></li>
                     {% endfor %}
                   </ul>

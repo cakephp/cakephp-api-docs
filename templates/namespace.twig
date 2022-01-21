@@ -1,75 +1,41 @@
 {% extends 'layout.twig' %}
 
-{% block title 'Namespace ' ~ loaded.name %}
+{% block title 'Namespace ' ~ namespace.name %}
 
 {% block content %}
 <div class="section namespace">
-  <h1>Namespace {{ loaded.name }}</h1>
+  <h1>Namespace {{ namespace.name }}</h1>
 
-  {% if loaded.children is not empty %}
+  {% if namespace.children is not empty %}
     <div>
       <h3>Namespaces</h3>
       <ul class="summary-list">
-        {% for child in loaded.children %}
+        {% for child in namespace.children %}
         <li>
-          <a href="{{ child.fqsen|fqsen_to_url('namespace') }}">{{ child.name }}</a>
+          <a href="{{ child.namespaced|namespace_url }}">{{ child.name }}</a>
         </li>
         {% endfor %}
       </ul>
     </div>
   {% endif %}
 
-  {% if loaded.functions is not empty %}
-    <div class="section">
-      <h2>Functions</h2>
-      <div class="method-detail">
-        {% for function in loaded.functions %}
-          <h3 class="method-name">
-            {{ function.name }}()
-
-            {% if function|docblock|get_tags('deprecated') is not empty %}
-              <span class="label">deprecated</span>
-            {% endif %}
-          </h3>
-
-          <pre><code class="language-php">{{ function.name }}(
-            {%- for argument in function.function.arguments %}
-              {{- function|docblock|param(argument.name).type ?? argument.type }} {% if argument.isVariadic %}...{% endif %}${{ argument.name }}{{ loop.last?'':', ' }}
-            {%- endfor -%}
-          )</code></pre>
-
-          <div class="description detailed">
-            {{ function|docblock.summary|markdown_to_html }}
-            {{ function|docblock.description|markdown_to_html }}
-          </div>
-        {% endfor %}
-      </div>
-    </div>
+  {% if namespace.functions is not empty %}
+    {{ include('sections/function-detail.twig', {title: 'Function', functions: namespace.functions}) }}
   {% endif %}
 
-  {% if loaded.constants is not empty %}
-    <div class="section">
-      <h2>Constants</h2>
-      <ul class="summary-list">
-        {% for constant in loaded.constants %}
-          <li>
-            {{ constant.name }}
-            {{ constant|docblock.summary|markdown_to_html }}
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
+  {% if namespace.constants is not empty %}
+    {{ include('sections/constant-detail.twig', {constants: namespace.constants}) }}
   {% endif %}
 
-  {% macro section(title, elements, type) %}
-    {% if elements is not empty %}
+  {% macro showClassLikes(type, title, classLikes, type) %}
+    {% if classLikes is not empty %}
       <div class="section">
         <h3>{{ title }}</h3>
         <ul class="summary-list">
-          {% for element in elements %}
+          {% for classLike in classLikes %}
             <li>
-              <h5><a href="{{ element.fqsen|fqsen_to_url(type) }}">{{ element.name }}</a></h5>
-              {{ element|docblock.summary|markdown_to_html }}
+              <h5><a href="{{ classLike.namespaced|url(type) }}">{{ classLike.name }}</a></h5>
+              {{ classLike.doc.summary|markdown_to_html }}
             </li>
           {% endfor %}
         </ul>
@@ -77,8 +43,8 @@
     {% endif %}
   {% endmacro %}
 
-  {{ _self.section('Interfaces', loaded.interfaces, 'interface') }}
-  {{ _self.section('Classes', loaded.classes, 'class') }}
-  {{ _self.section('Traits', loaded.traits, 'trait') }}
+  {{ _self.showClassLikes('interface', 'Interfaces', namespace.interfaces, 'interface') }}
+  {{ _self.showClassLikes('class', 'Classes', namespace.classes, 'class') }}
+  {{ _self.showClassLikes('trait', 'Traits', namespace.traits, 'trait') }}
 </div>
 {% endblock %}

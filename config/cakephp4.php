@@ -4,18 +4,18 @@
 return [
     'project' => 'CakePHP',
     'release' => 'Strawberry',
-    'namespace' => '\Cake',
+    'root' => 'Cake',
 
     'templatePath' => 'templates',
-    'sourcePaths' => ['src', 'config'],
+    'sourceDirs' => ['src', 'config'],
     'exclude' => [
         'namespaces' => [],
         'names' => [
-            '\Cake\Collection\CollectionTrait',
-            '\Cake\Collection\ExtractTrait',
-            '\Cake\Datasource\EntityTrait',
-            '\Cake\Datasource\QueryTrait',
-            '\Cake\I18n\DateFormatTrait',
+            'Cake\Collection\CollectionTrait',
+            'Cake\Collection\ExtractTrait',
+            'Cake\Datasource\EntityTrait',
+            'Cake\Datasource\QueryTrait',
+            'Cake\I18n\DateFormatTrait',
         ],
     ],
 

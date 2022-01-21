@@ -11,6 +11,7 @@
         "cakephp/console": "^4.0",
         "composer/composer": "^2.0",
         "erusev/parsedown": "^1.7",
+        "nikic/php-parser": "^4.13",
         "phpdocumentor/reflection": "^4.0",
         "phpdocumentor/reflection-common": "^2.1",
         "phpdocumentor/reflection-docblock": "^5.1",

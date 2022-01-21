@@ -1,281 +1,70 @@
 {% extends 'layout.twig' %}
 
-{% block title type|capitalize ~ ' ' ~ loaded.name %}
+{% block title classLikeType|capitalize ~ ' ' ~ classLike.name %}
 
 {% block content %}
 <div id="content" class="class">
   <h1>
-    {{ type|capitalize }}
-    {% if loaded|docblock|get_tag('deprecated') %}
-      <div class="deprecated" style="display: inline">{{ loaded.name }}</div>
+    {{ classLikeType|capitalize }}
+    {% if classLike.doc.node.getDeprecatedTagValues() %}
+      <div class="deprecated" style="display: inline">{{ classLike.name }}</div>
     {% else %}
-      {{ loaded.name }}
+      {{ classLike.name }}
     {% endif %}
   </h1>
 
   <div class="description">
-    {{ loaded|docblock.summary|markdown_to_html }}
-    {{ loaded|docblock.description|markdown_to_html }}
+    {{ classLike.doc.summary|markdown_to_html }}
+    {{ classLike.doc.description|markdown_to_html }}
   </div>
 
   {#{{ macros.showInheritanceTree(classlike.inheritanceTree) }}#}
 
   <div class="info">
-    {% if loaded is class %}
-      {% if loaded.element.final %}
+    {% if classLikeType == 'class' %}
+      {% if classLike.final %}
         <b>Final</b><br>
       {% endif %}
-      {% if loaded.element.abstract %}
+      {% if classLike.abstract %}
         <b>Abstract</b><br>
       {% endif %}
     {% endif %}
 
-    <b>Namespace:</b> <a href="{{ loaded.namespace|fqsen_to_url('namespace') }}">{{ loaded.namespace|fqsen }}</a><br>
+    <b>Namespace:</b> <a href="{{ classLike.context.namespace|namespace_url }}">{{ classLike.context.namespace }}</a><br>
 
-    {% for tag in loaded|docblock|get_tags('deprecated') %}
-      <b style="color: #be0000">Deprecated ({{ tag.version }}):</b> {{ tag.description }}<br>
+    {% for tag in classLike.doc.node.getDeprecatedTagValues() %}
+      <b style="color: #be0000">Deprecated:</b> {{ tag.description }}<br>
     {% endfor %}
 
-    {% for tag in loaded|docblock|get_tags('experimental') %}
+    {% if classLike.doc.node.getTagsByName('@experimental') %}
       <b style="color: #5500be">Experimental:</b> Expect API changes in minor releases.<br>
+    {% endif %}
+
+    {% for tag in classLike.doc.node.getTagsByName('@see') %}
+      <b>See:</b> {{ tag.value.value }}<br>
     {% endfor %}
 
-    {% for tag in loaded|docblock|get_tags('see') %}
-      <b>See:</b> {{ tag.reference ~ ' ' ~ tag.description }}<br>
-    {% endfor %}
-
-    {% for tag in loaded|docblock|get_tags('link') %}
-      <b>Link:</b> <a href="{{ tag.link }}">{{ tag.link }}</a> {{ tag.description }}<br>
+    {% for tag in classLike.doc.node.getTagsByName('@link') %}
+      <b>Link:</b> {{ tag.value.value }}<br>
     {% endfor %}
   </div>
 
-  {% if loaded.constants is not empty %}
-  <div class="section">
-    <h2>Constants summary</h2>
-    <ul class="member-summary constants">
-    {% for constant in loaded.constants %}
-      <li class="clearfix">
-        <a id="{{ constant.name }}"></a>
-        <div class="attributes col-md-2 col-sm-2 p0">
-          {% set var = constant|docblock|get_tag('var') %}
-          <code>{{ var ? var.type : 'mixed' }}</code>
-        </div>
-
-        <div class="name col-md-10 col-sm-10">
-          <b>{{ constant.name }}</b>
-          <a href="#{{ constant.name }}" class="permalink" title="Permalink to this constant">¶</a>
-        </div>
-
-        <div class="col-md-10 col-md-offset-2">
-          <code>{{ constant.constant.value }}</code>
-        </div>
-      </li>
-    {% endfor %}
-    </ul>
-  </div>
+  {% if classLike.constants is not empty %}
+    {{ include('sections/constant-detail.twig', {constants: classLike.constants}) }}
   {% endif %}
 
-  {% if loaded.properties is not empty %}
-  <div class="section">
-    <h2>Properties summary</h2>
-    <ul class="member-summary properties">
-      {% for property in loaded.properties %}
-        <li class="clearfix">
-          <div class="name">
-          <a href="#${{ property.name }}">${{ property.name }}</a>
-
-            <span class="attributes">
-              <span class="label">{{ property.property.visibility }}</span>
-
-              {% if property.property.static %}
-                <span class="label">static</span>
-              {% endif %}
-              {% if property.annotation %}
-                <span class="label annotation">@{{ property.annotation }}</span>
-              {% endif %}
-            </span>
-          </div>
-
-          {% set var = property|docblock|get_tag('var') %}
-          <div class="property-type"><code>{{ var ? var.type : (property.property.type ?? 'mixed') }}</code></div>
-
-          <div class="description">
-            {{ property|docblock.summary|markdown_to_html }}
-          </div>
-        </li>
-      {% endfor %}
-    </ul>
-  </div>
+  {% if classLike.properties is not empty %}
+    {{ include('sections/property-summary.twig', {properties: classLike.properties}) }}
   {% endif %}
 
-  {% if loaded.methods is not empty %}
-  <div class="section">
-    <h2>Method Summary</h2>
-    <ul class="member-summary">
-      {% for method in loaded.methods %}
-        <li class="clearfix">
-          <h5 class="method-name">
-            <a href="#{{ method.name }}()">{{ method.name }}()</a>
+  {% if classLike.methods is not empty %}
+    {{ include('sections/function-summary.twig', {functions: classLike.methods}) }}
 
-            {% if method.method.abstract %}
-              <span class="label">abstract</span>
-            {% endif %}
-            {% if method.method.final %}
-              <span class="label">final</span>
-            {% endif %}
-
-            <span class="label">{{ method.method.visibility }}</span>
-            {% if method.method.static %}
-              <span class="label">static</span>
-            {% endif %}
-            {% if method.annotation %}
-              <span class="label annotation">@{{ method.annotation }}</span>
-            {% endif %}
-            {% if method|docblock|get_tags('deprecated') is not empty %}
-              <span class="label">deprecated</span>
-            {% endif %}
-          </h5>
-          <div class="description detailed">
-            {{ method|docblock.summary|markdown_to_html }}
-          </div>
-        </li>
-      {% endfor %}
-    </ul>
-  </div>
-
-  <div class="section">
-    <h2>Method Detail</h2>
-    {% for method in loaded.methods %}
-      <div class="method-detail">
-        <a id="{{ method.name }}()"></a>
-        <h3 class="method-name">
-          {{ method.name }}()
-          <a href="#{{ method.name }}()" class="permalink" title="Permalink to this method">¶</a>
-
-          {% if method.method.abstract %}
-            <span class="label">abstract</span>
-          {% endif %}
-          {% if method.method.final %}
-            <span class="label">final</span>
-          {% endif %}
-
-          <span class="label">{{ method.method.visibility }}</span>
-          {% if method.method.static %}
-            <span class="label">static</span>
-          {% endif %}
-          {% if method.annotation %}
-            <span class="label annotation">{{ method.annotation }}</span>
-          {% endif %}
-          {% if method|docblock|get_tags('deprecated') is not empty %}
-            <span class="label">deprecated</span>
-          {% endif %}
-        </h3>
-
-        <pre><code class="language-php">{{ method.name }}(
-          {%- for argument in method.method.arguments %}
-            {{- method|docblock|param(argument.name).type ?? argument.type }} {% if argument.isVariadic %}...{% endif %}${{ argument.name }}{{ loop.last?'':', ' }}
-          {%- endfor -%}
-        )</code></pre>
-
-        <div class="description detailed">
-          {{ method|docblock.summary|markdown_to_html }}
-          {{ method|docblock.description|markdown_to_html }}
-
-          {% if method.method.arguments is not empty %}
-            <h6>Parameters</h6>
-            <div class="parameter-list list">
-            <dl>
-              {% for argument in method.method.arguments %}
-                <dt>
-                  <code>{{ method|docblock|param(argument.name).type ?? argument.type }}</code>
-                  {% if argument.isVariadic %}...{% endif %}<var>${{ argument.name }}</var>
-                  {% if argument.default is not empty %}
-                    <span class="label">optional</span>
-                  {% endif %}
-                </dt>
-                <dd>{{ (method|docblock|param(argument.name).description ?? '')|markdown_to_html }}</dd>
-              {% endfor %}
-            </dl>
-            </div>
-          {% endif %}
-
-          {% set return = method|docblock|get_tags('return')|first %}
-          {% if return is not empty %}
-            <h6>Returns</h6>
-            <div class="list">
-              <code>{{ return.type }}</code><br>
-              {{ (return.description ?? '')|markdown_to_html }}
-            </div>
-          {% endif %}
-
-          {% if method|docblock|get_tags('throws') %}
-            <h6>Throws</h6>
-            <div class="list">
-              {% for throw in method|docblock|get_tags('throws') %}
-                <code>{{ throw.type }}</code><br>
-                {{ throw.description }}{{ loop.last ? '' : '<br>' }}
-              {% endfor %}
-            </div>
-          {% endif %}
-
-          {% if method|docblock|get_tags('see') %}
-            <h6>See Also</h6>
-            <div class="list">
-              {% for see in method|docblock|get_tags('see') %}
-                {{ see.reference }}</a><br>
-                {{ see.description }}{{ loop.last ? '': '<br>' }}
-              {% endfor %}
-            </div>
-          {% endif %}
-
-          {% if method|docblock|get_tags('link') %}
-            <h6>Links</h6>
-            <div class="list">
-              {% for link in method|docblock|get_tags('link') %}
-                <a href="{{ link.link }}" target="_blank">{{ link.link }}</a><br>
-                {{ link.description }}{{ loop.last ? '' : '<br>' }}
-              {% endfor %}
-            </div>
-          {% endif %}
-        </div>
-      </div>
-    {% endfor %}
-  </div>
+    {{ include('sections/function-detail.twig', {functions: classLike.methods}) }}
   {% endif %}
 
-  {% if loaded.properties is not empty %}
-  <div class="section">
-    <h2>Property Detail</h2>
-    {% for property in loaded.properties %}
-      <div class="property-detail">
-        <a id="${{ property.name }}"></a>
-        <h3 class="property-name">
-          <var>${{ property.name }}</var>
-          <a href="#${{ property.name }}" class="permalink" title="Permalink to this property">¶</a>
-
-          <span class="label">{{ property.property.visibility }}</span>
-
-          {% if property.property.static %}
-            <span class="label">static</span>
-          {% endif %}
-          {% if property.annotation %}
-            <span class="label annotation">@{{ property.annotation }}</span>
-          {% endif %}
-        </h3>
-
-        <div class="description detailed">
-          {{ property|docblock.summary|markdown_to_html }}
-          {{ property|docblock.description|markdown_to_html }}
-
-          <h6>Type</h6>
-          <div class="list">
-            {% set var = property|docblock|get_tag('var') %}
-            <code>{{ var ? var.type : (property.property.type ?? 'mixed') }}</code><br>
-          </div>
-        </div>
-      </div>
-    {% endfor %}
-  </div>
+  {% if classLike.properties is not empty %}
+    {{ include('sections/property-detail.twig', {properties: classLike.properties}) }}
   {% endif %}
 </div>
 {% endblock %}

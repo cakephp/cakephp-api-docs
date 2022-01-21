@@ -17,69 +17,135 @@ declare(strict_types=1);
 
 namespace Cake\ApiDocs\Reflection;
 
-use phpDocumentor\Reflection\Php\Namespace_;
-
 class LoadedNamespace
 {
-    /**
-     * @var string
-     */
-    public string $fqsen;
+    public ?string $name;
 
-    /**
-     * @var string
-     */
-    public string $namespace;
+    public ?LoadedNamespace $parent;
 
-    /**
-     * @var string
-     */
-    public string $name;
-
-    /**
-     * @var \phpDocumentor\Reflection\Php\Namespace_
-     */
-    public Namespace_ $element;
-
-    /**
-     * @var \Cake\ApiDocs\Reflection\LoadedNamespace[]
-     */
     public array $children = [];
 
     /**
-     * @var \Cake\ApiDocs\Reflection\LoadedConstant[]
+     * @var array<string, \Cake\ApiDocs\Reflection\LoadedConstant>
      */
     public array $constants = [];
 
     /**
-     * @var \Cake\ApiDocs\Reflection\LoadedFunction[]
+     * @var array<string, \Cake\ApiDocs\Reflection\LoadedFunction>
      */
     public array $functions = [];
 
     /**
-     * @var \Cake\ApiDocs\Reflection\LoadedInterface[]
+     * @var array<string, \Cake\ApiDocs\Reflection\LoadedInterface>
      */
     public array $interfaces = [];
 
     /**
-     * @var \Cake\ApiDocs\Reflection\LoadedClass[]
-     */
-    public array $classes = [];
-
-    /**
-     * @var \Cake\ApiDocs\Reflection\LoadedTrait[]
+     * @var array<string, \Cake\ApiDocs\Reflection\LoadedTrait>
      */
     public array $traits = [];
 
     /**
-     * @param string $fqsen fqsen
-     * @param \phpDocumentor\Reflection\Php\Namespace_ $element Namespace instance
+     * @var array<string, \Cake\ApiDocs\Reflection\LoadedClass>
      */
-    public function __construct(string $fqsen, Namespace_ $element)
+    public array $classes = [];
+
+    /**
+     * @param string|null $namespace Namespace name
+     * @param \Cake\ApiDocs\Reflection\LoadedNamespace|null $parent Parent namespace
+     */
+    public function __construct(?string $namespace, ?LoadedNamespace $parent)
     {
-        $this->fqsen = $fqsen;
-        $this->namespace = substr($this->fqsen, 0, strrpos($this->fqsen, '\\'));
-        $this->name = $element->getName() ? $element->getName() : 'Global';
-        $this->element = $element;
+        $this->name = $namespace ?? 'Global';
+        if ($namespace) {
+            $endPos = strrpos($namespace, '\\');
+            if ($endPos !== false) {
+                $this->name = substr($namespace, $endPos + 1);
+            }
+        }
+        $this->parent = $parent;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function namespaced(): ?string
+    {
+        if ($this->parent) {
+            return $this->parent->namespaced() . '\\' . $this->name;
+        }
+
+        return $this->name;
+    }
+
+    /**
+     * @param \Cake\ApiDocs\Reflection\LoadedNode $node Node to add
+     * @return void
+     */
+    public function add(LoadedNode $node): void
+    {
+        if ($node instanceof LoadedConstant) {
+            $this->constants[$node->name] = $node;
+            ksort($this->constants);
+        } elseif ($node instanceof LoadedFunction) {
+            $this->functions[$node->name] = $node;
+            ksort($this->functions);
+        } elseif ($node instanceof LoadedInterface) {
+            $this->interfaces[$node->name] = $node;
+            ksort($this->interfaces);
+        } elseif ($node instanceof LoadedTrait) {
+            $this->traits[$node->name] = $node;
+            ksort($this->traits);
+        } elseif ($node instanceof LoadedClass) {
+            $this->classes[$node->name] = $node;
+            ksort($this->classes);
+        }
+    }
+
+    /**
+     * Finds loaded namespace starting with this node.
+     *
+     * @param string $namespace Namespace name
+     * @return self
+     */
+    public function find(string $namespace): LoadedNamespace
+    {
+        if ($namespace === $this->namespaced()) {
+            return $this;
+        }
+
+        $parts = explode('\\', substr($namespace, strlen($this->namespaced()) + 1));
+
+        $name = $this->namespaced();
+        $loaded = $this;
+        while ($parts) {
+            $name .= '\\' . array_shift($parts);
+            if (isset($loaded->children[$name])) {
+                $loaded = $loaded->children[$name];
+            } else {
+                $loaded = $loaded->children[$name] = new LoadedNamespace($name, $loaded);
+            }
+        }
+
+        return $loaded;
+    }
+
+    /**
+     * Checks whether name is a member of namespace, child namespace or grandchild namespace.
+     *
+     * @param string|null $name Qualified name
+     * @return bool
+     */
+    public function isRelated(?string $name): bool
+    {
+        if ($name === null) {
+            return $this->namespaced() === null;
+        }
+
+        if ($this->namespaced() === null) {
+            return !str_contains($name, '\\');
+        }
+
+        return str_starts_with($name, $this->namespaced());
     }
 }

@@ -17,22 +17,17 @@ declare(strict_types=1);
 
 namespace Cake\ApiDocs\Reflection;
 
-use phpDocumentor\Reflection\Php\Interface_;
+use PhpParser\Node\Stmt\Interface_;
 
 class LoadedInterface extends LoadedClassLike
 {
-    /**
-     * @var \phpDocumentor\Reflection\Php\Interface_
-     */
-    public Interface_ $interface;
+    public array $extends = [];
 
     /**
-     * @param string $fqsen fqsen
-     * @param \phpDocumentor\Reflection\Php\Interface_ $interface Reflection interface
-     * @param \Cake\ApiDocs\Reflection\LoadedFile $loadedFile Loaded file
+     * @inheritDoc
      */
-    public function __construct(string $fqsen, Interface_ $interface, LoadedFile $loadedFile)
+    public function __construct(Interface_ $node, Source $source, Context $context)
     {
-        parent::__construct($fqsen, $interface, $loadedFile);
+        parent::__construct($node, $source, $context);
     }
 }

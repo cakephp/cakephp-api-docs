@@ -17,22 +17,25 @@ declare(strict_types=1);
 
 namespace Cake\ApiDocs\Reflection;
 
-use phpDocumentor\Reflection\Php\Class_;
+use PhpParser\Node\Stmt\Class_;
 
 class LoadedClass extends LoadedClassLike
 {
-    /**
-     * @var \phpDocumentor\Reflection\Php\Class_
-     */
-    public Class_ $class;
+    public ?string $extends = null;
+
+    public array $implements = [];
+
+    public bool $abstract = false;
+
+    public bool $final = false;
 
     /**
-     * @param string $fqsen fqsen
-     * @param \phpDocumentor\Reflection\Php\Class_ $class Reflection class
-     * @param \Cake\ApiDocs\Reflection\LoadedFile $loadedFile Loaded file
+     * @inheritDoc
      */
-    public function __construct(string $fqsen, Class_ $class, LoadedFile $loadedFile)
+    public function __construct(Class_ $node, Source $source, Context $context)
     {
-        parent::__construct($fqsen, $class, $loadedFile);
+        parent::__construct($node, $source, $context);
+        $this->abstract = $node->isAbstract();
+        $this->final = $node->isFinal();
     }
 }

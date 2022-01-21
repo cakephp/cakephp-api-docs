@@ -17,76 +17,82 @@ declare(strict_types=1);
 
 namespace Cake\ApiDocs\Reflection;
 
-use phpDocumentor\Reflection\Element;
+use PhpParser\Node\Stmt\ClassLike;
 
-class LoadedClassLike
+abstract class LoadedClassLike extends LoadedNode
 {
-    /**
-     * @var string
-     */
-    public string $fqsen;
+    public array $uses = [];
 
-    /**
-     * @var string
-     */
-    public string $namespace;
-
-    /**
-     * @var string
-     */
-    public string $name;
-
-    /**
-     * @var \phpDocumentor\Reflection\Element
-     */
-    public Element $element;
-
-    /**
-     * @var \Cake\ApiDocs\Reflection\LoadedFile
-     */
-    public LoadedFile $loadedFile;
-
-    /**
-     * @var array<string, \Cake\ApiDocs\Reflection\LoadedClass|null>
-     */
-    public array $extends = [];
-
-    /**
-     * @var array<string, \Cake\ApiDocs\Reflection\LoadedClass|null>
-     */
-    public array $interfaces = [];
-
-    /**
-     * @var array<string, \Cake\ApiDocs\Reflection\LoadedClass>
-     */
-    public array $traits = [];
-
-    /**
-     * @var \Cake\ApiDocs\Reflection\LoadedConstant[]
-     */
     public array $constants = [];
 
-    /**
-     * @var \Cake\ApiDocs\Reflection\LoadedProperty[]
-     */
     public array $properties = [];
 
-    /**
-     * @var \Cake\ApiDocs\Reflection\LoadedMethod[]
-     */
     public array $methods = [];
 
     /**
-     * @param string $fqsen fqsen
-     * @param \phpDocumentor\Reflection\Element $element Reflection element
-     * @param \Cake\ApiDocs\Reflection\LoadedFile $loadedFile Loaded file
+     * @param \PhpParser\Node\Stmt\ClassLike $node Classlike node
+     * @param \Cake\ApiDocs\Reflection\Source $source Node source
+     * @param \Cake\ApiDocs\Reflection\Context $context Node context
      */
-    public function __construct(string $fqsen, Element $element, LoadedFile $loadedFile)
+    public function __construct(ClassLike $node, Source $source, Context $context)
     {
-        $this->fqsen = $fqsen;
-        $this->namespace = substr($this->fqsen, 0, strrpos($this->fqsen, '\\'));
-        $this->name = $element->getName();
-        $this->element = $element;
-        $this->loadedFile = $loadedFile;
+        parent::__construct($node->name->name, $source, $context, $node->getDocComment()?->getText());
+
+        $parentContext = clone $context;
+        $parentContext->parent = $context->namespaced($this->name);
+
+        foreach ($node->getConstants() as $classConst) {
+            $visibility = 'public';
+            if ($classConst->isProtected()) {
+                $visibility = 'protected';
+            } elseif ($classConst->isPrivate()) {
+                $visibility = 'private';
+            }
+
+            foreach ($classConst->consts as $const) {
+                $this->constants[$const->name->name] = $loaded = new LoadedConstant(
+                    $const,
+                    new Source($source->path, $const->getStartLine(), $const->getEndLine()),
+                    $parentContext
+                );
+                $loaded->visibility = $visibility;
+            }
+        }
+
+        foreach ($node->getProperties() as $classProperty) {
+            $visibility = 'public';
+            if ($classProperty->isProtected()) {
+                $visibility = 'protected';
+            } elseif ($classProperty->isPrivate()) {
+                $visibility = 'private';
+            }
+
+            foreach ($classProperty->props as $property) {
+                $this->properties[$property->name->name] = $loaded = new LoadedProperty(
+                    $classProperty,
+                    $property,
+                    new Source($source->path, $property->getStartLine(), $property->getEndLine()),
+                    $parentContext
+                );
+                $loaded->visibility = $visibility;
+                $loaded->static = $classProperty->isStatic();
+            }
+        }
+
+        foreach ($node->getmethods() as $method) {
+            $this->methods[$method->name->name] = $loaded = new LoadedFunction(
+                $method,
+                new Source($source->path, $method->getStartLine(), $method->getEndLine()),
+                $parentContext
+            );
+
+            if ($method->isProtected()) {
+                $loaded->visibility = 'protected';
+            } elseif ($method->isPrivate()) {
+                $loaded->visibility = 'private';
+            } else {
+                $loaded->visibility = 'public';
+            }
+        }
     }
 }

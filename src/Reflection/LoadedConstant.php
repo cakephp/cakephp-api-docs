@@ -17,61 +17,45 @@ declare(strict_types=1);
 
 namespace Cake\ApiDocs\Reflection;
 
-use phpDocumentor\Reflection\DocBlock;
-use phpDocumentor\Reflection\Php\Constant;
+use Cake\ApiDocs\PrintUtil;
+use PhpParser\Node\Const_;
+use PHPStan\PhpDocParser\Ast\Type\TypeNode;
 
-class LoadedConstant
+class LoadedConstant extends LoadedNode
 {
-    /**
-     * @var string
-     */
-    public string $fqsen;
+    public string $value;
+
+    public ?TypeNode $type = null;
+
+    public ?string $visibility = null;
+
+    public ?string $declared = null;
+
+    public ?string $defined = null;
 
     /**
-     * @var string
+     * @param \PhpParser\Node\Const_ $node Constant node
+     * @param \Cake\ApiDocs\Reflection\Source $source Node source
+     * @param \Cake\ApiDocs\Reflection\Context $context Node context
      */
-    public string $namespace;
-
-    /**
-     * @var string
-     */
-    public string $name;
-
-    /**
-     * @var \phpDocumentor\Reflection\Php\Constant
-     */
-    public Constant $constant;
-
-    /**
-     * @var \phpDocumentor\Reflection\DocBlock
-     */
-    public DocBlock $docBlock;
-
-    /**
-     * @var \Cake\ApiDocs\Reflection\LoadedNamespace|\Cake\ApiDocs\Reflection\LoadedClassLike|null
-     */
-    public $origin;
-
-    /**
-     * @var \Cake\ApiDocs\Reflection\LoadedInterface|null
-     */
-    public ?LoadedInterface $implements;
-
-    /**
-     * @param string $fqsen fqsen
-     * @param \phpDocumentor\Reflection\Php\Constant $constant Reflection constant
-     * @param \Cake\ApiDocs\Reflection\LoadedNamespace|\Cake\ApiDocs\Reflection\LoadedClassLike|null $origin Loaded origin
-     */
-    public function __construct(string $fqsen, Constant $constant, $origin)
+    public function __construct(Const_ $node, Source $source, Context $context)
     {
-        $this->fqsen = $fqsen;
-        $this->namespace = substr($this->fqsen, 0, strrpos($this->fqsen, '\\'));
-        $this->name = $constant->getName();
-        $this->constant = $constant;
-        $this->docBlock = $constant->getDocBlock() ?? new DocBlock();
-        $this->origin = $origin;
-        if ($origin instanceof LoadedInterface) {
-            $this->implements = $origin;
+        parent::__construct($node->name->name, $source, $context, $node->getDocComment()?->getText());
+
+        $this->value = PrintUtil::expr($node->value);
+
+        /** @var array<\PHPStan\PhpDocParser\Ast\PhpDoc\VarTagValueNode> $vars */
+        $vars = $this->doc->node->getVarTagValues();
+        if ($vars) {
+            $this->type = $vars[0]->type;
         }
+    }
+
+    /**
+     * @param \Cake\ApiDocs\Reflection\LoadedConstant $other Child node
+     * @return void
+     */
+    public function merge(LoadedConstant $other): void
+    {
     }
 }

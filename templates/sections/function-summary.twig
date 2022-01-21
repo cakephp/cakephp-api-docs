@@ -1,0 +1,29 @@
+  <div class="section">
+    <h2>{{ title|default('Method') }} Summaries</h2>
+    <ul class="member-summary">
+      {% for function in functions %}
+        <li class="clearfix">
+          <h5 class="function-name">
+            <a href="#{{ function.name }}()">{{ function.name }}()</a>
+
+            {% if function.abstract %}
+              <span class="label">abstract</span>
+            {% endif %}
+
+            <span class="label">{{ function.visibility }}</span>
+            {% if function.static %}
+              <span class="label">static</span>
+            {% endif %}
+            {% if function.annotated %}
+              <span class="label annotation">@method</span>
+            {% endif %}
+            {% if function.doc.node.getDeprecatedTagValues() %}
+              <span class="label">deprecated</span>
+            {% endif %}
+          </h5>
+          <div class="description detailed">
+            {{ function.doc.summary|markdown_to_html }}
+          </div>
+        </li>
+      {% endfor %}
+    </ul>

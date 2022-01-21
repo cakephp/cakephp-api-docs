@@ -17,58 +17,45 @@ declare(strict_types=1);
 
 namespace Cake\ApiDocs\Reflection;
 
-use phpDocumentor\Reflection\DocBlock;
-use phpDocumentor\Reflection\Php\Property;
+use Cake\ApiDocs\PrintUtil;
+use PhpParser\Node\Stmt\Property;
+use PhpParser\Node\Stmt\PropertyProperty;
+use PHPStan\PhpDocParser\Ast\Type\TypeNode;
 
-class LoadedProperty
+class LoadedProperty extends LoadedNode
 {
-    /**
-     * @var string
-     */
-    public string $fqsen;
+    public ?TypeNode $type = null;
+
+    public string $visibility = 'public';
+
+    public bool $static = false;
+
+    public ?string $default = null;
+
+    public bool $annotated = false;
+
+    public ?string $declared = null;
+
+    public ?string $defined = null;
 
     /**
-     * @var string
+     * @param \PhpParser\Node\Stmt\Property $property Property node
+     * @param \PhpParser\Node\Stmt\PropertyProperty $node Property node
+     * @param \Cake\ApiDocs\Reflection\Source $source Function source
+     * @param \Cake\ApiDocs\Reflection\Context $context Function context
      */
-    public string $namespace;
-
-    /**
-     * @var string
-     */
-    public string $name;
-
-    /**
-     * @var \phpDocumentor\Reflection\Php\Property
-     */
-    public Property $property;
-
-    /**
-     * @var \phpDocumentor\Reflection\DocBlock
-     */
-    public DocBlock $docBlock;
-
-    /**
-     * @var \Cake\ApiDocs\Reflection\LoadedClassLike
-     */
-    public LoadedClassLike $origin;
-
-    /**
-     * @var string|null
-     */
-    public ?string $annotation = null;
-
-    /**
-     * @param string $fqsen fqsen
-     * @param \phpDocumentor\Reflection\Php\Property $property Reflection property
-     * @param \Cake\ApiDocs\Reflection\LoadedClassLike $origin Origin loaded class-like
-     */
-    public function __construct(string $fqsen, Property $property, LoadedClassLike $origin)
+    public function __construct(Property $property, PropertyProperty $node, Source $source, Context $context)
     {
-        $this->fqsen = $fqsen;
-        $this->namespace = substr($this->fqsen, 0, strrpos($this->fqsen, '\\'));
-        $this->name = $property->getName();
-        $this->property = $property;
-        $this->docBlock = $property->getDocBlock() ?? new DocBlock();
-        $this->origin = $origin;
+        parent::__construct($node->name->name, $source, $context, $property->getDocComment()?->getText());
+
+        /** @var array<\PHPStan\PhpDocParser\Ast\PhpDoc\VarTagValueNode> $vars */
+        $vars = $this->doc->node->getVarTagValues();
+        if ($vars) {
+            $this->type = $vars[0]->type;
+        } else {
+            $this->type = $property->type ? DocUtil::parseType(PrintUtil::node($property->type)) : null;
+        }
+
+        $this->default = $node->default ? PrintUtil::expr($node->default) : null;
     }
 }
