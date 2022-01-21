@@ -4,7 +4,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>{% block title 'API' %} | {{ project ~ ' ' ~ version }}</title>
+  <title>{% block title 'API' %} | {{ config.project ~ ' ' ~ config.version }}</title>
 
   <link rel="apple-touch-icon" sizes="180x180" href="./resources/favicons/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="./resources/favicons/favicon-32x32.png">
@@ -53,23 +53,24 @@
           <div id="groups">
             <h3 class="nav-title">Namespaces</h3>
             <ul class="nav-list">
-              {% macro renderChildren(context, namespace, forceExpand) %}
-                {% set isActive = context.loaded ?? null is in_namespace(namespace.fqsen) %}
+              {% macro showNamespace(context, namespace) %}
+                {% set isActive = context.namespace is defined ? context.namespace.hasAncestor(namespace) : false %}
                 <li class="{{ isActive ? 'active' : '' }}">
-                  <a href="{{ namespace.fqsen|fqsen_to_url('namespace') }}">{{ namespace.name }}</a>
-                  {% if isActive or forceExpand and namespace.children %}
+                  <a href="{{ namespace.qualifiedName|namespace_url }}">{{ namespace.name }}</a>
+                  {% if isActive and namespace.children %}
                   <ul>
                     {% for child in namespace.children %}
-                      {{ _self.renderChildren(context, child) }}
+                      {{ _self.showNamespace(context, child) }}
                     {% endfor %}
                   </ul>
                   {% endif %}
                 </li>
               {% endmacro %}
 
-              {% for namespace in namespaces %}
-                {{ _self.renderChildren(_context, namespace, true) }}
-              {% endfor %}
+              {% if project.global %}
+                {{ _self.showNamespace(_context, project.global) }}
+              {% endif %}
+              {{ _self.showNamespace(_context, project.root) }}
             </ul>
           </div>
         </div>

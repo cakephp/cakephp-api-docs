@@ -15,21 +15,25 @@ declare(strict_types=1);
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-namespace Cake\ApiDocs\Twig;
+namespace Cake\ApiDocs\Reflection;
 
-use Twig\Extra\Markdown\DefaultMarkdown;
-use Twig\Extra\Markdown\MarkdownRuntime;
-use Twig\RuntimeLoader\RuntimeLoaderInterface;
-
-class TwigRuntimeLoader implements RuntimeLoaderInterface
+class ReflectedMethod extends ReflectedFunction
 {
+    use ClassElementTrait;
+
+    public bool $abstract = false;
+
+    public ?self $overrides = null;
+
     /**
-     * @inheritDoc
+     * @return bool
      */
-    public function load(string $class)
+    public function implementing(): bool
     {
-        if ($class === MarkdownRuntime::class) {
-            return new MarkdownRuntime(new DefaultMarkdown());
+        if ($this->declared !== $this->owner && $this->declared instanceof ReflectedInterface) {
+            return true;
         }
+
+        return false;
     }
 }

@@ -1,0 +1,70 @@
+{% extends 'page.twig' %}
+
+{% block title type|capitalize ~ ' ' ~ classLike.name %}
+
+{% block content %}
+<div id="content" class="class">
+  <h1>
+    {{ type|capitalize }}
+    {% if classLike.doc.tags.deprecated is defined %}
+      <div class="deprecated" style="display: inline">{{ classLike.name }}</div>
+    {% else %}
+      {{ classLike.name }}
+    {% endif %}
+  </h1>
+
+  <div class="description">
+    {{ classLike.doc.summary|markdown_to_html }}
+    {{ classLike.doc.description|markdown_to_html }}
+  </div>
+
+  {#{{ macros.showInheritanceTree(classlike.inheritanceTree) }}#}
+
+  <div class="info">
+    {% if type == 'class' %}
+      {% if classLike.final %}
+        <b>Final</b><br>
+      {% endif %}
+      {% if classLike.abstract %}
+        <b>Abstract</b><br>
+      {% endif %}
+    {% endif %}
+
+    <b>Namespace:</b> <a href="{{ classLike.context.namespace|namespace_url }}">{{ classLike.context.namespace }}</a><br>
+
+    {% if classLike.doc.tags.deprecated is defined %}
+      <b style="color: #be0000">Deprecated:</b> {{ classLike.doc.tags.deprecated }}<br>
+    {% endif %}
+
+    {% if classLike.doc.tags.experimental is defined %}
+      <b style="color: #5500be">Experimental:</b> Expect API changes in minor releases.<br>
+    {% endif %}
+
+    {% for tag in classLike.doc.tags.see|default([]) %}
+      <b>See:</b> {{ tag.value }}<br>
+    {% endfor %}
+
+    {% for tag in classLike.doc.tags.link|default([]) %}
+      <b>Link:</b> {{ tag.value }}<br>
+    {% endfor %}
+  </div>
+
+  {% if classLike.constants %}
+    {{ include('pages/sections/constant-detail.twig', {constants: classLike.constants}) }}
+  {% endif %}
+
+  {% if classLike.properties %}
+    {{ include('pages/sections/property-summary.twig', {properties: classLike.properties}) }}
+  {% endif %}
+
+  {% if classLike.methods %}
+    {{ include('pages/sections/function-summary.twig', {functions: classLike.methods}) }}
+
+    {{ include('pages/sections/function-detail.twig', {functions: classLike.methods}) }}
+  {% endif %}
+
+  {% if classLike.properties %}
+    {{ include('pages/sections/property-detail.twig', {properties: classLike.properties}) }}
+  {% endif %}
+</div>
+{% endblock %}

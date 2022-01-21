@@ -11,28 +11,29 @@ declare(strict_types=1);
  *
  * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  * @link          https://cakephp.org CakePHP(tm) Project
- * @since         1.0.0
+ * @since         2.0.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 namespace Cake\ApiDocs\Reflection;
 
-use phpDocumentor\Reflection\Php\Class_;
-
-class LoadedClass extends LoadedClassLike
+abstract class ReflectedNode
 {
-    /**
-     * @var \phpDocumentor\Reflection\Php\Class_
-     */
-    public Class_ $class;
+    public string $name;
 
     /**
-     * @param string $fqsen fqsen
-     * @param \phpDocumentor\Reflection\Php\Class_ $class Reflection class
-     * @param \Cake\ApiDocs\Reflection\LoadedFile $loadedFile Loaded file
+     * @param string $qualifiedName Qualified node name
+     * @param \Cake\ApiDocs\Reflection\DocBlock $doc Reflected docblock
+     * @param \Cake\ApiDocs\Reflection\Context $context Context info
+     * @param \Cake\ApiDocs\Reflection\Source $source Source info
      */
-    public function __construct(string $fqsen, Class_ $class, LoadedFile $loadedFile)
-    {
-        parent::__construct($fqsen, $class, $loadedFile);
+    public function __construct(
+        public string $qualifiedName,
+        public DocBlock $doc,
+        public Context $context,
+        public Source $source
+    ) {
+        preg_match('/[^:\\\\]+$/', $qualifiedName, $matches);
+        $this->name = $matches[0];
     }
 }

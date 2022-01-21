@@ -3,19 +3,19 @@
 // CakePHP API docs
 return [
     'project' => 'CakePHP',
-    'release' => 'Strawberry',
-    'namespace' => '\Cake',
+    'release' => 'Red Velvet',
+    'root' => 'Cake',
 
     'templatePath' => 'templates',
-    'sourcePaths' => ['src', 'config'],
+    'sourceDirs' => ['src', 'config'],
     'exclude' => [
         'namespaces' => [],
         'names' => [
-            '\Cake\Collection\CollectionTrait',
-            '\Cake\Collection\ExtractTrait',
-            '\Cake\Datasource\EntityTrait',
-            '\Cake\Datasource\QueryTrait',
-            '\Cake\I18n\DateFormatTrait',
+            'Cake\Collection\CollectionTrait',
+            'Cake\Collection\ExtractTrait',
+            'Cake\Datasource\EntityTrait',
+            'Cake\Datasource\QueryTrait',
+            'Cake\I18n\DateFormatTrait',
         ],
     ],
 

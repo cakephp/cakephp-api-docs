@@ -15,21 +15,21 @@ declare(strict_types=1);
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-namespace Cake\ApiDocs\Twig;
+namespace Cake\ApiDocs\Reflection;
 
-use Twig\Extra\Markdown\DefaultMarkdown;
-use Twig\Extra\Markdown\MarkdownRuntime;
-use Twig\RuntimeLoader\RuntimeLoaderInterface;
+use PHPStan\PhpDocParser\Ast\Type\TypeNode;
 
-class TwigRuntimeLoader implements RuntimeLoaderInterface
+class ReflectedDefine extends ReflectedNode
 {
+    public string $value;
+
+    public ?TypeNode $type = null;
+
     /**
-     * @inheritDoc
+     * @param \Cake\ApiDocs\Reflection\LoadedConstant $other Child node
+     * @return void
      */
-    public function load(string $class)
+    public function merge(LoadedConstant $other): void
     {
-        if ($class === MarkdownRuntime::class) {
-            return new MarkdownRuntime(new DefaultMarkdown());
-        }
     }
 }

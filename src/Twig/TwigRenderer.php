@@ -11,15 +11,13 @@ declare(strict_types=1);
  *
  * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  * @link          https://cakephp.org CakePHP(tm) Project
- * @since         1.0.0
+ * @since         2.0.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 namespace Cake\ApiDocs\Twig;
 
 use Cake\ApiDocs\Twig\Extension\ReflectionExtension;
-use Cake\Log\LogTrait;
-use InvalidArgumentException;
 use RuntimeException;
 use Twig\Environment;
 use Twig\Extra\Markdown\MarkdownExtension;
@@ -27,8 +25,6 @@ use Twig\Loader\FilesystemLoader;
 
 class TwigRenderer
 {
-    use LogTrait;
-
     /**
      * @var \Twig\Environment
      */
@@ -42,43 +38,22 @@ class TwigRenderer
     /**
      * @param string $outputPath Output path
      * @param string $templatePath Twig template path
-     * @param array $globals Twig globals variables
      */
-    public function __construct(string $outputPath, string $templatePath, array $globals)
+    public function __construct(string $outputPath, string $templatePath)
     {
         $this->outputPath = $outputPath;
-        if (!is_dir($this->outputPath)) {
-            mkdir($this->outputPath, 0777, true);
-        }
-
-        if (!is_dir($this->outputPath)) {
-            throw new InvalidArgumentException("Unable to create output directory `{$this->outputPath}`.");
-        }
 
         $this->createTwig($templatePath);
-        foreach ($globals as $name => $global) {
-            $this->twig->addGlobal($name, $global);
-        }
     }
 
     /**
-     * Returns Twig Environment.
+     * Adds a Twig global.
      *
-     * @return \Twig\Environment
-     */
-    public function getTwig(): Environment
-    {
-        return $this->twig;
-    }
-
-    /**
-     * Sets Twig global.
-     *
-     * @param string $name global name
-     * @param mixed $value global value
+     * @param string $name Global name
+     * @param mixed $value Global value
      * @return void
      */
-    public function setGlobal(string $name, $value): void
+    public function addGlobal(string $name, $value): void
     {
         $this->twig->addGlobal($name, $value);
     }

@@ -1,0 +1,34 @@
+<div class="section">
+  <h2>Property Detail</h2>
+  {% for property in properties %}
+    <div class="property-detail">
+      <a id="${{ property.name }}"></a>
+      <h3 class="property-name">
+        <var>${{ property.name }}</var>
+        <a href="#${{ property.name }}" class="permalink" title="Permalink ${{ property.name }}">¶</a>
+
+        <span class="label">{{ property.visibility }}</span>
+
+        {% if property.static %}
+          <span class="label">static</span>
+        {% endif %}
+        {% if property.annotated %}
+          <span class="label annotation">@property</span>
+        {% endif %}
+        {% if property.doc.tags.deprecated is defined %}
+          <span class="label">deprecated</span>
+        {% endif %}
+      </h3>
+
+      <div class="description detailed">
+        {{ property.doc.summary|markdown_to_html }}
+        {{ property.doc.description|markdown_to_html }}
+
+        <h6>Type</h6>
+        <div class="list">
+          <code>{{ property.type }}</code><br>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>

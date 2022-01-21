@@ -1,0 +1,26 @@
+{% extends 'page.twig' %}
+
+{% block title 'Overview' %}
+
+{% block content %}
+<div id="content">
+  <h1>{{ config.project }} {{ config.version }} API</h1>
+
+  <h2>Namespace Tree</h2>
+  <ul>
+    {% macro showNamespace(namespace) %}
+      <li>
+        <a href="{{ namespace.name|namespace_url }}">{{ namespace.name }}</a>
+        <ul>
+        {% for child in namespace.children %}
+          {{ _self.showNamespace(child) }}
+        {% endfor %}
+        </ul>
+      </li>
+    {% endmacro %}
+
+    {{ _self.showNamespace(project.global) }}
+    {{ _self.showNamespace(project.root) }}
+  </ul>
+</div>
+{% endblock %}
