@@ -4,7 +4,7 @@
 return [
     'project' => 'Queue',
     'release' => null,
-    'namespace' => '\Cake\Queue',
+    'root' => 'Cake\Queue',
 
     'templatePath' => 'templates',
     'sourcePaths' => ['src'],

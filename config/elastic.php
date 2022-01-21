@@ -4,7 +4,7 @@
 return [
     'project' => 'Elastic Search',
     'release' => null,
-    'namespace' => '\Cake\ElasticSearch',
+    'root' => 'Cake\ElasticSearch',
 
     'templatePath' => 'templates',
     'sourcePaths' => ['src'],
