@@ -44,7 +44,7 @@
         top: -21px;
     }
 
-    .icon-social, .icon-irc, .icon-social-q {
+    .icon-irc, .icon-social-q {
         margin-bottom: 30px;
     }
 
@@ -113,7 +113,7 @@
     }
 
     .social {
-        margin-bottom: 20px;
+        margin-bottom: 15px;
     }
 
     .social iframe {
@@ -359,4 +359,10 @@
 #modal .dropdown-menu li {
     float: none;
     display: inline-block
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+    .social {
+        margin-bottom: 20px;
+    }
 }
