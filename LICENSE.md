@@ -8,7 +8,7 @@ You don't have to notify anyone which license you are using. You can freely use 
 
 ## New BSD License ##
 
-Copyright (c) 2010 [David Grudl](http://davidgrudl.com)
+Copyright (c) 2010 [David Grudl](https://davidgrudl.com)
 Copyright (c) 2011-2012 [Jaroslav Hanslík](https://github.com/kukulich)
 Copyright (c) 2011-2012 [Ondřej Nešpor](https://github.com/Andrewsville)
 
