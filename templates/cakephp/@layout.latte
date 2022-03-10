@@ -20,9 +20,19 @@ the file LICENSE.md that was distributed with this source code.
 
 	<title>{include #title}{if 'overview' !== $active && $titleName} | {$titleName}{/if}</title>
 
-	{var favicon = 'resources/favicon.png'}
-	<link href="{$favicon|staticFile}" type="image/png" rel="icon" />
-	<link href="{$favicon|staticFile}" type="image/png" rel="shortcut icon" />
+	<link rel="apple-touch-icon" sizes="180x180" href="{='resources/favicons/apple-touch-icon.png'|staticFile}">
+	<link rel="icon" type="image/png" sizes="32x32" href="{='resources/favicons/favicon-32x32.png'|staticFile}">
+	<link rel="icon" type="image/png" sizes="16x16" href="{='resources/favicons/favicon-16x16.png'|staticFile}">
+	<link rel="shortcut icon" type="image/x-icon" href="{='resources/favicons/favicon.ico'|staticFile}"/>
+	<link rel="manifest" href="{='resources/favicons/manifest.json'|staticFile}">
+	<link rel="mask-icon" href="{='resources/favicons/safari-pinned-tab.svg'|staticFile}" color="#D33C44">
+	<meta name="msapplication-config" content="{='resources/favicons/browserconfig.xml'|staticFile}" />
+
+	<meta name="apple-mobile-web-app-title" content="API - CakePHP">
+	<meta name="application-name" content="API - CakePHP">
+	<meta name="msapplication-TileColor" content="#D33C44">
+	<meta name="theme-color" content="#D33C44">
+
 	<link rel="stylesheet" type="text/css" href="{='resources/css/font-awesome.min.css'|staticFile}">
 	<link rel="stylesheet" type="text/css" href="{='resources/css/bootstrap.min.css'|staticFile}">
 	<link rel="stylesheet" type="text/css" href="{='resources/css/styles.css'|staticFile}">
