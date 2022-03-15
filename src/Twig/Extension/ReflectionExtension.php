@@ -24,6 +24,7 @@ use Cake\ApiDocs\Reflection\LoadedFunction;
 use Cake\ApiDocs\Reflection\LoadedMethod;
 use Cake\ApiDocs\Reflection\LoadedNamespace;
 use Cake\ApiDocs\Reflection\LoadedProperty;
+use Cake\Core\Configure;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\DocBlock\Tags\InvalidTag;
 use Twig\Extension\AbstractExtension;
@@ -100,6 +101,36 @@ class ReflectionExtension extends AbstractExtension
 
                 return null;
             }),
+            new TwigFilter('srcPath', function ($loaded) {
+                if ($loaded instanceof LoadedConstant) {
+                    return $this->buildGithubLink(
+                        $loaded->filePath,
+                        $loaded->constant->getLocation()
+                            ->getLineNumber()
+                    );
+                }
+                if ($loaded instanceof LoadedMethod) {
+                    return $this->buildGithubLink(
+                        $loaded->filePath,
+                        $loaded->method->getLocation()
+                            ->getLineNumber()
+                    );
+                }
+                if ($loaded instanceof LoadedProperty) {
+                    return $this->buildGithubLink(
+                        $loaded->filePath,
+                        $loaded->property->getLocation()
+                            ->getLineNumber()
+                    );
+                }
+                if ($loaded instanceof LoadedFunction) {
+                    return $this->buildGithubLink(
+                        $loaded->filePath,
+                        $loaded->function->getLocation()
+                            ->getLineNumber()
+                    );
+                }
+            }),
         ];
     }
 
@@ -134,7 +165,25 @@ class ReflectionExtension extends AbstractExtension
      */
     public function getFunctions()
     {
-        return [
-        ];
+        return [];
+    }
+
+    /**
+     * @param string $filePath Path to the file
+     * @param int $lineNr The line number in which the function/property etc. is present
+     * @return string
+     */
+    private function buildGithubLink(string $filePath, int $lineNr)
+    {
+        $repo = Configure::read('config');
+        if ($repo === 'elastic') {
+            $repo = 'elastic-search';
+        }
+
+        $version = Configure::read('version');
+        $basePath = Configure::read('basePath');
+        $repoPath = str_replace($basePath, '', $filePath);
+
+        return 'https://github.com/cakephp/' . $repo . '/tree/' . $version . $repoPath . '#L' . $lineNr;
     }
 }

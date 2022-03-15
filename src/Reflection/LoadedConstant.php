@@ -58,11 +58,17 @@ class LoadedConstant
     public ?LoadedInterface $implements;
 
     /**
+     * @var string
+     */
+    public string $filePath;
+
+    /**
      * @param string $fqsen fqsen
      * @param \phpDocumentor\Reflection\Php\Constant $constant Reflection constant
      * @param \Cake\ApiDocs\Reflection\LoadedNamespace|\Cake\ApiDocs\Reflection\LoadedClassLike|null $origin Loaded origin
+     * @param string $filePath Path to file
      */
-    public function __construct(string $fqsen, Constant $constant, $origin)
+    public function __construct(string $fqsen, Constant $constant, $origin, string $filePath)
     {
         $this->fqsen = $fqsen;
         $this->namespace = substr($this->fqsen, 0, strrpos($this->fqsen, '\\'));
@@ -73,5 +79,6 @@ class LoadedConstant
         if ($origin instanceof LoadedInterface) {
             $this->implements = $origin;
         }
+        $this->filePath = $filePath;
     }
 }

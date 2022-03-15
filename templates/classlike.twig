@@ -64,6 +64,7 @@
         <div class="name col-md-10 col-sm-10">
           <b>{{ constant.name }}</b>
           <a href="#{{ constant.name }}" class="permalink" title="Permalink to this constant">¶</a>
+          <a href="{{ constant|srcPath }}" target="_blank" class="permalink" title="Link to sourcecode">#</a>
         </div>
 
         <div class="col-md-10 col-md-offset-2">
@@ -151,6 +152,7 @@
         <h3 class="method-name">
           {{ method.name }}()
           <a href="#{{ method.name }}()" class="permalink" title="Permalink to this method">¶</a>
+          <a href="{{ method|srcPath }}" target="_blank" class="permalink" title="Link to sourcecode">#</a>
 
           {% if method.method.abstract %}
             <span class="label">abstract</span>
@@ -252,6 +254,7 @@
         <h3 class="property-name">
           <var>${{ property.name }}</var>
           <a href="#${{ property.name }}" class="permalink" title="Permalink to this property">¶</a>
+          <a href="{{ property|srcPath }}" target="_blank" class="permalink" title="Link to sourcecode">#</a>
 
           <span class="label">{{ property.property.visibility }}</span>
 

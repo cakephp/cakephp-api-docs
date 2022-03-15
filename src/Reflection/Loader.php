@@ -156,13 +156,14 @@ class Loader
      */
     protected function addConstants(LoadedClassLike $loaded, array $constants): void
     {
+        $path = $loaded->loadedFile->file->getPath();
         foreach ($constants as $fqsen => $constant) {
             $loadedConstant = $loaded->constants[$constant->getName()] ?? null;
             if ($loadedConstant) {
                 $loadedConstant->docBlock = $this->mergeDocBlock($loadedConstant->docBlock, $constant->getDocBlock());
                 $loadedConstant->origin = $loaded;
             } else {
-                $loadedConstant = new LoadedConstant((string)$constant->getFqsen(), $constant, $loaded);
+                $loadedConstant = new LoadedConstant((string)$constant->getFqsen(), $constant, $loaded, $path);
                 $loaded->constants[$constant->getName()] = $loadedConstant;
             }
         }
@@ -193,6 +194,7 @@ class Loader
                     new DocBlock((string)($tag->getDescription() ?: '')),
                     null,
                     false,
+                    null,
                     null,
                     $tag->getType()
                 );
@@ -238,6 +240,7 @@ class Loader
                     false,
                     $tag->isStatic(),
                     false,
+                    null,
                     null,
                     $tag->getReturnType()
                 );

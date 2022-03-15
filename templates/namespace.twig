@@ -24,12 +24,15 @@
       <h2>Functions</h2>
       <div class="method-detail">
         {% for function in loaded.functions %}
+          <a id="{{ function.name }}()"></a>
           <h3 class="method-name">
             {{ function.name }}()
+            <a href="#{{ function.name }}()" class="permalink" title="Permalink to this function">¶</a>
 
             {% if function|docblock|get_tags('deprecated') is not empty %}
               <span class="label">deprecated</span>
             {% endif %}
+            <a href="{{ function|srcPath }}" target="_blank" class="permalink" title="Link to sourcecode">#</a>
           </h3>
 
           <pre><code class="language-php">{{ function.name }}(

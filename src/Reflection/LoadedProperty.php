@@ -58,6 +58,11 @@ class LoadedProperty
     public ?string $annotation = null;
 
     /**
+     * @var string
+     */
+    public string $filePath;
+
+    /**
      * @param string $fqsen fqsen
      * @param \phpDocumentor\Reflection\Php\Property $property Reflection property
      * @param \Cake\ApiDocs\Reflection\LoadedClassLike $origin Origin loaded class-like
@@ -70,5 +75,6 @@ class LoadedProperty
         $this->property = $property;
         $this->docBlock = $property->getDocBlock() ?? new DocBlock();
         $this->origin = $origin;
+        $this->filePath = $origin->loadedFile->file->getPath();
     }
 }

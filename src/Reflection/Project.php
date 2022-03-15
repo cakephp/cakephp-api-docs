@@ -189,11 +189,12 @@ class Project
     {
         $root = new LoadedNamespace('\\', $project->getRootNamespace());
         foreach ($project->getFiles() as $file) {
+            $path = $file->getPath();
             foreach ($file->getConstants() as $fqsen => $constant) {
-                $root->constants[$fqsen] = new LoadedConstant((string)$constant->getFqsen(), $constant, $root);
+                $root->constants[$fqsen] = new LoadedConstant((string)$constant->getFqsen(), $constant, $root, $path);
             }
             foreach ($file->getFunctions() as $fqsen => $function) {
-                $root->functions[$fqsen] = new LoadedFunction((string)$function->getFqsen(), $function, $root);
+                $root->functions[$fqsen] = new LoadedFunction((string)$function->getFqsen(), $function, $root, $path);
             }
         }
         ksort($root->constants);

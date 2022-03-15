@@ -63,6 +63,11 @@ class LoadedMethod
     public ?string $annotation = null;
 
     /**
+     * @var string
+     */
+    public string $filePath;
+
+    /**
      * @param string $fqsen fqsen
      * @param \phpDocumentor\Reflection\Php\Method $method Reflection method
      * @param \Cake\ApiDocs\Reflection\LoadedClassLike $origin Origin loaded class-like
@@ -78,5 +83,6 @@ class LoadedMethod
         if ($origin instanceof LoadedInterface) {
             $this->implements = $origin;
         }
+        $this->filePath = $origin->loadedFile->file->getPath();
     }
 }

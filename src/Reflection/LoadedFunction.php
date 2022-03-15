@@ -47,16 +47,23 @@ class LoadedFunction
     public ?LoadedNamespace $origin;
 
     /**
+     * @var string
+     */
+    public string $filePath;
+
+    /**
      * @param string $fqsen fqsen
      * @param \phpDocumentor\Reflection\Php\Function_ $function Reflection function
      * @param \Cake\ApiDocs\Reflection\LoadedNamespace|null $origin Loaded origin
+     * @param string $filePath Path to file
      */
-    public function __construct(string $fqsen, Function_ $function, ?LoadedNamespace $origin)
+    public function __construct(string $fqsen, Function_ $function, ?LoadedNamespace $origin, string $filePath)
     {
         $this->fqsen = $fqsen;
         $this->namespace = substr($this->fqsen, 0, strrpos($this->fqsen, '\\'));
         $this->name = $function->getName();
         $this->function = $function;
         $this->origin = $origin;
+        $this->filePath = $filePath;
     }
 }
