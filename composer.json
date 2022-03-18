@@ -3,7 +3,10 @@
     "description": "API docs for CakePHP",
     "type": "application",
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     },
     "require": {
         "php": ">=8.0",

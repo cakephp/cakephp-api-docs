@@ -46,7 +46,7 @@ class ReflectedNamespace
     public array $interfaces = [];
 
     /**
-     * @var array<string, \Cake\ApiDocs\Reflection\ClassTref>
+     * @var array<string, \Cake\ApiDocs\Reflection\ReflectedClass>
      */
     public array $classes = [];
 
@@ -74,8 +74,8 @@ class ReflectedNamespace
     public function addNode(ReflectedNode $ref): void
     {
         if ($ref instanceof ReflectedDefine) {
-            $this->constants[$ref->name] = $ref;
-            ksort($this->constants);
+            $this->defines[$ref->name] = $ref;
+            ksort($this->defines);
         } elseif ($ref instanceof ReflectedFunction) {
             $this->functions[$ref->name] = $ref;
             ksort($this->functions);

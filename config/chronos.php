@@ -7,7 +7,7 @@ return [
     'root' => 'Cake\Chronos',
 
     'templatePath' => 'templates',
-    'sourcePaths' => ['src'],
+    'sourceDirs' => ['src'],
     'exclude' => [
         'namespaces' => ['\Cake\Chronos\Traits'],
         'names' => [],

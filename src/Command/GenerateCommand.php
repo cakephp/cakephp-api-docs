@@ -52,6 +52,11 @@ class GenerateCommand extends BaseCommand
             'help' => 'The current version.',
         ]);
 
+        $parser->addOption('tag', [
+            'required' => true,
+            'help' => 'The tag name.',
+        ]);
+
         return $parser;
     }
 
@@ -77,6 +82,9 @@ class GenerateCommand extends BaseCommand
         Configure::config('default', new PhpConfig());
         Configure::load($args->getOption('config'), 'default', false);
 
+        Configure::write('basePath', $args->getArgumentAt(0));
+        Configure::write('config', $args->getOption('config'));
+        Configure::write('tag', $args->getOption('tag'));
         Configure::write('version', $args->getOption('version'));
     }
 }

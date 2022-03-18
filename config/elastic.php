@@ -7,7 +7,7 @@ return [
     'root' => 'Cake\ElasticSearch',
 
     'templatePath' => 'templates',
-    'sourcePaths' => ['src'],
+    'sourceDirs' => ['src'],
 
     'versions' => [
         '3.x' => '../3.x',

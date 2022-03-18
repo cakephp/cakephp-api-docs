@@ -5,7 +5,8 @@
       <a id="{{ function.name }}()"></a>
       <h3 class="method-name">
         {{ function.name }}()
-        <a href="#{{ function.name }}()" class="permalink" title="Permalink to {{ function.name}}()">¶</a>
+        <a href="#{{ function.name }}()" class="permalink" title="Permalink to {{ function.name }}()">¶</a>
+        <a href="{{ function.githubLink }}" class="permalink" title="Permalink to Github" target="_blank"><i class="fa fa-github"></i></a>
 
         {% if function.abstract|default(false) %}
           <span class="label">abstract</span>

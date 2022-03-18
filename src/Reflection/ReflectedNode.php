@@ -17,9 +17,21 @@ declare(strict_types=1);
 
 namespace Cake\ApiDocs\Reflection;
 
+use Cake\Core\Configure;
+
 abstract class ReflectedNode
 {
     public string $name;
+
+    public string $githubLink;
+
+    public array $repoMap = [
+        'cakephp4' => 'cakephp',
+        'cakephp3' => 'cakephp',
+        'elastic' => 'elastic-search',
+        'chronos' => 'chronos',
+        'queue' => 'queue',
+    ];
 
     /**
      * @param string $qualifiedName Qualified node name
@@ -35,5 +47,18 @@ abstract class ReflectedNode
     ) {
         preg_match('/[^:\\\\]+$/', $qualifiedName, $matches);
         $this->name = $matches[0];
+
+        $basePath = Configure::read('basePath');
+        $repo = $this->repoMap[Configure::read('config')];
+        $tag = Configure::read('tag');
+        if (str_contains($tag, 'origin/')) {
+            $tag = str_replace('origin/', '', $tag);
+        }
+
+        $repoPath = str_replace($basePath, '', $this->source->path);
+        $githubBase = 'https://github.com/cakephp/';
+        $githubBase .= sprintf('%s/tree/%s%s', $repo, $tag, $repoPath);
+        $githubBase .= sprintf('#L%s-L%s', $this->source->startLine, $this->source->endLine);
+        $this->githubLink = $githubBase;
     }
 }

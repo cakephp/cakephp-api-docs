@@ -10,7 +10,7 @@
   <ul>
     {% macro showNamespace(namespace) %}
       <li>
-        <a href="{{ namespace.name|namespace_url }}">{{ namespace.name }}</a>
+        <a href="{{ namespace.qualifiedName|namespace_url }}">{{ namespace.name }}</a>
         <ul>
         {% for child in namespace.children %}
           {{ _self.showNamespace(child) }}
@@ -19,7 +19,9 @@
       </li>
     {% endmacro %}
 
-    {{ _self.showNamespace(project.global) }}
+    {% if project.global %}
+      {{ _self.showNamespace(project.global) }}
+    {% endif %}
     {{ _self.showNamespace(project.root) }}
   </ul>
 </div>

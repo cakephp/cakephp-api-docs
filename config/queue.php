@@ -7,7 +7,7 @@ return [
     'root' => 'Cake\Queue',
 
     'templatePath' => 'templates',
-    'sourcePaths' => ['src'],
+    'sourceDirs' => ['src'],
 
     'versions' => [
         '0.x' => '../0.x',
