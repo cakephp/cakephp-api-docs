@@ -5,6 +5,7 @@ return [
     'project' => 'CakePHP',
     'release' => 'Strawberry',
     'root' => 'Cake',
+    'githubRepoName' => 'cakephp',
 
     'templatePath' => 'templates',
     'sourceDirs' => ['src', 'config'],

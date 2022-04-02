@@ -5,6 +5,7 @@ return [
     'project' => 'Queue',
     'release' => null,
     'root' => 'Cake\Queue',
+    'githubRepoName' => 'queue',
 
     'templatePath' => 'templates',
     'sourceDirs' => ['src'],

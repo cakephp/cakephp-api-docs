@@ -5,6 +5,7 @@ return [
     'project' => 'Chronos',
     'release' => null,
     'root' => 'Cake\Chronos',
+    'githubRepoName' => 'chronos',
 
     'templatePath' => 'templates',
     'sourceDirs' => ['src'],

@@ -25,14 +25,6 @@ abstract class ReflectedNode
 
     public string $githubLink;
 
-    public array $repoMap = [
-        'cakephp4' => 'cakephp',
-        'cakephp3' => 'cakephp',
-        'elastic' => 'elastic-search',
-        'chronos' => 'chronos',
-        'queue' => 'queue',
-    ];
-
     /**
      * @param string $qualifiedName Qualified node name
      * @param \Cake\ApiDocs\Reflection\DocBlock $doc Reflected docblock
@@ -49,7 +41,7 @@ abstract class ReflectedNode
         $this->name = $matches[0];
 
         $basePath = Configure::read('basePath');
-        $repo = $this->repoMap[Configure::read('config')];
+        $repo = Configure::read('githubRepoName');
         $tag = Configure::read('tag');
         if (str_contains($tag, 'origin/')) {
             $tag = str_replace('origin/', '', $tag);
