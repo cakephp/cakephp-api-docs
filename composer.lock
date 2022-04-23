@@ -60,16 +60,16 @@
         },
         {
             "name": "cakephp/console",
-            "version": "4.3.1",
+            "version": "4.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/console.git",
-                "reference": "ea328c5d4a175661cedb5fa5f5f392cad737c066"
+                "reference": "0c8fe78116178cb29afd6fc613bd9a8933f55627"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/console/zipball/ea328c5d4a175661cedb5fa5f5f392cad737c066",
-                "reference": "ea328c5d4a175661cedb5fa5f5f392cad737c066",
+                "url": "https://api.github.com/repos/cakephp/console/zipball/0c8fe78116178cb29afd6fc613bd9a8933f55627",
+                "reference": "0c8fe78116178cb29afd6fc613bd9a8933f55627",
                 "shasum": ""
             },
             "require": {
@@ -114,20 +114,20 @@
                 "issues": "https://github.com/cakephp/cakephp/issues",
                 "source": "https://github.com/cakephp/console"
             },
-            "time": "2021-10-26T20:01:16+00:00"
+            "time": "2022-02-23T22:58:10+00:00"
         },
         {
             "name": "cakephp/core",
-            "version": "4.3.1",
+            "version": "4.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/core.git",
-                "reference": "4726edc33d282c833b948618ca58b776db89de53"
+                "reference": "499f17738d40560ec077d7d2039c9af4969c6b17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/core/zipball/4726edc33d282c833b948618ca58b776db89de53",
-                "reference": "4726edc33d282c833b948618ca58b776db89de53",
+                "url": "https://api.github.com/repos/cakephp/core/zipball/499f17738d40560ec077d7d2039c9af4969c6b17",
+                "reference": "499f17738d40560ec077d7d2039c9af4969c6b17",
                 "shasum": ""
             },
             "require": {
@@ -141,12 +141,12 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "Cake\\Core\\": "."
-                },
                 "files": [
                     "functions.php"
-                ]
+                ],
+                "psr-4": {
+                    "Cake\\Core\\": "."
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -171,20 +171,20 @@
                 "issues": "https://github.com/cakephp/cakephp/issues",
                 "source": "https://github.com/cakephp/core"
             },
-            "time": "2021-10-26T20:01:16+00:00"
+            "time": "2022-03-10T13:13:51+00:00"
         },
         {
             "name": "cakephp/event",
-            "version": "4.3.1",
+            "version": "4.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/event.git",
-                "reference": "514ffe32d07f9d9a56f7d52a71185fa005866560"
+                "reference": "bef6f278674d208db8630b50fc046e0439214700"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/event/zipball/514ffe32d07f9d9a56f7d52a71185fa005866560",
-                "reference": "514ffe32d07f9d9a56f7d52a71185fa005866560",
+                "url": "https://api.github.com/repos/cakephp/event/zipball/bef6f278674d208db8630b50fc046e0439214700",
+                "reference": "bef6f278674d208db8630b50fc046e0439214700",
                 "shasum": ""
             },
             "require": {
@@ -221,20 +221,20 @@
                 "issues": "https://github.com/cakephp/cakephp/issues",
                 "source": "https://github.com/cakephp/event"
             },
-            "time": "2021-09-26T00:10:05+00:00"
+            "time": "2021-12-17T14:28:04+00:00"
         },
         {
             "name": "cakephp/filesystem",
-            "version": "4.3.1",
+            "version": "4.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/filesystem.git",
-                "reference": "6a3f1eb345a7a6328a26d517ea93e91b1b7dd704"
+                "reference": "723f74f7f9864d76964a5bd9a8a9ae9144ccb052"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/filesystem/zipball/6a3f1eb345a7a6328a26d517ea93e91b1b7dd704",
-                "reference": "6a3f1eb345a7a6328a26d517ea93e91b1b7dd704",
+                "url": "https://api.github.com/repos/cakephp/filesystem/zipball/723f74f7f9864d76964a5bd9a8a9ae9144ccb052",
+                "reference": "723f74f7f9864d76964a5bd9a8a9ae9144ccb052",
                 "shasum": ""
             },
             "require": {
@@ -271,26 +271,26 @@
                 "issues": "https://github.com/cakephp/cakephp/issues",
                 "source": "https://github.com/cakephp/filesystem"
             },
-            "time": "2021-10-24T13:54:45+00:00"
+            "time": "2021-12-17T14:28:04+00:00"
         },
         {
             "name": "cakephp/log",
-            "version": "4.3.1",
+            "version": "4.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/log.git",
-                "reference": "7d8358bb85a619ab2ee6177b99993f6744a35433"
+                "reference": "fa3dcc5c275319c45c17e07e901ad15af65c16c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/log/zipball/7d8358bb85a619ab2ee6177b99993f6744a35433",
-                "reference": "7d8358bb85a619ab2ee6177b99993f6744a35433",
+                "url": "https://api.github.com/repos/cakephp/log/zipball/fa3dcc5c275319c45c17e07e901ad15af65c16c9",
+                "reference": "fa3dcc5c275319c45c17e07e901ad15af65c16c9",
                 "shasum": ""
             },
             "require": {
                 "cakephp/core": "^4.0",
                 "php": ">=7.2.0",
-                "psr/log": "^1.0.0"
+                "psr/log": "^1.0 || ^2.0"
             },
             "provide": {
                 "psr/log-implementation": "^1.0.0"
@@ -325,20 +325,20 @@
                 "issues": "https://github.com/cakephp/cakephp/issues",
                 "source": "https://github.com/cakephp/log"
             },
-            "time": "2021-11-01T18:41:51+00:00"
+            "time": "2022-01-26T12:14:58+00:00"
         },
         {
             "name": "cakephp/utility",
-            "version": "4.3.1",
+            "version": "4.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/utility.git",
-                "reference": "fee2cf64752ac2516af6ac86c95e3e961a8ead7f"
+                "reference": "3d352060ca3e49c81c3fd2bdb092ee345d8f4e38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/utility/zipball/fee2cf64752ac2516af6ac86c95e3e961a8ead7f",
-                "reference": "fee2cf64752ac2516af6ac86c95e3e961a8ead7f",
+                "url": "https://api.github.com/repos/cakephp/utility/zipball/3d352060ca3e49c81c3fd2bdb092ee345d8f4e38",
+                "reference": "3d352060ca3e49c81c3fd2bdb092ee345d8f4e38",
                 "shasum": ""
             },
             "require": {
@@ -351,12 +351,12 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "Cake\\Utility\\": "."
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Cake\\Utility\\": "."
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -384,7 +384,7 @@
                 "issues": "https://github.com/cakephp/cakephp/issues",
                 "source": "https://github.com/cakephp/utility"
             },
-            "time": "2021-10-26T20:01:16+00:00"
+            "time": "2022-01-28T18:02:00+00:00"
         },
         {
             "name": "composer/ca-bundle",
