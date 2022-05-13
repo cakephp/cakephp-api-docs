@@ -2,14 +2,20 @@
 
 // Queue API docs
 return [
-    'project' => 'Queue',
-    'release' => null,
-    'namespace' => '\Cake\Queue',
+    'Project' => [
+        'namespace' => 'Cake\Queue',
+        'sourceDirs' => ['src'],
+        'excludePatterns' => [],
+    ],
 
-    'templatePath' => 'templates',
-    'sourcePaths' => ['src'],
-
-    'versions' => [
-        '0.x' => '../0.x',
+    'Twig' => [
+        'templateDir' => 'templates',
+        'globals' => [
+            'project' => 'Queue',
+            'release' => null,
+            'versions' => [
+                '0.x' => '../0.x',
+            ],
+        ],
     ],
 ];

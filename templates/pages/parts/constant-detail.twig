@@ -1,0 +1,29 @@
+  <div class="section">
+    <h2>Constants</h2>
+    <ul class="member-summary constants">
+      {% for constant in constants %}
+        <li class="clearfix">
+          <a id="{{ constant.name }}"></a>
+          <div class="attributes col-md-2 col-sm-2 p0">
+            {% if constant.type %}
+              <code>{{ constant.type|type }}</code>
+            {% endif %}
+          </div>
+
+          <div class="name col-md-10 col-sm-10">
+            <b>{{ constant.name }}</b>
+            <a href="#{{ constant.name }}" class="permalink" title="Permalink to {{ constant.name }}">¶</a>
+          </div>
+
+          <div class="col-md-10 col-md-offset-2">
+            <pre><code class="language-php">{{ constant.value }}</code></pre>
+          </div>
+
+          <div class="col-md-10 col-md-offset-2">
+            {{ constant.doc.summary|markdown_to_html }}
+            {{ constant.doc.description|markdown_to_html }}
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>

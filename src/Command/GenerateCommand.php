@@ -11,19 +11,25 @@ declare(strict_types=1);
  *
  * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  * @link          https://cakephp.org CakePHP(tm) Project
- * @since         1.0.0
+ * @since         2.0.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 namespace Cake\ApiDocs\Command;
 
 use Cake\ApiDocs\Generator;
+use Cake\ApiDocs\Project;
+use Cake\ApiDocs\Twig\Extension\ReflectionExtension;
+use Cake\ApiDocs\Twig\TwigRuntimeLoader;
 use Cake\Console\Arguments;
 use Cake\Console\BaseCommand;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
 use Cake\Core\Configure\Engine\PhpConfig;
+use Twig\Environment;
+use Twig\Extra\Markdown\MarkdownExtension;
+use Twig\Loader\FilesystemLoader;
 
 class GenerateCommand extends BaseCommand
 {
@@ -34,22 +40,22 @@ class GenerateCommand extends BaseCommand
     {
         $parser->addArgument('project-path', [
             'required' => true,
-            'help' => 'The project root path.',
+            'help' => 'The project root path. Source directories are relative to this.',
         ]);
 
-        $parser->addArgument('output-path', [
+        $parser->addOption('output-dir', [
             'required' => true,
-            'help' => 'The html output path.',
+            'help' => 'The render output directory.',
         ]);
 
         $parser->addOption('config', [
             'required' => true,
-            'help' => 'Config name.',
+            'help' => 'The config name to use, for example: cakephp4.',
         ]);
 
         $parser->addOption('version', [
             'required' => true,
-            'help' => 'The current version.',
+            'help' => 'The project version (example: 4.0)',
         ]);
 
         return $parser;
@@ -60,23 +66,39 @@ class GenerateCommand extends BaseCommand
      */
     public function execute(Arguments $args, ConsoleIo $io): ?int
     {
-        $this->configure($args);
+        Configure::config('default', new PhpConfig());
+        Configure::load($args->getOption('config'), 'default', false);
 
-        $generator = new Generator($args->getArgumentAt(0), $args->getArgumentAt(1), Configure::read('templatePath'));
-        $generator->generate();
+        $project = new Project($args->getArgumentAt(0), Configure::read('Project'));
+
+        $twig = $this->createTwig(Configure::read('Twig.templateDir'), $project);
+        $twig->addGlobal('version', $args->getOption('version'));
+        foreach (Configure::read('Twig.globals') as $name => $value) {
+            $twig->addGlobal($name, $value);
+        }
+
+        $generator = new Generator($twig, $args->getOption('output-dir'));
+        $generator->generate($project);
 
         return static::CODE_SUCCESS;
     }
 
     /**
-     * @param \Cake\Console\Arguments $args The command line arguments
-     * @return void
+     * @param string $templateDir Twig template dirctory
+     * @param \Cake\ApiDocs\Project $project Api Project
+     * @return \Twig\Environment
      */
-    protected function configure(Arguments $args): void
+    protected function createTwig(string $templateDir, Project $project): Environment
     {
-        Configure::config('default', new PhpConfig());
-        Configure::load($args->getOption('config'), 'default', false);
+        $twig = new Environment(
+            new FilesystemLoader($templateDir),
+            ['strict_variables' => true]
+        );
 
-        Configure::write('version', $args->getOption('version'));
+        $twig->addRuntimeLoader(new TwigRuntimeLoader());
+        $twig->addExtension(new MarkdownExtension());
+        $twig->addExtension(new ReflectionExtension($project));
+
+        return $twig;
     }
 }

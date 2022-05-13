@@ -11,28 +11,17 @@ declare(strict_types=1);
  *
  * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  * @link          https://cakephp.org CakePHP(tm) Project
- * @since         1.0.0
+ * @since         2.0.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 namespace Cake\ApiDocs\Reflection;
 
-use phpDocumentor\Reflection\Php\Class_;
+use PHPStan\PhpDocParser\Ast\Type\TypeNode;
 
-class LoadedClass extends LoadedClassLike
+class ReflectedDefine extends ReflectedNode
 {
-    /**
-     * @var \phpDocumentor\Reflection\Php\Class_
-     */
-    public Class_ $class;
+    public string $value;
 
-    /**
-     * @param string $fqsen fqsen
-     * @param \phpDocumentor\Reflection\Php\Class_ $class Reflection class
-     * @param \Cake\ApiDocs\Reflection\LoadedFile $loadedFile Loaded file
-     */
-    public function __construct(string $fqsen, Class_ $class, LoadedFile $loadedFile)
-    {
-        parent::__construct($fqsen, $class, $loadedFile);
-    }
+    public ?TypeNode $type = null;
 }

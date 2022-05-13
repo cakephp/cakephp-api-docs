@@ -64,15 +64,26 @@ composer.phar:
 install: composer.phar
 	$(PHP8) $(COMPOSER) install
 
-define cakephp
+define cakephp3
 build-cakephp-$(VERSION): install
 	cd $(CAKEPHP_SOURCE_DIR) && git checkout -f $(TAG)
 	cd $(CAKEPHP_SOURCE_DIR) && $(PHP7) $(COMPOSER) update
 	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
 
-	$(PHP8) bin/apitool.php generate --config cakephp --version $(VERSION) \
-		$(CAKEPHP_SOURCE_DIR) $(BUILD_DIR)/cakephp/$(VERSION)
+	$(PHP8) bin/apitool.php generate --config cakephp3 --version $(VERSION) \
+		--output-dir $(BUILD_DIR)/cakephp/$(VERSION) $(CAKEPHP_SOURCE_DIR)
+endef
+
+define cakephp4
+build-cakephp-$(VERSION): install
+	cd $(CAKEPHP_SOURCE_DIR) && git checkout -f $(TAG)
+	cd $(CAKEPHP_SOURCE_DIR) && $(PHP7) $(COMPOSER) update
+	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
+	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
+
+	$(PHP8) bin/apitool.php generate --config cakephp4 --version $(VERSION) \
+		--output-dir $(BUILD_DIR)/cakephp/$(VERSION) $(CAKEPHP_SOURCE_DIR)
 endef
 
 define cakephp5
@@ -94,7 +105,7 @@ build-chronos-$(VERSION): install
 	cp -r static/assets/* $(BUILD_DIR)/chronos/$(VERSION)
 
 	php bin/apitool.php generate --config chronos --version $(VERSION) \
-		$(CHRONOS_SOURCE_DIR) $(BUILD_DIR)/chronos/$(VERSION)
+		--output-dir $(BUILD_DIR)/chronos/$(VERSION) $(CHRONOS_SOURCE_DIR)
 endef
 
 define elastic
@@ -105,7 +116,7 @@ build-elastic-$(VERSION): install
 	cp -r static/assets/* $(BUILD_DIR)/elastic-search/$(VERSION)
 
 	$(PHP8) bin/apitool.php generate --config elastic --version $(VERSION) \
-		$(ELASTIC_SOURCE_DIR) $(BUILD_DIR)/elastic-search/$(VERSION)
+		--output-dir $(BUILD_DIR)/elastic-search/$(VERSION) $(ELASTIC_SOURCE_DIR)
 endef
 
 define queue
@@ -116,7 +127,7 @@ build-queue-$(VERSION): install
 	cp -r static/assets/* $(BUILD_DIR)/queue/$(VERSION)
 
 	$(PHP8) bin/apitool.php generate --config queue --version $(VERSION) \
-		$(QUEUE_SOURCE_DIR) $(BUILD_DIR)/queue/$(VERSION)
+		--output-dir $(BUILD_DIR)/queue/$(VERSION) $(QUEUE_SOURCE_DIR)
 endef
 
 # Build all the versions in a loop.
@@ -125,35 +136,35 @@ build-all: $(foreach version, $(CAKEPHP_VERSIONS), build-cakephp-$(version)) $(f
 # Generate build targets for cakephp
 TAG:=3.8.13
 VERSION:=3.8
-$(eval $(cakephp))
+$(eval $(cakephp3))
 
 TAG:=3.9.10
 VERSION:=3.9
-$(eval $(cakephp))
+$(eval $(cakephp3))
 
 TAG:=origin/3.x
 VERSION:=3.10
-$(eval $(cakephp))
+$(eval $(cakephp3))
 
 TAG:=4.0.9
 VERSION:=4.0
-$(eval $(cakephp))
+$(eval $(cakephp4))
 
 TAG:=4.1.7
 VERSION:=4.1
-$(eval $(cakephp))
+$(eval $(cakephp4))
 
 TAG:=4.2.10
 VERSION:=4.2
-$(eval $(cakephp))
+$(eval $(cakephp4))
 
 TAG:=origin/4.x
 VERSION:=4.3
-$(eval $(cakephp))
+$(eval $(cakephp4))
 
 TAG:=origin/4.next
 VERSION:=4.next
-$(eval $(cakephp))
+$(eval $(cakephp4))
 
 TAG:=origin/5.x
 VERSION:=5.0

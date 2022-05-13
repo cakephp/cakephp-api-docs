@@ -11,28 +11,26 @@ declare(strict_types=1);
  *
  * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  * @link          https://cakephp.org CakePHP(tm) Project
- * @since         1.0.0
+ * @since         2.0.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 namespace Cake\ApiDocs\Reflection;
 
-use phpDocumentor\Reflection\Php\Interface_;
+use PHPStan\PhpDocParser\Ast\Type\TypeNode;
 
-class LoadedInterface extends LoadedClassLike
+class ReflectedFunction extends ReflectedNode
 {
     /**
-     * @var \phpDocumentor\Reflection\Php\Interface_
+     * @var array<string, \Cake\ApiDocs\Reflection\ReflectedParam>
      */
-    public Interface_ $interface;
+    public array $params = [];
 
-    /**
-     * @param string $fqsen fqsen
-     * @param \phpDocumentor\Reflection\Php\Interface_ $interface Reflection interface
-     * @param \Cake\ApiDocs\Reflection\LoadedFile $loadedFile Loaded file
-     */
-    public function __construct(string $fqsen, Interface_ $interface, LoadedFile $loadedFile)
-    {
-        parent::__construct($fqsen, $interface, $loadedFile);
-    }
+    public ?TypeNode $returnType = null;
+
+    public ?TypeNode $nativeReturnType = null;
+
+    public bool $abstract = false;
+
+    public bool $static = false;
 }

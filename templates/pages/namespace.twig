@@ -1,0 +1,50 @@
+{% extends 'page.twig' %}
+
+{% block title 'Namespace ' ~ namespace.name|default(namespace.displayName) %}
+
+{% block content %}
+<div class="section namespace">
+  <h1>Namespace {{ namespace.displayName }}</h1>
+
+  {% if namespace.children is not empty %}
+    <div>
+      <h3>Namespaces</h3>
+      <ul class="summary-list">
+        {% for child in namespace.children %}
+        <li>
+          <a href="{{ child.name|namespace_url }}">{{ child.name }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  {% if namespace.functions is not empty %}
+    {{ include('pages/parts/function-detail.twig', {title: 'Function', functions: namespace.functions}) }}
+  {% endif %}
+
+  {% if namespace.defines is not empty %}
+    {{ include('pages/parts/constant-detail.twig', {constants: namespace.defines}) }}
+  {% endif %}
+
+  {% macro showClassLikes(type, title, classLikes, type) %}
+    {% if classLikes is not empty %}
+      <div class="section">
+        <h3>{{ title }}</h3>
+        <ul class="summary-list">
+          {% for classLike in classLikes %}
+            <li>
+              <h5><a href="{{ classLike.qualifiedName|url(type) }}">{{ classLike.name }}</a></h5>
+              {{ classLike.doc.summary|markdown_to_html }}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  {% endmacro %}
+
+  {{ _self.showClassLikes('interface', 'Interfaces', namespace.interfaces, 'interface') }}
+  {{ _self.showClassLikes('class', 'Classes', namespace.classes, 'class') }}
+  {{ _self.showClassLikes('trait', 'Traits', namespace.traits, 'trait') }}
+</div>
+{% endblock %}
