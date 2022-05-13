@@ -116,11 +116,13 @@ class MergeUtil
 
             foreach ($targetMethod->params as $param) {
                 if (
-                    $param->type === null ||
+                    isset($sourceMethod->params[$param->name]) &&
                     (
-                        !isset($targetMethod->doc->tags['param'][$param->name]) &&
-                        isset($sourceMethod->params[$param->name]) &&
-                        $param->nativeType == $sourceMethod->params[$param->name]->nativeType
+                        $param->type === null ||
+                        (
+                            !isset($targetMethod->doc->tags['param'][$param->name]) &&
+                            $param->nativeType == $sourceMethod->params[$param->name]->nativeType
+                        )
                     )
                 ) {
                     $param->type = $sourceMethod->params[$param->name]->type;

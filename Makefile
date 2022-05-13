@@ -14,7 +14,7 @@ COMPOSER=$(PWD)/composer.phar
 .ALL: help
 
 # Versions that can be built.
-CAKEPHP_VERSIONS = 3.8 3.9 3.10 4.0 4.1 4.2 4.3 4.next
+CAKEPHP_VERSIONS = 3.0 3.1 3.2 3.3 3.4 3.5 3.6 3.7 3.8 3.9 3.10 4.0 4.1 4.2 4.3 4.next
 
 CHRONOS_VERSIONS = 1.x 2.x
 
@@ -64,6 +64,17 @@ composer.phar:
 install: composer.phar
 	$(PHP8) $(COMPOSER) install
 
+define cakephp3-no-vendor
+build-cakephp-$(VERSION): install
+	cd $(CAKEPHP_SOURCE_DIR) && git checkout -f $(TAG)
+	cd $(CAKEPHP_SOURCE_DIR) && rm -rf ./vendor
+	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
+	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
+
+	$(PHP8) bin/apitool.php generate --config cakephp3 --version $(VERSION) \
+		--output-dir $(BUILD_DIR)/cakephp/$(VERSION) $(CAKEPHP_SOURCE_DIR)
+endef
+
 define cakephp3
 build-cakephp-$(VERSION): install
 	cd $(CAKEPHP_SOURCE_DIR) && git checkout -f $(TAG)
@@ -87,7 +98,7 @@ build-cakephp-$(VERSION): install
 endef
 
 define cakephp5
-build-cakephp5-$(VERSION): install
+build-cakephp-$(VERSION): install
 	cd $(CAKEPHP_SOURCE_DIR) && git checkout -f $(TAG)
 	cd $(CAKEPHP_SOURCE_DIR) && $(PHP8) $(COMPOSER) update
 	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
@@ -134,6 +145,38 @@ endef
 build-all: $(foreach version, $(CAKEPHP_VERSIONS), build-cakephp-$(version)) $(foreach version, $(CHRONOS_VERSIONS), build-chronos-$(version)) $(foreach version, $(ELASTIC_VERSIONS), build-elastic-$(version)) $(foreach version, $(QUEUE_VERSIONS), build-queue-$(version))
 
 # Generate build targets for cakephp
+TAG:=3.0.19
+VERSION:=3.0
+$(eval $(cakephp3-no-vendor))
+
+TAG:=3.1.14
+VERSION:=3.1
+$(eval $(cakephp3-no-vendor))
+
+TAG:=3.2.14
+VERSION:=3.2
+$(eval $(cakephp3))
+
+TAG:=3.3.16
+VERSION:=3.3
+$(eval $(cakephp3))
+
+TAG:=3.4.14
+VERSION:=3.4
+$(eval $(cakephp3))
+
+TAG:=3.5.18
+VERSION:=3.5
+$(eval $(cakephp3))
+
+TAG:=3.6.15
+VERSION:=3.6
+$(eval $(cakephp3))
+
+TAG:=3.7.9
+VERSION:=3.7
+$(eval $(cakephp3))
+
 TAG:=3.8.13
 VERSION:=3.8
 $(eval $(cakephp3))

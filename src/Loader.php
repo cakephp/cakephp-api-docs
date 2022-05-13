@@ -98,6 +98,10 @@ class Loader
             return $this->cache[$qualifiedName];
         }
 
+        if (!$this->classLoader) {
+            return null;
+        }
+
         $path = $this->classLoader->findFile($qualifiedName);
         if ($path === false) {
             return null;

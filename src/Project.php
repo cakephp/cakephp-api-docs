@@ -132,14 +132,16 @@ class Project
 
     /**
      * @param string $projectPath Project path
-     * @return \Composer\Autoload\ClassLoader
+     * @return \Composer\Autoload\ClassLoader|null
      */
-    protected function createClassLoader(string $projectPath): ClassLoader
+    protected function createClassLoader(string $projectPath): ?ClassLoader
     {
         // try to find vendor/ relative to sourceDir
         $autoloadPath = $projectPath . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
         if (!file_exists($autoloadPath)) {
-            throw new RuntimeException("Unable to find class loader at `$autoloadPath`.");
+            $this->log("Unable to find class loader at `$autoloadPath`", 'warning');
+
+            return null;
         }
 
         $this->log("Found class loader at `$autoloadPath`", 'info');
