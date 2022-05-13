@@ -30,7 +30,7 @@
           {%- for param in function.params %}
             {{- param.type|type }} {% if param.variadic %}...{% endif %}${{ param.name }}{{ param.default is not null ? ' = ' ~ param.default : '' }}{{ loop.last?'':', ' }}
           {%- endfor -%}
-        ){{ function.returnType ? ': ' ~ function.returnType : '' -}}
+        ){{ function.returnType ? ': ' ~ function.returnType|type : '' -}}
       </code></pre>
 
       <div class="description detailed">
@@ -58,7 +58,7 @@
         {% if function.returnType %}
           <h6>Returns</h6>
           <div class="list">
-            <code>{{ function.returnType }}</code><br>
+            <code>{{ function.returnType|type }}</code><br>
             {# {{ (return.description ?? '')|markdown_to_html }} #}
           </div>
         {% endif %}
