@@ -6,6 +6,9 @@
       <h3 class="method-name">
         {{ function.name }}()
         <a href="#{{ function.name }}()" class="permalink" title="Permalink to {{ function.name}}()">¶</a>
+        {% if function.source.inProject %}
+          <a href="{{ function|node_to_repo_url }}" class="permalink" title="Permalink to Github" target="_blank"><i class="fa fa-github"></i></a>
+        {% endif %}
 
         {% if function.abstract|default(false) %}
           <span class="label">abstract</span>

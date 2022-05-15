@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Cake\ApiDocs;
 
 use Cake\ApiDocs\Reflection\ReflectedClassLike;
-use Composer\Autoload\ClassLoader;
 use FilesystemIterator;
 use PhpParser\NodeTraverser;
 use PhpParser\Parser;
@@ -28,28 +27,27 @@ use RecursiveIteratorIterator;
 
 class Loader
 {
+    protected string $projectPath;
+
     protected Parser $parser;
 
     protected NodeTraverser $traverser;
 
-    protected ?ClassLoader $classLoader;
-
-    protected array $cache = [];
-
     /**
-     * @param \Composer\Autoload\ClassLoader|null $classLoader Class loader
+     * @param string $projectPath Project path
      */
-    public function __construct(?ClassLoader $classLoader)
+    public function __construct(string $projectPath)
     {
+        $this->projectPath = $projectPath;
         $this->parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
-        $this->classLoader = $classLoader;
     }
 
     /**
      * @param string $path Directory path
+     * @param bool $inProject Whether directory is within project
      * @return array
      */
-    public function loadDirectory(string $path): array
+    public function loadDirectory(string $path, bool $inProject): array
     {
         $nodes = [];
         $directoryIterator = new RecursiveDirectoryIterator(
@@ -58,7 +56,7 @@ class Loader
         );
         foreach (new RecursiveIteratorIterator($directoryIterator) as $filePath) {
             if (preg_match('/\.php$/', $filePath)) {
-                $nodes = array_merge($nodes, $this->loadFile($filePath));
+                $nodes = array_merge($nodes, $this->loadFile($filePath, $inProject));
             }
         }
 
@@ -67,14 +65,15 @@ class Loader
 
     /**
      * @param string $path File path
+     * @param bool $inProject Whether file is within project
      * @return array<string, \Cake\ApiDocs\Reflection\LoadedNode>
      */
-    public function loadFile(string $path): array
+    public function loadFile(string $path, bool $inProject): array
     {
         $stmts = $this->parser->parse(file_get_contents($path));
 
         $traverser = new NodeTraverser();
-        $visitor = new FileVisitor(new Factory($path));
+        $visitor = new FileVisitor(new Factory(), substr($path, strlen($this->projectPath) + 1), $inProject);
         $traverser->addVisitor($visitor);
         $traverser->traverse($stmts);
 
@@ -86,34 +85,5 @@ class Loader
         }
 
         return $nodes;
-    }
-
-    /**
-     * @param string $qualifiedName Qualified name
-     * @return \Cake\ApiDocs\Reflection\ReflectedClassLike|null
-     */
-    public function find(string $qualifiedName): ?ReflectedClassLike
-    {
-        if (array_key_exists($qualifiedName, $this->cache)) {
-            return $this->cache[$qualifiedName];
-        }
-
-        if (!$this->classLoader) {
-            return null;
-        }
-
-        $path = $this->classLoader->findFile($qualifiedName);
-        if ($path === false) {
-            return null;
-        }
-
-        $nodes = $this->loadFile($path);
-        foreach ($nodes as $node) {
-            if ($node instanceof ReflectedClassLike && $node->qualifiedName() === $qualifiedName) {
-                return $node;
-            }
-        }
-
-        return $this->cache[$qualifiedName] = null;
     }
 }

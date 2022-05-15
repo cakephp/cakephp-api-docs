@@ -6,6 +6,7 @@ return [
         'namespace' => 'Cake\ElasticSearch',
         'sourceDirs' => ['src'],
         'excludePatterns' => [],
+        'repo' => 'https://github.com/cakephp/elastic-search',
     ],
 
     'Twig' => [

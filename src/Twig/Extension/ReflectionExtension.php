@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Cake\ApiDocs\Twig\Extension;
 
 use Cake\ApiDocs\Project;
+use Cake\ApiDocs\Reflection\ReflectedNode;
 use PHPStan\PhpDocParser\Ast\Type\TypeNode;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -66,6 +67,17 @@ class ReflectionExtension extends AbstractExtension
                     ],
                     ['${1}', '<', '>', ', ', ', ', '${1}', ''],
                     (string)$type
+                );
+            }),
+            new TwigFilter('node_to_repo_url', function (ReflectedNode $node) {
+                preg_match('/^(?:origin\/)?(.*)$/', $this->project->getConfig('tag'), $matches);
+
+                return sprintf(
+                    '%s/blob/%s/%s#L%d',
+                    $this->project->getConfig('repo'),
+                    $matches[1],
+                    $node->source->path,
+                    $node->source->startLine
                 );
             }),
         ];

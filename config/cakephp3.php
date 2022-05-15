@@ -11,6 +11,7 @@ return [
             'Cake\Datasource\QueryTrait',
             'Cake\I18n\DateFormatTrait',
         ],
+        'repo' => 'https://github.com/cakephp/cakephp',
     ],
 
     'Twig' => [

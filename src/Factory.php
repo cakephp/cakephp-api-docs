@@ -49,25 +49,15 @@ use PHPStan\PhpDocParser\Ast\PhpDoc\ParamTagValueNode;
 
 class Factory
 {
-    protected string $filePath;
-
-    /**
-     * @param string $filePath File path
-     */
-    public function __construct(string $filePath)
-    {
-        $this->filePath = $filePath;
-    }
-
     /**
      * @param \PhpParser\Node\Const_ $node Const node
      * @param \Cake\ApiDocs\Reflection\Context $context Reflection context
+     * @param \Cake\ApiDocs\Reflection\Source $source Reflection source
      * @return \Cake\ApiDocs\Reflection\ReflectedDefine
      */
-    public function createDefine(Const_ $node, Context $context): ReflectedDefine
+    public function createDefine(Const_ $node, Context $context, Source $source): ReflectedDefine
     {
         $doc = new DocBlock($node->getDocComment()?->getText());
-        $source = new Source($this->filePath, $node->getStartLine(), $node->getEndLine());
 
         $const = new ReflectedDefine($node->name->name, $doc, $context, $source);
         $const->value = PrintUtil::expr($node->value);
@@ -82,12 +72,12 @@ class Factory
     /**
      * @param \PhpParser\Node\Stmt\Function_ $node Function node
      * @param \Cake\ApiDocs\Reflection\Context $context Reflection context
+     * @param \Cake\ApiDocs\Reflection\Source $source Reflection source
      * @return \Cake\ApiDocs\Reflection\ReflectedDefine
      */
-    public function createFunction(Function_ $node, Context $context): ReflectedFunction
+    public function createFunction(Function_ $node, Context $context, Source $source): ReflectedFunction
     {
         $doc = new DocBlock($node->getDocComment()?->getText());
-        $source = new Source($this->filePath, $node->getStartLine(), $node->getEndLine());
 
         $func = new ReflectedFunction($node->name->name, $doc, $context, $source);
         $this->reflectFuncLike($func, $node, $doc);
@@ -98,12 +88,12 @@ class Factory
     /**
      * @param \PhpParser\Node\Stmt\Interface_ $node Interface node
      * @param \Cake\ApiDocs\Reflection\Context $context Reflection context
+     * @param \Cake\ApiDocs\Reflection\Source $source Reflection source
      * @return \Cake\ApiDocs\Reflection\ReflectedDefine
      */
-    public function createInterface(Interface_ $node, Context $context): ReflectedInterface
+    public function createInterface(Interface_ $node, Context $context, Source $source): ReflectedInterface
     {
         $doc = new DocBlock($node->getDocComment()?->getText());
-        $source = new Source($this->filePath, $node->getStartLine(), $node->getEndLine());
 
         $interface = new ReflectedInterface($node->name->name, $doc, $context, $source);
         $this->reflectClassLike($interface, $node);
@@ -116,12 +106,12 @@ class Factory
     /**
      * @param \PhpParser\Node\Stmt\Class_ $node Class node
      * @param \Cake\ApiDocs\Reflection\Context $context Reflection context
+     * @param \Cake\ApiDocs\Reflection\Source $source Reflection source
      * @return \Cake\ApiDocs\Reflection\ReflectedDefine
      */
-    public function createClass(Class_ $node, Context $context): ReflectedClass
+    public function createClass(Class_ $node, Context $context, Source $source): ReflectedClass
     {
         $doc = new DocBlock($node->getDocComment()?->getText());
-        $source = new Source($this->filePath, $node->getStartLine(), $node->getEndLine());
 
         $class = new ReflectedClass($node->name->name, $doc, $context, $source);
         $this->reflectClassLike($class, $node);
@@ -137,13 +127,12 @@ class Factory
     /**
      * @param \PhpParser\Node\Stmt\Trait_ $node Trait node
      * @param \Cake\ApiDocs\Reflection\Context $context Reflection context
+     * @param \Cake\ApiDocs\Reflection\Source $source Reflection source
      * @return \Cake\ApiDocs\Reflection\ReflectedDefine
      */
-    public function createTrait(Trait_ $node, Context $context): ReflectedTrait
+    public function createTrait(Trait_ $node, Context $context, Source $source): ReflectedTrait
     {
         $doc = new DocBlock($node->getDocComment()?->getText());
-        $source = new Source($this->filePath, $node->getStartLine(), $node->getEndLine());
-
         $trait = new ReflectedTrait($node->name->name, $doc, $context, $source);
         $this->reflectClassLike($trait, $node);
 
@@ -162,7 +151,12 @@ class Factory
         Const_ $constNode
     ): ReflectedConstant {
         $doc = new DocBlock($classNode->getDocComment()?->getText());
-        $source = new Source($this->filePath, $classNode->getStartLine(), $classNode->getEndLine());
+        $source = new Source(
+            $classLike->source->path,
+            $classLike->source->inProject,
+            $classNode->getStartLine(),
+            $classNode->getEndLine()
+        );
 
         $const = new ReflectedConstant(
             $constNode->name->name,
@@ -193,7 +187,12 @@ class Factory
         PropertyProperty $propNode
     ): ReflectedProperty {
         $doc = new DocBlock($classNode->getDocComment()?->getText());
-        $source = new Source($this->filePath, $classNode->getStartLine(), $classNode->getEndLine());
+        $source = new Source(
+            $classLike->source->path,
+            $classLike->source->inProject,
+            $classNode->getStartLine(),
+            $classNode->getEndLine()
+        );
 
         $prop = new ReflectedProperty(
             $propNode->name->name,
@@ -201,10 +200,11 @@ class Factory
             $classLike->context,
             $source
         );
-        $prop->default = $propNode->default ? PrintUtil::expr($propNode->default) : null;
 
         $prop->nativeType = $classNode->type ? DocUtil::parseType(PrintUtil::node($classNode->type)) : null;
         $prop->type = $doc->tags['var']?->type ?? $prop->nativeType;
+
+        $prop->default = $propNode->default ? PrintUtil::expr($propNode->default) : null;
 
         $prop->visibility = $classNode->isPublic() ? 'public' : ($classNode->isProtected() ? 'protected' : 'private');
         $prop->static = $classNode->isStatic();
@@ -220,7 +220,12 @@ class Factory
     protected function createMethod(ReflectedClassLike $classLike, ClassMethod $node): ReflectedMethod
     {
         $doc = new DocBlock($node->getDocComment()?->getText());
-        $source = new Source($this->filePath, $node->getStartLine(), $node->getEndLine());
+        $source = new Source(
+            $classLike->source->path,
+            $classLike->source->inProject,
+            $node->getStartLine(),
+            $node->getEndLine()
+        );
 
         $func = new ReflectedMethod(
             $node->name->name,
@@ -228,6 +233,7 @@ class Factory
             $classLike->context,
             $source
         );
+
         $this->reflectFuncLike($func, $node, $doc);
 
         $func->visibility = $node->isPublic() ? 'public' : ($node->isProtected() ? 'protected' : 'private');

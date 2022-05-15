@@ -8,6 +8,7 @@ return [
         'excludePatterns' => [
             'Cake\Chronos\Traits',
         ],
+        'repo' => 'https://github.com/cakephp/chronos',
     ],
 
     'Twig' => [

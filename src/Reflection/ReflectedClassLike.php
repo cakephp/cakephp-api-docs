@@ -27,8 +27,6 @@ class ReflectedClassLike extends ReflectedNode
 
     public array $methods = [];
 
-    public bool $inProject = false;
-
     /**
      * Returns qualified name.
      *

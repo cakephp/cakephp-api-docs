@@ -58,6 +58,11 @@ class GenerateCommand extends BaseCommand
             'help' => 'The project version (example: 4.0)',
         ]);
 
+        $parser->addOption('tag', [
+            'required' => true,
+            'help' => 'The github tag or branch name',
+        ]);
+
         return $parser;
     }
 
@@ -69,10 +74,13 @@ class GenerateCommand extends BaseCommand
         Configure::config('default', new PhpConfig());
         Configure::load($args->getOption('config'), 'default', false);
 
+        Configure::write('Project.version', $args->getOption('version'));
+        Configure::write('Project.tag', $args->getOption('tag'));
+
         $project = new Project($args->getArgumentAt(0), Configure::read('Project'));
 
         $twig = $this->createTwig(Configure::read('Twig.templateDir'), $project);
-        $twig->addGlobal('version', $args->getOption('version'));
+        $twig->addGlobal('version', Configure::read('Project.version'));
         foreach (Configure::read('Twig.globals') as $name => $value) {
             $twig->addGlobal($name, $value);
         }

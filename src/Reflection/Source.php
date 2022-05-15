@@ -21,10 +21,11 @@ class Source
 {
     /**
      * @param string $path File path
+     * @param bool $inProject File within project source
      * @param int $startLine Starting line
      * @param int $endLine Ending line
      */
-    public function __construct(public string $path, public int $startLine, public int $endLine)
+    public function __construct(public string $path, public bool $inProject, public int $startLine, public int $endLine)
     {
     }
 }
