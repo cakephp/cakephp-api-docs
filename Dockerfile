@@ -1,4 +1,4 @@
-FROM alpine:3.14
+FROM alpine:edge
 
 LABEL Description="CakePHP API Docs"
 
@@ -9,20 +9,20 @@ RUN apk add --no-cache \
     make \
     nginx \
     openssh-client \
-    php8 \
-    php8-bz2 \
-    php8-curl \
-    php8-dom \
-    php8-intl \
-    php8-json \
-    php8-mbstring \
-    php8-openssl \
-    php8-phar \
-    php8-simplexml \
-    php8-tokenizer \
-    php8-xml \
-    php8-xmlwriter \
-    php8-zip \
+    php81 \
+    php81-bz2 \
+    php81-curl \
+    php81-dom \
+    php81-intl \
+    php81-json \
+    php81-mbstring \
+    php81-openssl \
+    php81-phar \
+    php81-simplexml \
+    php81-tokenizer \
+    php81-xml \
+    php81-xmlwriter \
+    php81-zip \
     php7 \
     php7-bz2 \
     php7-curl \
@@ -38,7 +38,7 @@ RUN apk add --no-cache \
     php7-xmlwriter \
     php7-zip
 
-RUN ln -sf /usr/bin/php8 /usr/bin/php
+RUN ln -sf /usr/bin/php81 /usr/bin/php
 
 RUN mkdir /website /root/.ssh
 

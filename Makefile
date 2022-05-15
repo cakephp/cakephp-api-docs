@@ -14,7 +14,7 @@ COMPOSER=$(PWD)/composer.phar
 .ALL: help
 
 # Versions that can be built.
-CAKEPHP_VERSIONS = 3.0 3.1 3.2 3.3 3.4 3.5 3.6 3.7 3.8 3.9 3.10 4.0 4.1 4.2 4.3 4.next
+CAKEPHP_VERSIONS = 3.0 3.1 3.2 3.3 3.4 3.5 3.6 3.7 3.8 3.9 3.10 4.0 4.1 4.2 4.3 4.next 5.0
 
 CHRONOS_VERSIONS = 1.x 2.x
 
@@ -104,8 +104,8 @@ build-cakephp-$(VERSION): install
 	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
 
-	$(PHP8) bin/apitool.php generate --config cakephp --version $(VERSION) --tag $(TAG) \
-		$(CAKEPHP_SOURCE_DIR) $(BUILD_DIR)/cakephp/$(VERSION)
+	$(PHP8) bin/apitool.php generate --config cakephp4 --version $(VERSION) --tag $(TAG) \
+		--output-dir $(BUILD_DIR)/cakephp/$(VERSION) $(CAKEPHP_SOURCE_DIR)
 endef
 
 define chronos
