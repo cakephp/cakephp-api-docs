@@ -6,6 +6,7 @@ return [
         'namespace' => 'Cake\Queue',
         'sourceDirs' => ['src'],
         'excludePatterns' => [],
+        'repo' => 'https://github.com/cakephp/queue',
     ],
 
     'Twig' => [

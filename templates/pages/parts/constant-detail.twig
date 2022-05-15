@@ -13,6 +13,9 @@
           <div class="name col-md-10 col-sm-10">
             <b>{{ constant.name }}</b>
             <a href="#{{ constant.name }}" class="permalink" title="Permalink to {{ constant.name }}">¶</a>
+            {% if constant.source.inProject %}
+              <a href="{{ constant|node_to_repo_url }}" class="permalink" title="Permalink to Github" target="_blank"><i class="fa fa-github"></i></a>
+            {% endif %}
           </div>
 
           <div class="col-md-10 col-md-offset-2">

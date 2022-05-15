@@ -71,7 +71,7 @@ build-cakephp-$(VERSION): install
 	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
 
-	$(PHP8) bin/apitool.php generate --config cakephp3 --version $(VERSION) \
+	$(PHP8) bin/apitool.php generate --config cakephp3 --version $(VERSION) --tag $(TAG) \
 		--output-dir $(BUILD_DIR)/cakephp/$(VERSION) $(CAKEPHP_SOURCE_DIR)
 endef
 
@@ -82,7 +82,7 @@ build-cakephp-$(VERSION): install
 	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
 
-	$(PHP8) bin/apitool.php generate --config cakephp3 --version $(VERSION) \
+	$(PHP8) bin/apitool.php generate --config cakephp3 --version $(VERSION) --tag $(TAG) \
 		--output-dir $(BUILD_DIR)/cakephp/$(VERSION) $(CAKEPHP_SOURCE_DIR)
 endef
 
@@ -93,7 +93,7 @@ build-cakephp-$(VERSION): install
 	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
 
-	$(PHP8) bin/apitool.php generate --config cakephp4 --version $(VERSION) \
+	$(PHP8) bin/apitool.php generate --config cakephp4 --version $(VERSION) --tag $(TAG) \
 		--output-dir $(BUILD_DIR)/cakephp/$(VERSION) $(CAKEPHP_SOURCE_DIR)
 endef
 
@@ -104,7 +104,7 @@ build-cakephp-$(VERSION): install
 	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
 
-	$(PHP8) bin/apitool.php generate --config cakephp --version $(VERSION) \
+	$(PHP8) bin/apitool.php generate --config cakephp --version $(VERSION) --tag $(TAG) \
 		$(CAKEPHP_SOURCE_DIR) $(BUILD_DIR)/cakephp/$(VERSION)
 endef
 
@@ -115,7 +115,7 @@ build-chronos-$(VERSION): install
 	mkdir -p $(BUILD_DIR)/chronos/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/chronos/$(VERSION)
 
-	php bin/apitool.php generate --config chronos --version $(VERSION) \
+	php bin/apitool.php generate --config chronos --version $(VERSION) --tag $(TAG) \
 		--output-dir $(BUILD_DIR)/chronos/$(VERSION) $(CHRONOS_SOURCE_DIR)
 endef
 
@@ -126,7 +126,7 @@ build-elastic-$(VERSION): install
 	mkdir -p $(BUILD_DIR)/elastic-search/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/elastic-search/$(VERSION)
 
-	$(PHP8) bin/apitool.php generate --config elastic --version $(VERSION) \
+	$(PHP8) bin/apitool.php generate --config elastic --version $(VERSION) --tag $(TAG) \
 		--output-dir $(BUILD_DIR)/elastic-search/$(VERSION) $(ELASTIC_SOURCE_DIR)
 endef
 
@@ -137,7 +137,7 @@ build-queue-$(VERSION): install
 	mkdir -p $(BUILD_DIR)/queue/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/queue/$(VERSION)
 
-	$(PHP8) bin/apitool.php generate --config queue --version $(VERSION) \
+	$(PHP8) bin/apitool.php generate --config queue --version $(VERSION) --tag $(TAG) \
 		--output-dir $(BUILD_DIR)/queue/$(VERSION) $(QUEUE_SOURCE_DIR)
 endef
 

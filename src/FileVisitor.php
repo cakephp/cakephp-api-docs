@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Cake\ApiDocs;
 
 use Cake\ApiDocs\Reflection\Context;
+use Cake\ApiDocs\Reflection\Source;
 use PhpParser\Node;
 use PhpParser\Node\Const_ as NodeConst_;
 use PhpParser\Node\Expr\FuncCall;
@@ -38,16 +39,24 @@ class FileVisitor extends NodeVisitorAbstract
 {
     protected Factory $factor;
 
+    protected string $filePath;
+
+    protected bool $inProject;
+
     protected Context $context;
 
     protected array $nodes = [];
 
     /**
      * @param \Cake\ApiDocs\Factory $factory Reflection factory
+     * @param string $filePath File path
+     * @param bool $inProject Path within project
      */
-    public function __construct(Factory $factory)
+    public function __construct(Factory $factory, string $filePath, bool $inProject)
     {
         $this->factory = $factory;
+        $this->filePath = $filePath;
+        $this->inProject = $inProject;
         $this->context = new Context(null);
     }
 
@@ -114,7 +123,8 @@ class FileVisitor extends NodeVisitorAbstract
                     $node->args[1]->value,
                     $node->getAttributes()
                 );
-                $this->nodes[] = $this->factory->createDefine($const, $this->context);
+                $source = new Source($this->filePath, $this->inProject, $const->getStartLine(), $const->getEndLine());
+                $this->nodes[] = $this->factory->createDefine($const, $this->context, $source);
             }
 
             return NodeTraverser::DONT_TRAVERSE_CHILDREN;
@@ -122,32 +132,37 @@ class FileVisitor extends NodeVisitorAbstract
 
         if ($node instanceof Const_) {
             foreach ($node->consts as $const) {
-                $this->nodes[] = $this->factory->createDefine($const, $this->context);
+                $source = new Source($this->filePath, $this->inProject, $const->getStartLine(), $const->getEndLine());
+                $this->nodes[] = $this->factory->createDefine($const, $this->context, $source);
             }
 
             return NodeTraverser::DONT_TRAVERSE_CHILDREN;
         }
 
         if ($node instanceof Function_) {
-            $this->nodes[] = $this->factory->createFunction($node, $this->context);
+            $source = new Source($this->filePath, $this->inProject, $node->getStartLine(), $node->getEndLine());
+            $this->nodes[] = $this->factory->createFunction($node, $this->context, $source);
 
             return NodeTraverser::DONT_TRAVERSE_CHILDREN;
         }
 
         if ($node instanceof Interface_) {
-            $this->nodes[] = $this->factory->createInterface($node, $this->context);
+            $source = new Source($this->filePath, $this->inProject, $node->getStartLine(), $node->getEndLine());
+            $this->nodes[] = $this->factory->createInterface($node, $this->context, $source);
 
             return NodeTraverser::DONT_TRAVERSE_CHILDREN;
         }
 
         if ($node instanceof Class_) {
-            $this->nodes[] = $this->factory->createClass($node, $this->context);
+            $source = new Source($this->filePath, $this->inProject, $node->getStartLine(), $node->getEndLine());
+            $this->nodes[] = $this->factory->createClass($node, $this->context, $source);
 
             return NodeTraverser::DONT_TRAVERSE_CHILDREN;
         }
 
         if ($node instanceof Trait_) {
-            $this->nodes[] = $this->factory->createTrait($node, $this->context);
+            $source = new Source($this->filePath, $this->inProject, $node->getStartLine(), $node->getEndLine());
+            $this->nodes[] = $this->factory->createTrait($node, $this->context, $source);
 
             return NodeTraverser::DONT_TRAVERSE_CHILDREN;
         }

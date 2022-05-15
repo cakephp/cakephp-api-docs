@@ -32,4 +32,12 @@ abstract class ReflectedNode
         public Source $source
     ) {
     }
+
+    /**
+     * @return void
+     */
+    public function __clone(): void
+    {
+        $this->doc = clone $this->doc;
+    }
 }

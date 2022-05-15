@@ -38,6 +38,10 @@ class Project
 
     protected Loader $loader;
 
+    protected ClassLoader $classLoder;
+
+    protected array $cache = [];
+
     protected array $_defaultConfig = [];
 
     /**
@@ -53,15 +57,16 @@ class Project
         $this->globalNamespace = new ProjectNamespace(null, 'Global');
         $this->rootNamespace = new ProjectNamespace($this->_config['namespace'], $this->_config['namespace']);
 
-        $this->loader = new Loader($this->createClassLoader($projectPath));
+        $this->loader = new Loader($projectPath);
+        $this->classLoader = $this->createClassLoader($projectPath);
 
         foreach ($this->_config['sourceDirs'] as $dir) {
             $this->log(sprintf('Loading sources from `%s`', $dir), 'info');
-            $nodes = $this->loader->loadDirectory($projectPath . DIRECTORY_SEPARATOR . $dir);
+            $nodes = $this->loader->loadDirectory($projectPath . DIRECTORY_SEPARATOR . $dir, true);
 
             foreach ($nodes as $node) {
                 if ($node instanceof ReflectedClassLike) {
-                    $node->inProject = true;
+                    $this->cache[$node->qualifiedName()] = $node;
                 }
 
                 $namespace = $this->findNamespace($node->context->namespace);
@@ -79,7 +84,7 @@ class Project
     {
         $classLikeMerger = function (ReflectedClassLike $ref) use (&$classLikeMerger) {
             foreach ($ref->uses as $use) {
-                $trait = $this->loader->find($ref->context->resolveClassLike($use));
+                $trait = $this->findClassLike($ref->context->resolveClassLike($use));
                 if (!$trait) {
                     continue;
                 }
@@ -89,7 +94,7 @@ class Project
 
             if ($ref instanceof ReflectedClass) {
                 foreach ($ref->implements as $implement) {
-                    $interface = $this->loader->find($ref->context->resolveClassLike($implement));
+                    $interface = $this->findClassLike($ref->context->resolveClassLike($implement));
                     if (!$interface) {
                         continue;
                     }
@@ -100,7 +105,7 @@ class Project
 
             if ($ref instanceof ReflectedInterface || $ref instanceof ReflectedClass) {
                 foreach ((array)$ref->extends ?? [] as $extend) {
-                    $interface = $this->loader->find($ref->context->resolveClassLike($extend));
+                    $interface = $this->findClassLike($ref->context->resolveClassLike($extend));
                     if (!$interface) {
                         continue;
                     }
@@ -128,6 +133,35 @@ class Project
 
         $namespaceMerger($this->globalNamespace);
         $namespaceMerger($this->rootNamespace);
+    }
+
+    /**
+     * @param string $qualifiedName Qualified name
+     * @return \Cake\ApiDocs\Reflection\ReflectedClassLike|null
+     */
+    protected function findClassLike(string $qualifiedName): ?ReflectedClassLike
+    {
+        if (array_key_exists($qualifiedName, $this->cache)) {
+            return $this->cache[$qualifiedName];
+        }
+
+        if (!$this->classLoader) {
+            return null;
+        }
+
+        $path = $this->classLoader->findFile($qualifiedName);
+        if ($path === false) {
+            return null;
+        }
+
+        $nodes = $this->loader->loadFile($path, false);
+        foreach ($nodes as $node) {
+            if ($node instanceof ReflectedClassLike && $node->qualifiedName() === $qualifiedName) {
+                return $node;
+            }
+        }
+
+        return $this->cache[$qualifiedName] = null;
     }
 
     /**
