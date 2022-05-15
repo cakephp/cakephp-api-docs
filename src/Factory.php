@@ -277,23 +277,29 @@ class Factory
     {
         foreach ($node->getConstants() as $classConstNode) {
             foreach ($classConstNode->consts as $constNode) {
-                $constant = $this->createConstant($classLike, $classConstNode, $constNode);
-                $classLike->constants[$constant->name] = $constant;
+                if (!$classConstNode->isPrivate()) {
+                    $constant = $this->createConstant($classLike, $classConstNode, $constNode);
+                    $classLike->constants[$constant->name] = $constant;
+                }
             }
         }
         ksort($classLike->constants);
 
         foreach ($node->getProperties() as $classPropNode) {
             foreach ($classPropNode->props as $propNode) {
-                $property = $this->createProperty($classLike, $classPropNode, $propNode);
-                $classLike->properties[$property->name] = $property;
+                if (!$classPropNode->isPrivate()) {
+                    $property = $this->createProperty($classLike, $classPropNode, $propNode);
+                    $classLike->properties[$property->name] = $property;
+                }
             }
         }
         ksort($classLike->properties);
 
         foreach ($node->getmethods() as $methodNode) {
-            $method = $this->createMethod($classLike, $methodNode);
-            $classLike->methods[$method->name] = $method;
+            if (!$methodNode->isPrivate()) {
+                $method = $this->createMethod($classLike, $methodNode);
+                $classLike->methods[$method->name] = $method;
+            }
         }
         ksort($classLike->methods);
 
