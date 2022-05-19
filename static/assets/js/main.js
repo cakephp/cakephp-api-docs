@@ -265,7 +265,7 @@ $(function() {
 
     var $search = $('.search input[name=q]');
     $search
-        .autocomplete(searchEntries.entries, {
+        .autocomplete(searchEntries, {
             matchContains: true,
             scrollHeight: 200,
             max: 20,
