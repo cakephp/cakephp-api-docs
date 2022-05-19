@@ -164,8 +164,9 @@ class Factory
             $classLike->context,
             $source
         );
-        $const->value = PrintUtil::expr($constNode->value);
+        $const->owner = $classLike;
 
+        $const->value = PrintUtil::expr($constNode->value);
         if (isset($doc->tags['var'])) {
             $const->type = $doc->tags['var']->type;
         }
@@ -200,10 +201,10 @@ class Factory
             $classLike->context,
             $source
         );
+        $prop->owner = $classLike;
 
         $prop->nativeType = $classNode->type ? DocUtil::parseType(PrintUtil::node($classNode->type)) : null;
         $prop->type = $doc->tags['var']?->type ?? $prop->nativeType;
-
         $prop->default = $propNode->default ? PrintUtil::expr($propNode->default) : null;
 
         $prop->visibility = $classNode->isPublic() ? 'public' : ($classNode->isProtected() ? 'protected' : 'private');
@@ -233,9 +234,9 @@ class Factory
             $classLike->context,
             $source
         );
+        $func->owner = $classLike;
 
         $this->reflectFuncLike($func, $node, $doc);
-
         $func->visibility = $node->isPublic() ? 'public' : ($node->isProtected() ? 'protected' : 'private');
         $func->abstract = $node->isAbstract();
         $func->static = $node->isStatic();

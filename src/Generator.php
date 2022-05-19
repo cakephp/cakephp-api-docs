@@ -18,6 +18,8 @@ declare(strict_types=1);
 namespace Cake\ApiDocs;
 
 use Cake\ApiDocs\Reflection\ReflectedClassLike;
+use Cake\ApiDocs\Reflection\ReflectedInterface;
+use Cake\ApiDocs\Reflection\ReflectedTrait;
 use Cake\Log\LogTrait;
 use Twig\Environment;
 
@@ -59,13 +61,22 @@ class Generator
         $namespaces[] = $project->rootNamespace;
         $this->twig->addGlobal('namespaces', $namespaces);
 
-        $this->renderTemplate('pages/overview.twig', 'index.html');
+        $this->renderOverview();
+        $this->renderSearch($namespaces);
+
         foreach ($namespaces as $namespace) {
             $this->renderNamespace($namespace);
         }
-        /*
-        $this->renderSearch();
-        */
+    }
+
+    /**
+     * Render overview page.
+     *
+     * @return void
+     */
+    public function renderOverview(): void
+    {
+        $this->renderTemplate('pages/overview.twig', 'index.html');
     }
 
     /**
@@ -115,59 +126,62 @@ class Generator
     /**
      * Renders search data.
      *
+     * @param array $namespaces Project namespaces
      * @return void
      */
-    protected function renderSearch(): void
+    protected function renderSearch(array $namespaces): void
     {
-        $search = [];
-        $addNested = function ($loaded, $addNested) use (&$search) {
-            foreach ($loaded->children as $child) {
-                $addNested($child, $addNested);
-            }
+        $entries = [];
 
-            // Add interface entries
-            foreach ($loaded->interfaces as $loadedInterface) {
-                foreach ($loadedInterface->constants as $loadedConstant) {
-                    $search[] = ['i', substr($loadedConstant->fqsen, 1)];
-                }
-                foreach ($loadedInterface->methods as $loadedMethod) {
-                    $search[] = ['i', substr($loadedMethod->fqsen, 1)];
-                }
-            }
+        $addEntries = function (ReflectedClassLike $classLike) use (&$entries) {
+            $type = match (true) {
+                $classLike instanceof ReflectedInterface => 'i',
+                $classLike instanceof ReflectedTrait => 't',
+                $classLike instanceof ReflectedClassLike => 'c'
+            };
 
-            // Add class entries
-            foreach ($loaded->classes as $loadedClass) {
-                foreach ($loadedClass->constants as $loadedConstant) {
-                    $search[] = ['c', substr($loadedConstant->fqsen, 1)];
-                }
-                /* skip properties to reduce search results
-                foreach ($loadedClass->properties as $loadedProperty) {
-                    $search[] = ['c', substr($loadedProperty->fqsen, 1)];
-                }
-                */
-                foreach ($loadedClass->methods as $loadedMethod) {
-                    $search[] = ['c', substr($loadedMethod->fqsen, 1)];
+            foreach ($classLike->constants as $constant) {
+                if (
+                    $constant->visibility === 'public' &&
+                    (
+                        !$constant->source->inProject || $constant->owner === $classLike
+                    )
+                ) {
+                    $entries[] = [$type, sprintf('%s::%s', $classLike->qualifiedName(), $constant->name)];
                 }
             }
-
-            // Add trait entries
-            foreach ($loaded->traits as $loadedTrait) {
-                /* skip properties to reduce search results
-                foreach ($loadedTrait->properties as $loadedProperty) {
-                    $search[] = ['t', substr($loadedProperty->fqsen, 1)];
+            foreach ($classLike->properties as $property) {
+                if (
+                    $property->visibility === 'public' &&
+                    (
+                        !$property->source->inProject || $property->owner === $classLike
+                    )
+                ) {
+                    $entries[] = [$type, sprintf('%s::$%s', $classLike->qualifiedName(), $property->name)];
                 }
-                */
-                foreach ($loadedTrait->methods as $loadedMethod) {
-                    $search[] = ['t', substr($loadedMethod->fqsen, 1)];
+            }
+            foreach ($classLike->methods as $method) {
+                if (
+                    $method->visibility === 'public' &&
+                    (
+                        !$method->source->inProject || $method->owner === $classLike
+                    )
+                ) {
+                    $entries[] = [$type, sprintf('%s::%s()', $classLike->qualifiedName(), $method->name)];
                 }
             }
         };
 
-        foreach ($this->project->getNamespaces() as $loaded) {
-            $addNested($loaded, $addNested);
-        }
+        $addNamespace = function (ProjectNamespace $ns) use (&$addNamespace, $addEntries) {
+            array_walk($ns->children, fn ($ns) => $addNamespace($ns));
+            array_walk($ns->interfaces, fn ($classLike) => $addEntries($classLike));
+            array_walk($ns->traits, fn ($classLike) => $addEntries($classLike));
+            array_walk($ns->classes, fn ($classLike) => $addEntries($classLike));
+        };
 
-        $this->renderer->render('searchlist.twig', 'searchlist.js', ['entries' => json_encode(array_values($search))]);
+        array_walk($namespaces, $addNamespace);
+
+        $this->renderTemplate('searchlist.twig', 'searchlist.js', ['entries' => json_encode(array_values($entries))]);
     }
 
     /**

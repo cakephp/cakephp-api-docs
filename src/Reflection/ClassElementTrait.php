@@ -23,7 +23,9 @@ trait ClassElementTrait
 
     public bool $annotated = false;
 
-    public ReflectedClassLike $implements;
+    public ?ReflectedClassLike $implements = null;
 
-    public ReflectedClassLike $overrides;
+    public ?ReflectedClassLike $overrides = null;
+
+    public ReflectedClassLike $owner;
 }
