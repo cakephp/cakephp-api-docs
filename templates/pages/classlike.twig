@@ -11,6 +11,9 @@
     {% else %}
       {{ ref.name }}
     {% endif %}
+    {% if ref.source.inProject %}
+      <a href="{{ ref|node_to_repo_url }}" title="Permalink to Github" target="_blank"><i class="fa fa-github"></i></a>
+    {% endif %}
   </h1>
 
   <div class="description">
