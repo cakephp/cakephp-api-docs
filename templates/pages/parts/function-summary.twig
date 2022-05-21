@@ -14,8 +14,8 @@
             {% if function.static %}
               <span class="label">static</span>
             {% endif %}
-            {% if function.annotated %}
-              <span class="label annotation">@method</span>
+            {% if function.annotation|default(null) %}
+              <span class="label annotation">{{ function.annotation }}</span>
             {% endif %}
             {% if function.doc.tags.deprecated is defined %}
               <span class="label">deprecated</span>

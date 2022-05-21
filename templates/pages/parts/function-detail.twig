@@ -20,8 +20,8 @@
         {% if function.static %}
           <span class="label">static</span>
         {% endif %}
-        {% if function.annotated|default(false) %}
-          <span class="label annotation">@method</span>
+        {% if function.annotation|default(null) %}
+          <span class="label annotation">{{ function.annotation }}</span>
         {% endif %}
         {% if function.doc.tags.depecated is defined %}
           <span class="label">deprecated</span>
@@ -31,7 +31,7 @@
       <pre><code class="language-php">
         {{- function.name }}(
           {%- for param in function.params %}
-            {{- param.type|type }} {% if param.variadic %}...{% endif %}${{ param.name }}{{ param.default is not null ? ' = ' ~ param.default : '' }}{{ loop.last?'':', ' }}
+            {{- param.type|type|default('mixed') }} {% if param.variadic %}...{% endif %}${{ param.name }}{{ param.default is not null ? ' = ' ~ param.default : '' }}{{ loop.last?'':', ' }}
           {%- endfor -%}
         ){{ function.returnType ? ': ' ~ function.returnType|type : '' -}}
       </code></pre>
