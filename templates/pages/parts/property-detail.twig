@@ -15,8 +15,8 @@
         {% if property.static %}
           <span class="label">static</span>
         {% endif %}
-        {% if property.annotated %}
-          <span class="label annotation">@property</span>
+        {% if property.annotation %}
+          <span class="label annotation">{{ property.annotation }}</span>
         {% endif %}
         {% if property.doc.tags.deprecated is defined %}
           <span class="label">deprecated</span>

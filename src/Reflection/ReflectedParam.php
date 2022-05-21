@@ -42,4 +42,17 @@ class ReflectedParam
     {
         $this->name = $name;
     }
+
+    /**
+     * @return void
+     */
+    public function __clone(): void
+    {
+        if ($this->type) {
+            $this->type = clone $this->type;
+        }
+        if ($this->nativeType) {
+            $this->nativeType = clone $this->nativeType;
+        }
+    }
 }

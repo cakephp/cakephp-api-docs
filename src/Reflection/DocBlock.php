@@ -70,28 +70,14 @@ class DocBlock
             $this->tags['return'] = current($tags)->value;
         }
 
-        $tags = $node->getTagsByName('@property');
-        foreach ($tags as $tag) {
-            if ($tag->value instanceof InvalidTagValueNode) {
-                continue;
+        foreach (['@property', '@property-read', '@property-write'] as $tagName) {
+            $tags = $node->getTagsByName($tagName);
+            foreach ($tags as $tag) {
+                if ($tag->value instanceof InvalidTagValueNode) {
+                    continue;
+                }
+                $this->tags[$tagName][$tag->value->propertyName] = $tag->value;
             }
-            $this->tags['property'][$tag->value->propertyName] = $tag->value;
-        }
-
-        $tags = $node->getTagsByName('@property-read');
-        foreach ($tags as $tag) {
-            if ($tag->value instanceof InvalidTagValueNode) {
-                continue;
-            }
-            $this->tags['property'][$tag->value->propertyName] = $tag->value;
-        }
-
-        $tags = $node->getTagsByName('@property-write');
-        foreach ($tags as $tag) {
-            if ($tag->value instanceof InvalidTagValueNode) {
-                continue;
-            }
-            $this->tags['property'][$tag->value->propertyName] = $tag->value;
         }
 
         $tags = $node->getTagsByName('@method');
@@ -99,7 +85,7 @@ class DocBlock
             if ($tag->value instanceof InvalidTagValueNode) {
                 continue;
             }
-            $this->tags['method'][$tag->value->methodName] = $tag->value;
+            $this->tags['@method'][$tag->value->methodName] = $tag->value;
         }
 
         $tags = $node->getTagsByName('@throws');

@@ -33,4 +33,21 @@ class ReflectedFunction extends ReflectedNode
     public bool $abstract = false;
 
     public bool $static = false;
+
+    /**
+     * @return void
+     */
+    public function __clone(): void
+    {
+        parent::__clone();
+        foreach ($this->params as &$param) {
+            $param = clone $param;
+        }
+        if ($this->returnType) {
+            $this->returnType = clone $this->returnType;
+        }
+        if ($this->nativeReturnType) {
+            $this->nativeReturnType = clone $this->nativeReturnType;
+        }
+    }
 }

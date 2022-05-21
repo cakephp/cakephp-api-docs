@@ -21,7 +21,7 @@ trait ClassElementTrait
 {
     public string $visibility = 'public';
 
-    public bool $annotated = false;
+    public ?string $annotation = null;
 
     public ?ReflectedClassLike $implements = null;
 

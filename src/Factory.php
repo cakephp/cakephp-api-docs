@@ -45,7 +45,9 @@ use PhpParser\Node\Stmt\Property;
 use PhpParser\Node\Stmt\PropertyProperty;
 use PhpParser\Node\Stmt\Trait_;
 use PHPStan\PhpDocParser\Ast\PhpDoc\InvalidTagValueNode;
+use PHPStan\PhpDocParser\Ast\PhpDoc\MethodTagValueNode;
 use PHPStan\PhpDocParser\Ast\PhpDoc\ParamTagValueNode;
+use PHPStan\PhpDocParser\Ast\PhpDoc\PropertyTagValueNode;
 
 class Factory
 {
@@ -195,12 +197,7 @@ class Factory
             $classNode->getEndLine()
         );
 
-        $prop = new ReflectedProperty(
-            $propNode->name->name,
-            $doc,
-            $classLike->context,
-            $source
-        );
+        $prop = new ReflectedProperty($propNode->name->name, $doc, $classLike->context, $source);
         $prop->owner = $classLike;
 
         $prop->nativeType = $classNode->type ? DocUtil::parseType(PrintUtil::node($classNode->type)) : null;
@@ -209,6 +206,31 @@ class Factory
 
         $prop->visibility = $classNode->isPublic() ? 'public' : ($classNode->isProtected() ? 'protected' : 'private');
         $prop->static = $classNode->isStatic();
+
+        return $prop;
+    }
+
+    /**
+     * @param \Cake\ApiDocs\Reflection\ReflectedClassLike $classLike Reflected classLike
+     * @param string $tagName Property tag name
+     * @param \PHPStan\PhpDocParser\Ast\PhpDoc\PropertyTagValueNode $tagValue Property tag value
+     * @return \Cake\ApiDocs\Reflection\ReflectedProperty
+     */
+    protected function createdAnnotatedProperty(
+        ReflectedClassLike $classLike,
+        string $tagName,
+        PropertyTagValueNode $tagValue
+    ): ReflectedProperty {
+        $doc = new DocBlock(null);
+        $doc->summary = $tagValue->description;
+        $source = clone $classLike->source;
+
+        $prop = new ReflectedProperty(substr($tagValue->propertyName, 1), $doc, $classLike->context, $source);
+        $prop->owner = $classLike;
+        $prop->annotation = $tagName;
+
+        $prop->nativeType = $tagValue->type;
+        $prop->type = $tagValue->type;
 
         return $prop;
     }
@@ -245,28 +267,35 @@ class Factory
     }
 
     /**
-     * @param \Cake\ApiDocs\Reflection\ReflectedFunction $func Reflected function
-     * @param \PhpParser\Node\Param $node Param node
-     * @return \Cake\ApiDocs\Reflection\ReflectedParam
+     * @param \Cake\ApiDocs\Reflection\ReflectedClassLike $classLike Reflected classLike
+     * @param string $tagName Method tag name
+     * @param \PHPStan\PhpDocParser\Ast\PhpDoc\MethodTagValueNode $tagValue Method tag value
+     * @return \Cake\ApiDocs\Reflection\ReflectedMethod
      */
-    protected function createParam(ReflectedFunction $func, Param $node): ReflectedParam
-    {
-        $param = new ReflectedParam($node->var->name);
+    protected function createdAnnotatedMethod(
+        ReflectedClassLike $classLike,
+        string $tagName,
+        MethodTagValueNode $tagValue
+    ): ReflectedMethod {
+        $doc = new DocBlock(null);
+        $doc->summary = $tagValue->description;
+        $source = clone $classLike->source;
 
-        $tag = $this->getParamTag($param->name, $func->doc);
-        $param->nativeType = $node->type ? DocUtil::parseType(PrintUtil::node($node->type)) : null;
-        if ($tag) {
-            $param->type = $tag->type;
-            $param->description = $tag->description;
-        } else {
-            $param->type = $param->nativeType;
+        $method = new ReflectedMethod($tagValue->methodName, $doc, $classLike->context, $source);
+        $method->owner = $classLike;
+        $method->annotation = $tagName;
+
+        foreach ($tagValue->parameters as $paramNode) {
+            $param = new ReflectedParam(substr($paramNode->parameterName, 1));
+            $param->type = $paramNode->type;
+            $param->byRef = $paramNode->isReference;
+            $param->variadic = $paramNode->isVariadic;
+            $param->default = $paramNode->defaultValue?->__toString();
+            $method->params[$param->name] = $param;
         }
+        $method->returnType = $tagValue->returnType;
 
-        $param->variadic = $node->variadic;
-        $param->byRef = $node->byRef;
-        $param->default = $node->default ? PrintUtil::expr($node->default) : null;
-
-        return $param;
+        return $method;
     }
 
     /**
@@ -294,6 +323,12 @@ class Factory
                 }
             }
         }
+        foreach (['@property', '@property-read', '@property-write'] as $tagName) {
+            foreach ($classLike->doc->tags[$tagName] ?? [] as $tagValue) {
+                $property = $this->createdAnnotatedProperty($classLike, $tagName, $tagValue);
+                $classLike->properties[$property->name] = $property;
+            }
+        }
         ksort($classLike->properties);
 
         foreach ($node->getmethods() as $methodNode) {
@@ -301,6 +336,10 @@ class Factory
                 $method = $this->createMethod($classLike, $methodNode);
                 $classLike->methods[$method->name] = $method;
             }
+        }
+        foreach ($classLike->doc->tags['@method'] ?? [] as $tagValue) {
+            $method = $this->createdAnnotatedMethod($classLike, '@method', $tagValue);
+            $classLike->methods[$method->name] = $method;
         }
         ksort($classLike->methods);
 
@@ -330,6 +369,31 @@ class Factory
             $func->nativeReturnType = DocUtil::parseType(PrintUtil::node($node->getReturnType()));
         }
         $func->returnType = $doc->tags['return']?->type ?? $func->nativeReturnType;
+    }
+
+    /**
+     * @param \Cake\ApiDocs\Reflection\ReflectedFunction $func Reflected function
+     * @param \PhpParser\Node\Param $node Param node
+     * @return \Cake\ApiDocs\Reflection\ReflectedParam
+     */
+    protected function createParam(ReflectedFunction $func, Param $node): ReflectedParam
+    {
+        $param = new ReflectedParam($node->var->name);
+
+        $tag = $this->getParamTag($param->name, $func->doc);
+        $param->nativeType = $node->type ? DocUtil::parseType(PrintUtil::node($node->type)) : null;
+        if ($tag) {
+            $param->type = $tag->type;
+            $param->description = $tag->description;
+        } else {
+            $param->type = $param->nativeType;
+        }
+
+        $param->variadic = $node->variadic;
+        $param->byRef = $node->byRef;
+        $param->default = $node->default ? PrintUtil::expr($node->default) : null;
+
+        return $param;
     }
 
     /**
