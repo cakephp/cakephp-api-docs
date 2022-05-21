@@ -2,6 +2,8 @@ FROM alpine:edge
 
 LABEL Description="CakePHP API Docs"
 
+RUN echo 'https://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories
+
 RUN apk add --no-cache \
     bash \
     curl \
