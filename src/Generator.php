@@ -133,13 +133,14 @@ class Generator
     {
         $entries = [];
 
-        $addEntries = function (ReflectedClassLike $classLike) use (&$entries) {
+        $addClassLike = function (ReflectedClassLike $classLike) use (&$entries) {
             $type = match (true) {
                 $classLike instanceof ReflectedInterface => 'i',
                 $classLike instanceof ReflectedTrait => 't',
                 $classLike instanceof ReflectedClassLike => 'c'
             };
 
+            $entries[] = [$type, $classLike->qualifiedName()];
             foreach ($classLike->constants as $constant) {
                 if (
                     $constant->visibility === 'public' &&
@@ -172,11 +173,11 @@ class Generator
             }
         };
 
-        $addNamespace = function (ProjectNamespace $ns) use (&$addNamespace, $addEntries) {
+        $addNamespace = function (ProjectNamespace $ns) use (&$addNamespace, $addClassLike) {
             array_walk($ns->children, fn ($ns) => $addNamespace($ns));
-            array_walk($ns->interfaces, fn ($classLike) => $addEntries($classLike));
-            array_walk($ns->traits, fn ($classLike) => $addEntries($classLike));
-            array_walk($ns->classes, fn ($classLike) => $addEntries($classLike));
+            array_walk($ns->interfaces, fn ($classLike) => $addClassLike($classLike));
+            array_walk($ns->traits, fn ($classLike) => $addClassLike($classLike));
+            array_walk($ns->classes, fn ($classLike) => $addClassLike($classLike));
         };
 
         array_walk($namespaces, $addNamespace);
