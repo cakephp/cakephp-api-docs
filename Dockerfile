@@ -1,15 +1,11 @@
-FROM alpine:edge
-
-LABEL Description="CakePHP API Docs"
-
-RUN echo 'https://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories
+# Build api docs with php 8.1 requirements
+FROM alpine:3.16
 
 RUN apk add --no-cache \
     bash \
     curl \
     git \
     make \
-    nginx \
     openssh-client \
     php81 \
     php81-bz2 \
@@ -24,7 +20,44 @@ RUN apk add --no-cache \
     php81-tokenizer \
     php81-xml \
     php81-xmlwriter \
-    php81-zip \
+    php81-zip
+
+RUN ln -sf /usr/bin/php81 /usr/bin/php
+
+RUN mkdir /root/.ssh \
+    && ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+
+WORKDIR /data
+COPY . /data
+
+RUN git clone https://github.com/cakephp/cakephp.git /cakephp
+
+RUN ls -lah \
+  && make clean build-cakephp5-all CAKEPHP_SOURCE_DIR=/cakephp CHRONOS_SOURCE_DIR=/chronos ELASTIC_SOURCE_DIR=/elastic QUEUE_SOURCE_DIR=/queue
+
+# Build api docs with php7 requirements
+FROM alpine:3.15
+
+RUN apk add --no-cache \
+    bash \
+    curl \
+    git \
+    make \
+    openssh-client \
+    php8 \
+    php8-bz2 \
+    php8-curl \
+    php8-dom \
+    php8-intl \
+    php8-json \
+    php8-mbstring \
+    php8-openssl \
+    php8-phar \
+    php8-simplexml \
+    php8-tokenizer \
+    php8-xml \
+    php8-xmlwriter \
+    php8-zip \
     php7 \
     php7-bz2 \
     php7-curl \
@@ -40,15 +73,11 @@ RUN apk add --no-cache \
     php7-xmlwriter \
     php7-zip
 
-RUN ln -sf /usr/bin/php81 /usr/bin/php
+RUN ln -sf /usr/bin/php8 /usr/bin/php
 
-RUN mkdir /website /root/.ssh
+RUN mkdir /root/.ssh \
+    && ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
 
-RUN ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
-
-ARG GIT_COMMIT=master
-
-ENV GIT_COMMIT ${GIT_COMMIT}
 WORKDIR /data
 COPY . /data
 
@@ -58,15 +87,33 @@ RUN git clone https://github.com/cakephp/cakephp.git /cakephp \
   && git clone https://github.com/cakephp/queue.git /queue
 
 RUN ls -lah \
-  && make clean build-all CAKEPHP_SOURCE_DIR=/cakephp CHRONOS_SOURCE_DIR=/chronos ELASTIC_SOURCE_DIR=/elastic QUEUE_SOURCE_DIR=/queue \
-  && make deploy DEPLOY_DIR=/var/www/html
+  && make clean build-cakephp3-all PHP_COMPOSER=php7 CAKEPHP_SOURCE_DIR=/cakephp \
+  && make clean build-cakephp4-all PHP_COMPOSER=php7 CAKEPHP_SOURCE_DIR=/cakephp \
+  && make clean build-chronos1-all PHP_COMPOSER=php7 CHRONOS_SOURCE_DIR=/chronos \
+  && make clean build-chronos2-all PHP_COMPOSER=php7 CHRONOS_SOURCE_DIR=/chronos \
+  && make clean build-elastic2-all PHP_COMPOSER=php7 ELASTIC_SOURCE_DIR=/elastic \
+  && make clean build-elastic3-all PHP_COMPOSER=php7 ELASTIC_SOURCE_DIR=/elastic \
+  && make clean build-queue1-all PHP_COMPOSER=php7 QUEUE_SOURCE_DIR=/queue
 
-RUN mkdir -p /run/nginx \
-  && mv /data/nginx.conf /etc/nginx/http.d/default.conf
+
+# nginx server
+FROM alpine:3.16
+
+LABEL Description="CakePHP API Docs"
+
+RUN apk add --no-cache \
+    nginx \
+    openssh-client
 
 # forward request and error logs to docker log collector
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
   && ln -sf /dev/stderr /var/log/nginx/error.log
+
+COPY nginx.conf /etc/nginx/http.d/default.conf
+
+WORKDIR /var/www/html
+COPY --from=0 /data/build/api ./
+COPY --from=1 /data/build/api ./
 
 EXPOSE 80
 
