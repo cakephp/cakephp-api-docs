@@ -53,14 +53,14 @@
           <div id="groups">
             <h3 class="nav-title">Namespaces</h3>
             <ul class="nav-list">
-              {% macro listNamespace(namespace, context) %}
+              {% macro listNamespace(namespace, topLevel, context) %}
                 {% set isActive = context['contextName'] is defined and inNamespace(namespace.name, context['contextName']) %}
                 <li class="{{ isActive ? 'active' : '' }}">
                   <a href="{{ namespace.name|namespace_url }}">{{ namespace.displayName }}</a>
-                  {% if isActive and namespace.children %}
+                  {% if (topLevel or isActive) and namespace.children %}
                   <ul>
                     {% for child in namespace.children %}
-                      {{ _self.listNamespace(child, context) }}
+                      {{ _self.listNamespace(child, false, context) }}
                     {% endfor %}
                   </ul>
                   {% endif %}
@@ -68,7 +68,7 @@
               {% endmacro %}
 
               {% for ns in namespaces %}
-                {{ _self.listNamespace(ns, _context) }}
+                {{ _self.listNamespace(ns, true, _context) }}
               {% endfor %}
             </ul>
           </div>
