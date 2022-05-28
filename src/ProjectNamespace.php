@@ -27,9 +27,9 @@ use InvalidArgumentException;
 
 class ProjectNamespace
 {
-    public ?string $name;
+    public string $name;
 
-    public ?string $displayName;
+    public ?string $qualifiedName;
 
     /**
      * @var array<string, self>
@@ -62,13 +62,17 @@ class ProjectNamespace
     public array $traits = [];
 
     /**
-     * @param string|null $name Qualified namespace name
-     * @param string $displayName Display name
+     * @param string|null $qualifiedName Qualified name
      */
-    public function __construct(?string $name, string $displayName)
+    public function __construct(?string $qualifiedName)
     {
-        $this->name = $name;
-        $this->displayName = $displayName;
+        if (!$qualifiedName) {
+            $this->name = $qualifiedName ?: 'Global';
+        } else {
+            $lastSlash = strrpos($qualifiedName, '\\');
+            $this->name = substr($qualifiedName, $lastSlash + 1);
+        }
+        $this->qualifiedName = $qualifiedName;
     }
 
     /**

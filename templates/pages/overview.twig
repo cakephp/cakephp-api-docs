@@ -10,7 +10,7 @@
   <ul>
     {% macro showNamespace(namespace) %}
       <li>
-        <a href="{{ namespace.name|namespace_url }}">{{ namespace.name|default(namespace.displayName) }}</a>
+        <a href="{{ namespace.name|namespace_to_url }}">{{ namespace.name|default(namespace.name) }}</a>
         <ul>
         {% for child in namespace.children %}
           {{ _self.showNamespace(child) }}

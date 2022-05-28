@@ -31,7 +31,7 @@
       <b>Abstract</b><br>
     {% endif %}
 
-    <b>Namespace:</b> <a href="{{ ref.context.namespace|namespace_url }}">{{ ref.context.namespace }}</a><br>
+    <b>Namespace:</b> <a href="{{ ref.context.namespace|namespace_to_url }}">{{ ref.context.namespace }}</a><br>
 
     {% if ref.doc.tags.deprecated is defined %}
       <b style="color: #be0000">Deprecated:</b> {{ ref.doc.tags.deprecated }}<br>
