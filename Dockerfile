@@ -33,7 +33,7 @@ COPY . /data
 RUN git clone https://github.com/cakephp/cakephp.git /cakephp
 
 RUN ls -lah \
-  && make clean build-cakephp5-all CAKEPHP_SOURCE_DIR=/cakephp CHRONOS_SOURCE_DIR=/chronos ELASTIC_SOURCE_DIR=/elastic QUEUE_SOURCE_DIR=/queue
+  && make build-cakephp5-all CAKEPHP_SOURCE_DIR=/cakephp CHRONOS_SOURCE_DIR=/chronos ELASTIC_SOURCE_DIR=/elastic QUEUE_SOURCE_DIR=/queue
 
 # Build api docs with php7 requirements
 FROM alpine:3.15
@@ -87,13 +87,13 @@ RUN git clone https://github.com/cakephp/cakephp.git /cakephp \
   && git clone https://github.com/cakephp/queue.git /queue
 
 RUN ls -lah \
-  && make clean build-cakephp3-all PHP_COMPOSER=php7 CAKEPHP_SOURCE_DIR=/cakephp \
-  && make clean build-cakephp4-all PHP_COMPOSER=php7 CAKEPHP_SOURCE_DIR=/cakephp \
-  && make clean build-chronos1-all PHP_COMPOSER=php7 CHRONOS_SOURCE_DIR=/chronos \
-  && make clean build-chronos2-all PHP_COMPOSER=php7 CHRONOS_SOURCE_DIR=/chronos \
-  && make clean build-elastic2-all PHP_COMPOSER=php7 ELASTIC_SOURCE_DIR=/elastic \
-  && make clean build-elastic3-all PHP_COMPOSER=php7 ELASTIC_SOURCE_DIR=/elastic \
-  && make clean build-queue1-all PHP_COMPOSER=php7 QUEUE_SOURCE_DIR=/queue
+  && make build-cakephp3-all PHP_COMPOSER=php7 CAKEPHP_SOURCE_DIR=/cakephp \
+  && make build-cakephp4-all PHP_COMPOSER=php7 CAKEPHP_SOURCE_DIR=/cakephp \
+  && make build-chronos1-all PHP_COMPOSER=php7 CHRONOS_SOURCE_DIR=/chronos \
+  && make build-chronos2-all PHP_COMPOSER=php7 CHRONOS_SOURCE_DIR=/chronos \
+  && make build-elastic2-all PHP_COMPOSER=php7 ELASTIC_SOURCE_DIR=/elastic \
+  && make build-elastic3-all PHP_COMPOSER=php7 ELASTIC_SOURCE_DIR=/elastic \
+  && make build-queue1-all PHP_COMPOSER=php7 QUEUE_SOURCE_DIR=/queue
 
 
 # nginx server

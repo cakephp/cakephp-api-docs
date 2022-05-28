@@ -160,7 +160,7 @@ endef
 # Build all the versions in a loop.
 build-cakephp3-all: $(foreach version, $(CAKEPHP3_VERSIONS), build-cakephp-$(version))
 build-cakephp4-all: $(foreach version, $(CAKEPHP4_VERSIONS), build-cakephp-$(version))
-build-cakephp5-all: $(foreach version, $(CAKEPHP4_VERSIONS), build-cakephp-$(version))
+build-cakephp5-all: $(foreach version, $(CAKEPHP5_VERSIONS), build-cakephp-$(version))
 
 build-chronos1-all: $(foreach version, $(CHRONOS1_VERSIONS), build-chronos-$(version))
 build-chronos2-all: $(foreach version, $(CHRONOS2_VERSIONS), build-chronos-$(version))
