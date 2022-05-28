@@ -199,18 +199,19 @@ class Project
 
         if (!str_starts_with($name, $this->rootNamespace->name)) {
             throw new RuntimeException(sprintf(
-                'Namespace `%s` is not a child of the project root `%s`.',
+                'Namespace `%s` is not a child of the project namespace `%s`.',
                 $name,
                 $this->rootNamespace->name
             ));
         }
 
-        $ns = $this->rootNamespace;
-        $parts = explode('\\', substr($name, strlen($this->rootNamespace->name)));
-        if (count($parts) > 1) {
-            array_shift($parts);
+        $remainder = substr($name, strlen($this->rootNamespace->name) + 1);
+        if (!$remainder) {
+            return $this->rootNamespace;
         }
 
+        $ns = $this->rootNamespace;
+        $parts = preg_split('/\\\\/', $remainder);
         foreach ($parts as $part) {
             if (isset($ns->children[$part])) {
                 $ns = $ns->children[$part];
