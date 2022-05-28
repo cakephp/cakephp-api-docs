@@ -4,23 +4,34 @@ ELASTIC_SOURCE_DIR=../elastic-search
 QUEUE_SOURCE_DIR=../queue
 BUILD_DIR=./build/api
 DEPLOY_DIR=./website
-PHP8=php
-PHP7=php7
+PHP=php
+PHP_COMPOSER=php
 COMPOSER=$(PWD)/composer.phar
 
 .PHONY: clean help
-.PHONY: build-all
+.PHONY: build-cakephp-3
+.PHONY: build-cakephp-4
+.PHONY: build-cakephp-5
+.PHONY: build-chronos-1
+.PHONY: build-chronos-2
+.PHONY: build-elastic-2
+.PHONY: build-elastic-3
+.PHONY: build-queue-1
 .PHONY: build-active-and-missing
 .ALL: help
 
 # Versions that can be built.
-CAKEPHP_VERSIONS = 3.0 3.1 3.2 3.3 3.4 3.5 3.6 3.7 3.8 3.9 3.10 4.0 4.1 4.2 4.3 4.next 5.0
+CAKEPHP3_VERSIONS = 3.0 3.1 3.2 3.3 3.4 3.5 3.6 3.7 3.8 3.9 3.10
+CAKEPHP4_VERSIONS = 4.0 4.1 4.2 4.3 4.next
+CAKEPHP5_VERSIONS = 5.0
 
-CHRONOS_VERSIONS = 1.x 2.x
+CHRONOS1_VERSIONS = 1.x
+CHRONOS2_VERSIONS = 2.x
 
-ELASTIC_VERSIONS = 2.x 3.x
+ELASTIC2_VERSIONS = 2.x
+ELASTIC3_VERSIONS = 3.x
 
-QUEUE_VERSIONS = 0.x
+QUEUE1_VERSIONS = 0.x
 
 help:
 	@echo "CakePHP API Documentation generator"
@@ -30,14 +41,19 @@ help:
 	@echo ""
 	@echo " clean - Clean the build output directory"
 	@echo ""
-	@echo " build-x.y - Build the x.y documentation. The versions that can be"
+	@echo " build-name-v - Build the version v documentation. The versions that can be"
 	@echo "             built are:"
 	@echo "             $(VERSIONS)"
-	@echo " build-all     - Build all versions of the documentation"
 	@echo ""
 	@echo "Variables:"
 	@echo " CAKEPHP-SOURCE_DIR - Define where your cakephp clone is. This clone will have its"
 	@echo "                      currently checked out branch manipulated. Default: $(CAKEPHP_SOURCE_DIR)"
+	@echo " CHRONOS_SOURCE_DIR - Define where your chronos clone is. This clone will have its"
+	@echo "                      currently checked out branch manipulated. Default: $(CHRONOS_SOURCE_DIR)"
+	@echo " ELASTIC_SOURCE_DIR - Define where your elastic-search clone is. This clone will have its"
+	@echo "                      currently checked out branch manipulated. Default: $(ELASTIC_SOURCE_DIR)"
+	@echo " QUEUE_SOURCE_DIR   - Define where your queue clone is. This clone will have its"
+	@echo "                      currently checked out branch manipulated. Default: $(QUEUE_SOURCE_DIR)"
 	@echo " BUILD_DIR  - The directory where the output should go. Default: $(BUILD_DIR)"
 	@echo " DEPLOY_DIR - The directory files shold be copied to in `deploy` Default: $(DEPLOY_DIR)"
 
@@ -62,7 +78,7 @@ composer.phar:
 	curl -sS https://getcomposer.org/installer | php
 
 install: composer.phar
-	$(PHP8) $(COMPOSER) install
+	$(PHP) $(COMPOSER) install
 
 define cakephp3-no-vendor
 build-cakephp-$(VERSION): install
@@ -71,78 +87,88 @@ build-cakephp-$(VERSION): install
 	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
 
-	$(PHP8) bin/apitool.php generate --config cakephp3 --version $(VERSION) --tag $(TAG) \
+	$(PHP) bin/apitool.php generate --config cakephp3 --version $(VERSION) --tag $(TAG) \
 		--output-dir $(BUILD_DIR)/cakephp/$(VERSION) $(CAKEPHP_SOURCE_DIR)
 endef
 
 define cakephp3
 build-cakephp-$(VERSION): install
 	cd $(CAKEPHP_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(CAKEPHP_SOURCE_DIR) && $(PHP7) $(COMPOSER) update
+	cd $(CAKEPHP_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update
 	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
 
-	$(PHP8) bin/apitool.php generate --config cakephp3 --version $(VERSION) --tag $(TAG) \
+	$(PHP) bin/apitool.php generate --config cakephp3 --version $(VERSION) --tag $(TAG) \
 		--output-dir $(BUILD_DIR)/cakephp/$(VERSION) $(CAKEPHP_SOURCE_DIR)
 endef
 
 define cakephp4
 build-cakephp-$(VERSION): install
 	cd $(CAKEPHP_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(CAKEPHP_SOURCE_DIR) && $(PHP7) $(COMPOSER) update
+	cd $(CAKEPHP_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update
 	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
 
-	$(PHP8) bin/apitool.php generate --config cakephp4 --version $(VERSION) --tag $(TAG) \
+	$(PHP) bin/apitool.php generate --config cakephp4 --version $(VERSION) --tag $(TAG) \
 		--output-dir $(BUILD_DIR)/cakephp/$(VERSION) $(CAKEPHP_SOURCE_DIR)
 endef
 
 define cakephp5
 build-cakephp-$(VERSION): install
 	cd $(CAKEPHP_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(CAKEPHP_SOURCE_DIR) && $(PHP8) $(COMPOSER) update
+	cd $(CAKEPHP_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update
 	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
 
-	$(PHP8) bin/apitool.php generate --config cakephp4 --version $(VERSION) --tag $(TAG) \
+	$(PHP) bin/apitool.php generate --config cakephp4 --version $(VERSION) --tag $(TAG) \
 		--output-dir $(BUILD_DIR)/cakephp/$(VERSION) $(CAKEPHP_SOURCE_DIR)
 endef
 
 define chronos
 build-chronos-$(VERSION): install
 	cd $(CHRONOS_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(CHRONOS_SOURCE_DIR) && $(PHP7) $(COMPOSER) update
+	cd $(CHRONOS_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update
 	mkdir -p $(BUILD_DIR)/chronos/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/chronos/$(VERSION)
 
-	php bin/apitool.php generate --config chronos --version $(VERSION) --tag $(TAG) \
+	$(PHP) bin/apitool.php generate --config chronos --version $(VERSION) --tag $(TAG) \
 		--output-dir $(BUILD_DIR)/chronos/$(VERSION) $(CHRONOS_SOURCE_DIR)
 endef
 
 define elastic
 build-elastic-$(VERSION): install
 	cd $(ELASTIC_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(ELASTIC_SOURCE_DIR) && $(PHP7) $(COMPOSER) update
+	cd $(ELASTIC_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update
 	mkdir -p $(BUILD_DIR)/elastic-search/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/elastic-search/$(VERSION)
 
-	$(PHP8) bin/apitool.php generate --config elastic --version $(VERSION) --tag $(TAG) \
+	$(PHP) bin/apitool.php generate --config elastic --version $(VERSION) --tag $(TAG) \
 		--output-dir $(BUILD_DIR)/elastic-search/$(VERSION) $(ELASTIC_SOURCE_DIR)
 endef
 
 define queue
 build-queue-$(VERSION): install
 	cd $(QUEUE_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(QUEUE_SOURCE_DIR) && $(PHP7) $(COMPOSER) update
+	cd $(QUEUE_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update
 	mkdir -p $(BUILD_DIR)/queue/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/queue/$(VERSION)
 
-	$(PHP8) bin/apitool.php generate --config queue --version $(VERSION) --tag $(TAG) \
+	$(PHP) bin/apitool.php generate --config queue --version $(VERSION) --tag $(TAG) \
 		--output-dir $(BUILD_DIR)/queue/$(VERSION) $(QUEUE_SOURCE_DIR)
 endef
 
 # Build all the versions in a loop.
-build-all: $(foreach version, $(CAKEPHP_VERSIONS), build-cakephp-$(version)) $(foreach version, $(CHRONOS_VERSIONS), build-chronos-$(version)) $(foreach version, $(ELASTIC_VERSIONS), build-elastic-$(version)) $(foreach version, $(QUEUE_VERSIONS), build-queue-$(version))
+build-cakephp3-all: $(foreach version, $(CAKEPHP3_VERSIONS), build-cakephp-$(version))
+build-cakephp4-all: $(foreach version, $(CAKEPHP4_VERSIONS), build-cakephp-$(version))
+build-cakephp5-all: $(foreach version, $(CAKEPHP4_VERSIONS), build-cakephp-$(version))
+
+build-chronos1-all: $(foreach version, $(CHRONOS1_VERSIONS), build-chronos-$(version))
+build-chronos2-all: $(foreach version, $(CHRONOS2_VERSIONS), build-chronos-$(version))
+
+build-elastic2-all: $(foreach version, $(ELASTIC2_VERSIONS), build-elastic-$(version))
+build-elastic3-all: $(foreach version, $(ELASTIC3_VERSIONS), build-elastic-$(version))
+
+build-queue1-all: $(foreach version, $(QUEUE1_VERSIONS), build-queue-$(version))
 
 # Generate build targets for cakephp
 TAG:=3.0.19

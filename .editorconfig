@@ -19,5 +19,5 @@ indent_size = 2
 [*.{twig, html}]
 indent_size = 2
 
-[Dockerfile]
+[Dockerfile, Dockerfile.*]
 indent_size = 2

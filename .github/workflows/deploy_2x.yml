@@ -1,5 +1,5 @@
 ---
-name: 'deploy_2x'
+name: Deploy API Docs - 2.x
 
 on:
   push:
