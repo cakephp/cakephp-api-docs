@@ -2,7 +2,7 @@
 
 return [
     'Project' => [
-        'namespace' => 'Cake',
+        'namespaces' => 'Cake',
         'sourceDirs' => ['src', 'config'],
         'excludePatterns' => [
             'Cake\Collection\CollectionTrait',

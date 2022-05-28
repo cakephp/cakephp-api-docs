@@ -3,7 +3,7 @@
 // Queue API docs
 return [
     'Project' => [
-        'namespace' => 'Cake\Queue',
+        'namespaces' => 'Cake\Queue',
         'sourceDirs' => ['src'],
         'excludePatterns' => [],
         'repo' => 'https://github.com/cakephp/queue',

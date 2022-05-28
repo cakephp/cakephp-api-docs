@@ -1,10 +1,10 @@
 {% extends 'page.twig' %}
 
-{% block title 'Namespace ' ~ namespace.name|default(namespace.displayName) %}
+{% block title 'Namespace ' ~ namespace.name|default(namespace.name) %}
 
 {% block content %}
 <div class="section namespace">
-  <h1>Namespace {{ namespace.displayName }}</h1>
+  <h1>Namespace {{ namespace.name }}</h1>
 
   {% if namespace.children is not empty %}
     <div>
@@ -12,7 +12,7 @@
       <ul class="summary-list">
         {% for child in namespace.children %}
         <li>
-          <a href="{{ child.name|namespace_url }}">{{ child.name }}</a>
+          <a href="{{ child.qualifiedName|namespace_to_url }}">{{ child.qualifiedName ?? child.name }}</a>
         </li>
         {% endfor %}
       </ul>
@@ -34,7 +34,7 @@
         <ul class="summary-list">
           {% for classLike in classLikes %}
             <li>
-              <h5><a href="{{ classLike.qualifiedName|url(type) }}">{{ classLike.name }}</a></h5>
+              <h5><a href="{{ classLike.qualifiedName|classlike_to_url(type) }}">{{ classLike.name }}</a></h5>
               {{ classLike.doc.summary|markdown_to_html }}
             </li>
           {% endfor %}

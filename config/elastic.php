@@ -3,7 +3,7 @@
 // Elastic Search API docs
 return [
     'Project' => [
-        'namespace' => 'Cake\ElasticSearch',
+        'namespaces' => 'Cake\ElasticSearch',
         'sourceDirs' => ['src'],
         'excludePatterns' => [],
         'repo' => 'https://github.com/cakephp/elastic-search',

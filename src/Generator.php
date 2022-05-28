@@ -54,19 +54,12 @@ class Generator
     {
         $this->log(sprintf('Generating project into `%s`', $this->outputDir), 'info');
 
-        $namespaces = [];
-        if (!$project->globalNamespace->isEmpty()) {
-            $namespaces[] = $project->globalNamespace;
-        }
-        $namespaces[] = $project->rootNamespace;
-        $this->twig->addGlobal('namespaces', $namespaces);
+        $this->twig->addGlobal('namespaces', $project->namespaces);
 
         $this->renderOverview();
-        $this->renderSearch($namespaces);
+        $this->renderSearch($project->namespaces);
 
-        foreach ($namespaces as $namespace) {
-            $this->renderNamespace($namespace);
-        }
+        array_walk($project->namespaces, fn ($namespace) => $this->renderNamespace($namespace));
     }
 
     /**
@@ -90,7 +83,7 @@ class Generator
         $renderer = function (ProjectNamespace $ns) use (&$renderer): void {
             $this->renderTemplate(
                 'pages/namespace.twig',
-                sprintf('namespace-%s.html', str_replace('\\', '.', $ns->name ?? $ns->displayName)),
+                sprintf('namespace-%s.html', str_replace('\\', '.', $ns->qualifiedName ?? $ns->name)),
                 ['namespace' => $ns, 'contextName' => $ns->name]
             );
 

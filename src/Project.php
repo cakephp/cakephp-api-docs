@@ -32,9 +32,10 @@ class Project
 
     use LogTrait;
 
-    public ProjectNamespace $globalNamespace;
-
-    public ProjectNamespace $rootNamespace;
+    /**
+     * @var array<string, \Cake\ApiDocs\ProjectNamespace>
+     */
+    public array $namespaces;
 
     protected Loader $loader;
 
@@ -54,8 +55,9 @@ class Project
     {
         $this->setConfig($config);
 
-        $this->globalNamespace = new ProjectNamespace(null, 'Global');
-        $this->rootNamespace = new ProjectNamespace($this->_config['namespace'], $this->_config['namespace']);
+        foreach ((array)$this->_config['namespaces'] as $namespace) {
+            $this->namespaces[$namespace] = new ProjectNamespace($namespace);
+        }
 
         $this->loader = new Loader($projectPath);
         $this->classLoader = $this->createClassLoader($projectPath);
@@ -69,10 +71,11 @@ class Project
                     $this->cache[$node->qualifiedName()] = $node;
                 }
 
-                $namespace = $this->findNamespace($node->context->namespace);
+                $namespace = $this->getNamespace($node->context->namespace);
                 $namespace->addNode($node);
             }
         }
+        ksort($this->namespaces);
 
         $this->mergeInherited();
     }
@@ -131,8 +134,7 @@ class Project
             }
         };
 
-        $namespaceMerger($this->globalNamespace);
-        $namespaceMerger($this->rootNamespace);
+        array_walk($this->namespaces, fn ($namespace) => $namespaceMerger($namespace));
     }
 
     /**
@@ -188,42 +190,44 @@ class Project
     /**
      * Finds or creates project namespace.
      *
-     * @param string|null $name Namespace name
+     * @param string|null $qualifiedName Qualified name
      * @return self|null
      */
-    protected function findNamespace(?string $name): ProjectNamespace
+    protected function getNamespace(?string $qualifiedName): ProjectNamespace
     {
-        if ($name === null) {
-            return $this->globalNamespace;
+        if ($qualifiedName === null) {
+            return $this->namespaces[''] ??= new ProjectNamespace(null);
         }
 
-        if (!str_starts_with($name, $this->rootNamespace->name)) {
-            throw new RuntimeException(sprintf(
-                'Namespace `%s` is not a child of the project namespace `%s`.',
-                $name,
-                $this->rootNamespace->name
-            ));
+        $namespace = null;
+        foreach ($this->namespaces as $root) {
+            if (str_starts_with($qualifiedName, $root->qualifiedName)) {
+                $namespace = $root;
+                break;
+            }
         }
 
-        $remainder = substr($name, strlen($this->rootNamespace->name) + 1);
-        if (!$remainder) {
-            return $this->rootNamespace;
+        if ($namespace === null) {
+            throw new RuntimeException(sprintf('Namespace `%s` is part of the project namespaces.', $qualifiedName));
         }
 
-        $ns = $this->rootNamespace;
-        $parts = preg_split('/\\\\/', $remainder);
-        foreach ($parts as $part) {
-            if (isset($ns->children[$part])) {
-                $ns = $ns->children[$part];
+        if ($namespace->qualifiedName === $qualifiedName) {
+            return $namespace;
+        }
+
+        $names = explode('\\', substr($qualifiedName, strlen($namespace->qualifiedName) + 1));
+        foreach ($names as $name) {
+            if (isset($namespace->children[$name])) {
+                $namespace = $namespace->children[$name];
                 continue;
             }
 
-            $ns->children[$part] = new ProjectNamespace($ns->name . '\\' . $part, $part);
-            ksort($ns->children);
+            $child = $namespace->children[$name] = new ProjectNamespace($namespace->qualifiedName . '\\' . $name);
+            ksort($namespace->children);
 
-            $ns = $ns->children[$part];
+            $namespace = $child;
         }
 
-        return $ns;
+        return $namespace;
     }
 }

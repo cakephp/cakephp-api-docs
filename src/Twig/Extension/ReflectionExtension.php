@@ -45,10 +45,10 @@ class ReflectionExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-            new TwigFilter('url', function (string $name, string $type) {
+            new TwigFilter('classlike_to_url', function (string $name, string $type) {
                 return sprintf('%s-%s.html', $type, preg_replace('[\\\\]', '.', $name));
             }),
-            new TwigFilter('namespace_url', function (?string $name) {
+            new TwigFilter('namespace_to_url', function (?string $name) {
                 return sprintf('namespace-%s.html', preg_replace('[\\\\]', '.', $name ?: 'Global'));
             }),
             new TwigFilter('type', function (?TypeNode $type) {

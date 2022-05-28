@@ -3,7 +3,7 @@
 // Chronos API docs
 return [
     'Project' => [
-        'namespace' => 'Cake\Chronos',
+        'namespaces' => 'Cake\Chronos',
         'sourceDirs' => ['src'],
         'excludePatterns' => [
             'Cake\Chronos\Traits',
