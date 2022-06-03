@@ -1,6 +1,6 @@
 {% extends 'page.twig' %}
 
-{% block title 'Namespace ' ~ namespace.name|default(namespace.name) %}
+{% block title 'Namespace ' ~ namespace.qualifiedName|default(namespace.name) %}
 
 {% block content %}
 <div class="section namespace">
@@ -12,7 +12,7 @@
       <ul class="summary-list">
         {% for child in namespace.children %}
         <li>
-          <a href="{{ child.qualifiedName|namespace_to_url }}">{{ child.qualifiedName ?? child.name }}</a>
+          <a href="{{ child.qualifiedName|namespace_to_url }}">{{ child.qualifiedName|default(child.name) }}</a>
         </li>
         {% endfor %}
       </ul>

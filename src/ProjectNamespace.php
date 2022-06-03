@@ -62,16 +62,12 @@ class ProjectNamespace
     public array $traits = [];
 
     /**
+     * @param string $name Display name
      * @param string|null $qualifiedName Qualified name
      */
-    public function __construct(?string $qualifiedName)
+    public function __construct(string $name, ?string $qualifiedName)
     {
-        if (!$qualifiedName) {
-            $this->name = $qualifiedName ?: 'Global';
-        } else {
-            $lastSlash = strrpos($qualifiedName, '\\');
-            $this->name = substr($qualifiedName, $lastSlash + 1);
-        }
+        $this->name = $name;
         $this->qualifiedName = $qualifiedName;
     }
 

@@ -56,7 +56,7 @@ class Project
         $this->setConfig($config);
 
         foreach ((array)$this->_config['namespaces'] as $namespace) {
-            $this->namespaces[$namespace] = new ProjectNamespace($namespace);
+            $this->namespaces[$namespace] = new ProjectNamespace($namespace, $namespace);
         }
 
         $this->loader = new Loader($projectPath);
@@ -196,7 +196,7 @@ class Project
     protected function getNamespace(?string $qualifiedName): ProjectNamespace
     {
         if ($qualifiedName === null) {
-            return $this->namespaces[''] ??= new ProjectNamespace(null);
+            return $this->namespaces[''] ??= new ProjectNamespace('Global', null);
         }
 
         $namespace = null;
@@ -222,7 +222,8 @@ class Project
                 continue;
             }
 
-            $child = $namespace->children[$name] = new ProjectNamespace($namespace->qualifiedName . '\\' . $name);
+            $child = new ProjectNamespace($name, $namespace->qualifiedName . '\\' . $name);
+            $namespace->children[$name] = $child;
             ksort($namespace->children);
 
             $namespace = $child;
