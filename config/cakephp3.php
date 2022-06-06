@@ -4,12 +4,14 @@ return [
     'Project' => [
         'namespaces' => 'Cake',
         'sourceDirs' => ['src', 'config'],
-        'excludePatterns' => [
-            'Cake\Collection\CollectionTrait',
-            'Cake\Collection\ExtractTrait',
-            'Cake\Datasource\EntityTrait',
-            'Cake\Datasource\QueryTrait',
-            'Cake\I18n\DateFormatTrait',
+        'exclude' => [
+            'classes' => [
+                'Cake\Collection\CollectionTrait',
+                'Cake\Collection\ExtractTrait',
+                'Cake\Datasource\EntityTrait',
+                'Cake\Datasource\QueryTrait',
+                'Cake\I18n\DateFormatTrait',
+            ],
         ],
         'repo' => 'https://github.com/cakephp/cakephp',
     ],
