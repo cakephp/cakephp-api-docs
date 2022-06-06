@@ -5,8 +5,10 @@ return [
     'Project' => [
         'namespaces' => 'Cake\Chronos',
         'sourceDirs' => ['src'],
-        'excludePatterns' => [
-            'Cake\Chronos\Traits',
+        'exclude' => [
+            'namespaces' => [
+                'Cake\Chronos\Traits',
+            ],
         ],
         'repo' => 'https://github.com/cakephp/chronos',
     ],

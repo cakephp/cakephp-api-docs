@@ -5,7 +5,6 @@ return [
     'Project' => [
         'namespaces' => 'Cake\ElasticSearch',
         'sourceDirs' => ['src'],
-        'excludePatterns' => [],
         'repo' => 'https://github.com/cakephp/elastic-search',
     ],
 

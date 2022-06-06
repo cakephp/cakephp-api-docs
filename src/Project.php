@@ -69,6 +69,14 @@ class Project
             foreach ($nodes as $node) {
                 if ($node instanceof ReflectedClassLike) {
                     $this->cache[$node->qualifiedName()] = $node;
+
+                    if (in_array($node->qualifiedName(), $config['exclude']['classes'] ?? [], true)) {
+                        continue;
+                    }
+                }
+
+                if (in_array($node->context->namespace, $config['exclude']['namespaces'] ?? [], true)) {
+                    continue;
                 }
 
                 $namespace = $this->getNamespace($node->context->namespace);
