@@ -233,7 +233,7 @@ VERSION:=4.3
 $(eval $(cakephp4))
 
 TAG:=origin/4.x
-VERSION:=4.x
+VERSION:=4.4
 $(eval $(cakephp4))
 
 TAG:=origin/4.next
