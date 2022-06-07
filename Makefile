@@ -22,7 +22,7 @@ COMPOSER=$(PWD)/composer.phar
 
 # Versions that can be built.
 CAKEPHP3_VERSIONS = 3.0 3.1 3.2 3.3 3.4 3.5 3.6 3.7 3.8 3.9 3.10
-CAKEPHP4_VERSIONS = 4.0 4.1 4.2 4.3 4.next
+CAKEPHP4_VERSIONS = 4.0 4.1 4.2 4.3 4.4 4.next
 CAKEPHP5_VERSIONS = 5.0
 
 CHRONOS1_VERSIONS = 1.x
@@ -46,6 +46,7 @@ help:
 	@echo "             $(VERSIONS)"
 	@echo ""
 	@echo "Variables:"
+	@echo ""
 	@echo " CAKEPHP-SOURCE_DIR - Define where your cakephp clone is. This clone will have its"
 	@echo "                      currently checked out branch manipulated. Default: $(CAKEPHP_SOURCE_DIR)"
 	@echo " CHRONOS_SOURCE_DIR - Define where your chronos clone is. This clone will have its"
@@ -227,8 +228,12 @@ TAG:=4.2.10
 VERSION:=4.2
 $(eval $(cakephp4))
 
-TAG:=origin/4.x
+TAG:=4.3.10
 VERSION:=4.3
+$(eval $(cakephp4))
+
+TAG:=origin/4.x
+VERSION:=4.x
 $(eval $(cakephp4))
 
 TAG:=origin/4.next
