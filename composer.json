@@ -15,6 +15,7 @@
         "composer/composer": "^2.0",
         "erusev/parsedown": "^1.7",
         "nikic/php-parser": "^4.13",
+        "phpstan/phpdoc-parser": "^1.4.5",
         "twig/markdown-extra": "^3.0",
         "twig/twig": "^3.0"
     },
