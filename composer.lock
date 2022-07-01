@@ -60,7 +60,7 @@
         },
         {
             "name": "cakephp/console",
-            "version": "4.4.0",
+            "version": "4.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/console.git",
@@ -118,7 +118,7 @@
         },
         {
             "name": "cakephp/core",
-            "version": "4.4.0",
+            "version": "4.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/core.git",
@@ -175,16 +175,16 @@
         },
         {
             "name": "cakephp/event",
-            "version": "4.4.0",
+            "version": "4.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/event.git",
-                "reference": "ea980b4b3c6c5a8f4d6b276857711c7d5137f6a2"
+                "reference": "a9d8948f7e548d5115b8b896121debee5525b56d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/event/zipball/ea980b4b3c6c5a8f4d6b276857711c7d5137f6a2",
-                "reference": "ea980b4b3c6c5a8f4d6b276857711c7d5137f6a2",
+                "url": "https://api.github.com/repos/cakephp/event/zipball/a9d8948f7e548d5115b8b896121debee5525b56d",
+                "reference": "a9d8948f7e548d5115b8b896121debee5525b56d",
                 "shasum": ""
             },
             "require": {
@@ -221,11 +221,11 @@
                 "issues": "https://github.com/cakephp/cakephp/issues",
                 "source": "https://github.com/cakephp/event"
             },
-            "time": "2022-05-29T00:02:01+00:00"
+            "time": "2022-06-07T09:46:53+00:00"
         },
         {
             "name": "cakephp/filesystem",
-            "version": "4.4.0",
+            "version": "4.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/filesystem.git",
@@ -275,7 +275,7 @@
         },
         {
             "name": "cakephp/log",
-            "version": "4.4.0",
+            "version": "4.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/log.git",
@@ -329,7 +329,7 @@
         },
         {
             "name": "cakephp/utility",
-            "version": "4.4.0",
+            "version": "4.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/utility.git",
