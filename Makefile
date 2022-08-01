@@ -95,7 +95,7 @@ endef
 define cakephp3
 build-cakephp-$(VERSION): install
 	cd $(CAKEPHP_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(CAKEPHP_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update
+	cd $(CAKEPHP_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update --no-plugins
 	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
 
@@ -106,7 +106,7 @@ endef
 define cakephp4
 build-cakephp-$(VERSION): install
 	cd $(CAKEPHP_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(CAKEPHP_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update
+	cd $(CAKEPHP_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update --no-plugins
 	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
 
@@ -117,7 +117,7 @@ endef
 define cakephp5
 build-cakephp-$(VERSION): install
 	cd $(CAKEPHP_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(CAKEPHP_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update
+	cd $(CAKEPHP_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update --no-plugins
 	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
 
@@ -128,7 +128,7 @@ endef
 define chronos
 build-chronos-$(VERSION): install
 	cd $(CHRONOS_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(CHRONOS_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update
+	cd $(CHRONOS_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update --no-plugins
 	mkdir -p $(BUILD_DIR)/chronos/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/chronos/$(VERSION)
 
@@ -139,7 +139,7 @@ endef
 define elastic
 build-elastic-$(VERSION): install
 	cd $(ELASTIC_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(ELASTIC_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update
+	cd $(ELASTIC_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update --no-plugins
 	mkdir -p $(BUILD_DIR)/elastic-search/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/elastic-search/$(VERSION)
 
@@ -150,7 +150,7 @@ endef
 define queue
 build-queue-$(VERSION): install
 	cd $(QUEUE_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(QUEUE_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update
+	cd $(QUEUE_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update --no-plugins
 	mkdir -p $(BUILD_DIR)/queue/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/queue/$(VERSION)
 
