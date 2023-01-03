@@ -7,7 +7,7 @@
         <var>${{ property.name }}</var>
         <a href="#${{ property.name }}" class="permalink" title="Permalink ${{ property.name }}">¶</a>
         {% if property.source.inProject %}
-          <a href="{{ property|node_to_repo_url }}" class="permalink" title="Permalink to Github" target="_blank"><i class="fa fa-github"></i></a>
+          <a href="{{ property|node_to_repo_url }}" class="permalink" title="Permalink to Github" target="_blank"><i class="fa-brands fa-github"></i></a>
         {% endif %}
 
         <span class="label">{{ property.visibility }}</span>
