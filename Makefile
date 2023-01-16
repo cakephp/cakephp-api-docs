@@ -2,6 +2,8 @@ CAKEPHP_SOURCE_DIR=../cakephp
 CHRONOS_SOURCE_DIR=../chronos
 ELASTIC_SOURCE_DIR=../elastic-search
 QUEUE_SOURCE_DIR=../queue
+AUTHENTICATION_SOURCE_DIR=../authentication
+AUTHORIZATION_SOURCE_DIR=../authorization
 BUILD_DIR=./build/api
 DEPLOY_DIR=./website
 PHP=php
@@ -17,6 +19,8 @@ COMPOSER=$(PWD)/composer.phar
 .PHONY: build-elastic-2
 .PHONY: build-elastic-3
 .PHONY: build-queue-1
+.PHONY: build-authentication-2
+.PHONY: build-authorization-2
 .PHONY: build-active-and-missing
 .ALL: help
 
@@ -32,6 +36,10 @@ ELASTIC2_VERSIONS = 2.x
 ELASTIC3_VERSIONS = 3.x
 
 QUEUE1_VERSIONS = 0.x
+
+AUTHENTICATION2_VERSIONS = 2.x
+
+AUTHORIZATION2_VERSIONS = 2.x
 
 help:
 	@echo "CakePHP API Documentation generator"
@@ -158,6 +166,28 @@ build-queue-$(VERSION): install
 		--output-dir $(BUILD_DIR)/queue/$(VERSION) $(QUEUE_SOURCE_DIR)
 endef
 
+define authentication
+build-authentication-$(VERSION): install
+	cd $(AUTHENTICATION_SOURCE_DIR) && git checkout -f $(TAG)
+	cd $(AUTHENTICATION_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update --no-plugins
+	mkdir -p $(BUILD_DIR)/authentication/$(VERSION)
+	cp -r static/assets/* $(BUILD_DIR)/authentication/$(VERSION)
+
+	$(PHP) bin/apitool.php generate --config authentication --version $(VERSION) --tag $(TAG) \
+		--output-dir $(BUILD_DIR)/authentication/$(VERSION) $(AUTHENTICATION_SOURCE_DIR)
+endef
+
+define authorization
+build-authorization-$(VERSION): install
+	cd $(AUTHORIZATION_SOURCE_DIR) && git checkout -f $(TAG)
+	cd $(AUTHORIZATION_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update --no-plugins
+	mkdir -p $(BUILD_DIR)/authorization/$(VERSION)
+	cp -r static/assets/* $(BUILD_DIR)/authorization/$(VERSION)
+
+	$(PHP) bin/apitool.php generate --config authorization --version $(VERSION) --tag $(TAG) \
+		--output-dir $(BUILD_DIR)/authorization/$(VERSION) $(AUTHORIZATION_SOURCE_DIR)
+endef
+
 # Build all the versions in a loop.
 build-cakephp3-all: $(foreach version, $(CAKEPHP3_VERSIONS), build-cakephp-$(version))
 build-cakephp4-all: $(foreach version, $(CAKEPHP4_VERSIONS), build-cakephp-$(version))
@@ -170,6 +200,12 @@ build-elastic2-all: $(foreach version, $(ELASTIC2_VERSIONS), build-elastic-$(ver
 build-elastic3-all: $(foreach version, $(ELASTIC3_VERSIONS), build-elastic-$(version))
 
 build-queue1-all: $(foreach version, $(QUEUE1_VERSIONS), build-queue-$(version))
+
+build-elastic2-all: $(foreach version, $(ELASTIC2_VERSIONS), build-elastic-$(version))
+
+build-authentication2-all: $(foreach version, $(AUTHENTICATION2_VERSIONS), build-authentication-$(version))
+
+build-authorization2-all: $(foreach version, $(AUTHORIZATION2_VERSIONS), build-authorization-$(version))
 
 # Generate build targets for cakephp
 TAG:=3.0.19
@@ -266,3 +302,13 @@ $(eval $(elastic))
 TAG:=origin/master
 VERSION:=0.x
 $(eval $(queue))
+
+# Generate build targets for authetication
+TAG:=origin/2.x
+VERSION:=2.x
+$(eval $(authentication))
+
+# Generate build targets for authorization
+TAG:=origin/2.x
+VERSION:=2.x
+$(eval $(authorization))
