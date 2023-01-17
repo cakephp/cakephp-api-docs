@@ -33,7 +33,7 @@ COPY . /data
 RUN git clone https://github.com/cakephp/cakephp.git /cakephp
 
 RUN ls -lah \
-  && make build-cakephp5-all CAKEPHP_SOURCE_DIR=/cakephp CHRONOS_SOURCE_DIR=/chronos ELASTIC_SOURCE_DIR=/elastic QUEUE_SOURCE_DIR=/queue
+  && make build-cakephp5-all CAKEPHP_SOURCE_DIR=/cakephp CHRONOS_SOURCE_DIR=/chronos
 
 # Build api docs with php7 requirements
 FROM alpine:3.15
@@ -82,6 +82,8 @@ WORKDIR /data
 COPY . /data
 
 RUN git clone https://github.com/cakephp/cakephp.git /cakephp \
+  && git clone https://github.com/cakephp/authentication.git /authentication \
+  && git clone https://github.com/cakephp/authorization.git /authorization \
   && git clone https://github.com/cakephp/chronos.git /chronos \
   && git clone https://github.com/cakephp/elastic-search.git /elastic \
   && git clone https://github.com/cakephp/queue.git /queue
@@ -89,6 +91,8 @@ RUN git clone https://github.com/cakephp/cakephp.git /cakephp \
 RUN ls -lah \
   && make build-cakephp3-all PHP_COMPOSER=php7 CAKEPHP_SOURCE_DIR=/cakephp \
   && make build-cakephp4-all PHP_COMPOSER=php7 CAKEPHP_SOURCE_DIR=/cakephp \
+  && make build-authentication-2 PHP_COMPOSER=php7 AUTHENTICATION_SOURCE_DIR=/authentication \
+  && make build-authorization-2 PHP_COMPOSER=php7 AUTHORIZATION_SOURCE_DIR=/authorization \
   && make build-chronos1-all PHP_COMPOSER=php7 CHRONOS_SOURCE_DIR=/chronos \
   && make build-chronos2-all PHP_COMPOSER=php7 CHRONOS_SOURCE_DIR=/chronos \
   && make build-elastic2-all PHP_COMPOSER=php7 ELASTIC_SOURCE_DIR=/elastic \
