@@ -92,8 +92,8 @@ RUN git clone https://github.com/cakephp/cakephp.git /cakephp \
 RUN ls -lah \
   && make build-cakephp3-all PHP_COMPOSER=php7 CAKEPHP_SOURCE_DIR=/cakephp \
   && make build-cakephp4-all PHP_COMPOSER=php7 CAKEPHP_SOURCE_DIR=/cakephp \
-  && make build-authentication-all PHP_COMPOSER=php7 AUTHENTICATION_SOURCE_DIR=/authentication \
-  && make build-authorization-all PHP_COMPOSER=php7 AUTHORIZATION_SOURCE_DIR=/authorization \
+  && make build-authentication2-all PHP_COMPOSER=php7 AUTHENTICATION_SOURCE_DIR=/authentication \
+  && make build-authorization2-all PHP_COMPOSER=php7 AUTHORIZATION_SOURCE_DIR=/authorization \
   && make build-chronos1-all PHP_COMPOSER=php7 CHRONOS_SOURCE_DIR=/chronos \
   && make build-chronos2-all PHP_COMPOSER=php7 CHRONOS_SOURCE_DIR=/chronos \
   && make build-elastic2-all PHP_COMPOSER=php7 ELASTIC_SOURCE_DIR=/elastic \
