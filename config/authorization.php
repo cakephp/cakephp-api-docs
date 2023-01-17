@@ -3,7 +3,7 @@
 // Authorization API docs
 return [
     'Project' => [
-        'namespace' => 'Authorization',
+        'namespaces' => 'Authorization',
         'sourceDirs' => ['src'],
         'excludePatterns' => [],
         'repo' => 'https://github.com/cakephp/authorization',
