@@ -14,6 +14,7 @@ return [
             'project' => 'Elastic Search',
             'release' => null,
             'versions' => [
+                '4.x' => '../4.x',
                 '3.x' => '../3.x',
                 '2.x' => '../2.x',
             ],
