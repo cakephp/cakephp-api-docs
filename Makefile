@@ -7,25 +7,17 @@ AUTHORIZATION_SOURCE_DIR=../authorization
 BUILD_DIR=./build/api
 DEPLOY_DIR=./website
 PHP=php
-PHP_COMPOSER=php
 COMPOSER=$(PWD)/composer.phar
 
 .PHONY: clean help
 .PHONY: build-cakephp-3
 .PHONY: build-cakephp-4
 .PHONY: build-cakephp-5
-.PHONY: build-chronos-1
-.PHONY: build-chronos-2
-.PHONY: build-chronos-3
-.PHONY: build-elastic-2
-.PHONY: build-elastic-3
-.PHONY: build-elastic-4
-.PHONY: build-queue-1
-.PHONY: build-queue-2
-.PHONY: build-authentication-2
-.PHONY: build-authentication-3
-.PHONY: build-authorization-2
-.PHONY: build-authorization-3
+.PHONY: build-chronos
+.PHONY: build-elastic
+.PHONY: build-queue
+.PHONY: build-authentication
+.PHONY: build-authorization
 .PHONY: build-active-and-missing
 .ALL: help
 
@@ -34,22 +26,15 @@ CAKEPHP3_VERSIONS = 3.0 3.1 3.2 3.3 3.4 3.5 3.6 3.7 3.8 3.9 3.10
 CAKEPHP4_VERSIONS = 4.0 4.1 4.2 4.3 4.4
 CAKEPHP5_VERSIONS = 5.0
 
-CHRONOS1_VERSIONS = 1.x
-CHRONOS2_VERSIONS = 2.x
-CHRONOS3_VERSIONS = 3.x
+CHRONOS_VERSIONS = 1.x 2.x 3.x
 
-ELASTIC2_VERSIONS = 2.x
-ELASTIC3_VERSIONS = 3.x
-ELASTIC4_VERSIONS = 4.x
+ELASTIC_VERSIONS = 2.x 3.x 4.x
 
-QUEUE1_VERSIONS = 1.x
-QUEUE1_VERSIONS = 2.x
+QUEUE_VERSIONS = 1.x 2.x
 
-AUTHENTICATION2_VERSIONS = 2.x
-AUTHENTICATION3_VERSIONS = 3.x
+AUTHENTICATION_VERSIONS = 2.x 3.x
 
-AUTHORIZATION2_VERSIONS = 2.x
-AUTHORIZATION3_VERSIONS = 3.x
+AUTHORIZATION_VERSIONS = 2.x 3.x
 
 help:
 	@echo "CakePHP API Documentation generator"
@@ -115,7 +100,7 @@ endef
 define cakephp3
 build-cakephp-$(VERSION): install
 	cd $(CAKEPHP_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(CAKEPHP_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update --no-plugins
+	cd $(CAKEPHP_SOURCE_DIR) && $(PHP) $(COMPOSER) update --no-plugins --ignore-platform-reqs
 	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
 
@@ -126,7 +111,7 @@ endef
 define cakephp4
 build-cakephp-$(VERSION): install
 	cd $(CAKEPHP_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(CAKEPHP_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update --no-plugins
+	cd $(CAKEPHP_SOURCE_DIR) && $(PHP) $(COMPOSER) update --no-plugins --ignore-platform-reqs
 	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
 
@@ -137,18 +122,18 @@ endef
 define cakephp5
 build-cakephp-$(VERSION): install
 	cd $(CAKEPHP_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(CAKEPHP_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update --no-plugins
+	cd $(CAKEPHP_SOURCE_DIR) && $(PHP) $(COMPOSER) update --no-plugins --ignore-platform-reqs
 	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
 
-	$(PHP) bin/apitool.php generate --config cakephp4 --version $(VERSION) --tag $(TAG) \
+	$(PHP) bin/apitool.php generate --config cakephp5 --version $(VERSION) --tag $(TAG) \
 		--output-dir $(BUILD_DIR)/cakephp/$(VERSION) $(CAKEPHP_SOURCE_DIR)
 endef
 
 define chronos
 build-chronos-$(VERSION): install
 	cd $(CHRONOS_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(CHRONOS_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update --no-plugins
+	cd $(CHRONOS_SOURCE_DIR) && $(PHP) $(COMPOSER) update --no-plugins --ignore-platform-reqs
 	mkdir -p $(BUILD_DIR)/chronos/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/chronos/$(VERSION)
 
@@ -159,7 +144,7 @@ endef
 define elastic
 build-elastic-$(VERSION): install
 	cd $(ELASTIC_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(ELASTIC_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update --no-plugins
+	cd $(ELASTIC_SOURCE_DIR) && $(PHP) $(COMPOSER) update --no-plugins --ignore-platform-reqs
 	mkdir -p $(BUILD_DIR)/elastic-search/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/elastic-search/$(VERSION)
 
@@ -170,7 +155,7 @@ endef
 define queue
 build-queue-$(VERSION): install
 	cd $(QUEUE_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(QUEUE_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update --no-plugins
+	cd $(QUEUE_SOURCE_DIR) && $(PHP) $(COMPOSER) update --no-plugins --ignore-platform-reqs
 	mkdir -p $(BUILD_DIR)/queue/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/queue/$(VERSION)
 
@@ -181,7 +166,7 @@ endef
 define authentication
 build-authentication-$(VERSION): install
 	cd $(AUTHENTICATION_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(AUTHENTICATION_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update --no-plugins
+	cd $(AUTHENTICATION_SOURCE_DIR) && $(PHP) $(COMPOSER) update --no-plugins --ignore-platform-reqs
 	mkdir -p $(BUILD_DIR)/authentication/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/authentication/$(VERSION)
 
@@ -192,7 +177,7 @@ endef
 define authorization
 build-authorization-$(VERSION): install
 	cd $(AUTHORIZATION_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(AUTHORIZATION_SOURCE_DIR) && $(PHP_COMPOSER) $(COMPOSER) update --no-plugins
+	cd $(AUTHORIZATION_SOURCE_DIR) && $(PHP) $(COMPOSER) update --no-plugins --ignore-platform-reqs
 	mkdir -p $(BUILD_DIR)/authorization/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/authorization/$(VERSION)
 
@@ -205,22 +190,11 @@ build-cakephp3-all: $(foreach version, $(CAKEPHP3_VERSIONS), build-cakephp-$(ver
 build-cakephp4-all: $(foreach version, $(CAKEPHP4_VERSIONS), build-cakephp-$(version))
 build-cakephp5-all: $(foreach version, $(CAKEPHP5_VERSIONS), build-cakephp-$(version))
 
-build-chronos1-all: $(foreach version, $(CHRONOS1_VERSIONS), build-chronos-$(version))
-build-chronos2-all: $(foreach version, $(CHRONOS2_VERSIONS), build-chronos-$(version))
-build-chronos3-all: $(foreach version, $(CHRONOS3_VERSIONS), build-chronos-$(version))
-
-build-elastic2-all: $(foreach version, $(ELASTIC2_VERSIONS), build-elastic-$(version))
-build-elastic3-all: $(foreach version, $(ELASTIC3_VERSIONS), build-elastic-$(version))
-build-elastic4-all: $(foreach version, $(ELASTIC4_VERSIONS), build-elastic-$(version))
-
-build-queue1-all: $(foreach version, $(QUEUE1_VERSIONS), build-queue-$(version))
-build-queue2-all: $(foreach version, $(QUEUE2_VERSIONS), build-queue-$(version))
-
-build-authentication2-all: $(foreach version, $(AUTHENTICATION2_VERSIONS), build-authentication-$(version))
-build-authentication3-all: $(foreach version, $(AUTHENTICATION3_VERSIONS), build-authentication-$(version))
-
-build-authorization2-all: $(foreach version, $(AUTHORIZATION2_VERSIONS), build-authorization-$(version))
-build-authorization3-all: $(foreach version, $(AUTHORIZATION3_VERSIONS), build-authorization-$(version))
+build-chronos-all: $(foreach version, $(CHRONOS_VERSIONS), build-chronos-$(version))
+build-elastic-all: $(foreach version, $(ELASTIC_VERSIONS), build-elastic-$(version))
+build-queue-all: $(foreach version, $(QUEUE_VERSIONS), build-queue-$(version))
+build-authentication-all: $(foreach version, $(AUTHENTICATION_VERSIONS), build-authentication-$(version))
+build-authorization-all: $(foreach version, $(AUTHORIZATION_VERSIONS), build-authorization-$(version))
 
 # Generate build targets for cakephp
 TAG:=3.0.19

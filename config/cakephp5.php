@@ -20,7 +20,7 @@ return [
         'templateDir' => 'templates',
         'globals' => [
             'project' => 'CakePHP',
-            'release' => 'Strawberry',
+            'release' => 'Chiffon',
             'versions' => [
                 '5.0' => '../5.0/',
                 '4.4' => '../4.4/',

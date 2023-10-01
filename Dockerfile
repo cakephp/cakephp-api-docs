@@ -1,5 +1,5 @@
 # Build api docs with php 8.1 requirements
-FROM alpine:3.16
+FROM alpine:3.16 as builder
 
 RUN apk add --no-cache \
     bash \
@@ -30,57 +30,6 @@ RUN mkdir /root/.ssh \
 WORKDIR /data
 COPY . /data
 
-RUN git clone https://github.com/cakephp/cakephp.git /cakephp
-
-RUN ls -lah \
-  && make build-cakephp5-all CAKEPHP_SOURCE_DIR=/cakephp CHRONOS_SOURCE_DIR=/chronos
-
-# Build api docs with php7 requirements
-FROM alpine:3.15
-
-RUN apk add --no-cache \
-    bash \
-    curl \
-    git \
-    make \
-    openssh-client \
-    php8 \
-    php8-bz2 \
-    php8-curl \
-    php8-dom \
-    php8-intl \
-    php8-json \
-    php8-mbstring \
-    php8-openssl \
-    php8-phar \
-    php8-simplexml \
-    php8-tokenizer \
-    php8-xml \
-    php8-xmlwriter \
-    php8-zip \
-    php7 \
-    php7-bz2 \
-    php7-curl \
-    php7-dom \
-    php7-intl \
-    php7-json \
-    php7-mbstring \
-    php7-openssl \
-    php7-phar \
-    php7-simplexml \
-    php7-tokenizer \
-    php7-xml \
-    php7-xmlwriter \
-    php7-zip
-
-RUN ln -sf /usr/bin/php8 /usr/bin/php
-
-RUN mkdir /root/.ssh \
-    && ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
-
-WORKDIR /data
-COPY . /data
-
 RUN git clone https://github.com/cakephp/cakephp.git /cakephp \
   && git clone https://github.com/cakephp/authentication.git /authentication \
   && git clone https://github.com/cakephp/authorization.git /authorization \
@@ -88,23 +37,15 @@ RUN git clone https://github.com/cakephp/cakephp.git /cakephp \
   && git clone https://github.com/cakephp/elastic-search.git /elastic \
   && git clone https://github.com/cakephp/queue.git /queue
 
-
 RUN ls -lah \
-  && make build-cakephp3-all PHP_COMPOSER=php7 CAKEPHP_SOURCE_DIR=/cakephp \
-  && make build-cakephp4-all PHP_COMPOSER=php7 CAKEPHP_SOURCE_DIR=/cakephp \
-  && make build-authentication2-all PHP_COMPOSER=php7 AUTHENTICATION_SOURCE_DIR=/authentication \
-  && make build-authentication3-all PHP_COMPOSER=php AUTHENTICATION_SOURCE_DIR=/authentication \
-  && make build-authorization2-all PHP_COMPOSER=php7 AUTHORIZATION_SOURCE_DIR=/authorization \
-  && make build-authorization3-all PHP_COMPOSER=php AUTHORIZATION_SOURCE_DIR=/authorization \
-  && make build-chronos1-all PHP_COMPOSER=php7 CHRONOS_SOURCE_DIR=/chronos \
-  && make build-chronos2-all PHP_COMPOSER=php7 CHRONOS_SOURCE_DIR=/chronos \
-  && make build-chronos3-all PHP_COMPOSER=php CHRONOS_SOURCE_DIR=/chronos \
-  && make build-elastic2-all PHP_COMPOSER=php7 ELASTIC_SOURCE_DIR=/elastic \
-  && make build-elastic3-all PHP_COMPOSER=php7 ELASTIC_SOURCE_DIR=/elastic \
-  && make build-elastic4-all PHP_COMPOSER=php ELASTIC_SOURCE_DIR=/elastic \
-  && make build-queue1-all PHP_COMPOSER=php7 QUEUE_SOURCE_DIR=/queue \
-  && make build-queue2-all PHP_COMPOSER=php QUEUE_SOURCE_DIR=/queue
-
+  && make build-cakephp3-all CAKEPHP_SOURCE_DIR=/cakephp \
+  && make build-cakephp4-all CAKEPHP_SOURCE_DIR=/cakephp \
+  && make build-cakephp5-all CAKEPHP_SOURCE_DIR=/cakephp \
+  && make build-authentication-all AUTHENTICATION_SOURCE_DIR=/authentication \
+  && make build-authorization-all AUTHORIZATION_SOURCE_DIR=/authorization \
+  && make build-chronos-all CHRONOS_SOURCE_DIR=/chronos \
+  && make build-elastic-all ELASTIC_SOURCE_DIR=/elastic \
+  && make build-queue-all QUEUE_SOURCE_DIR=/queue
 
 # nginx server
 FROM alpine:3.16
@@ -122,8 +63,7 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 COPY nginx.conf /etc/nginx/http.d/default.conf
 
 WORKDIR /var/www/html
-COPY --from=0 /data/build/api ./
-COPY --from=1 /data/build/api ./
+COPY --from=builder /data/build/api ./
 
 EXPOSE 80
 
