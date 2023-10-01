@@ -274,10 +274,6 @@ TAG:=origin/4.x
 VERSION:=4.4
 $(eval $(cakephp4))
 
-TAG:=origin/4.next
-VERSION:=4.next
-$(eval $(cakephp4))
-
 TAG:=origin/5.x
 VERSION:=5.0
 $(eval $(cakephp5))
@@ -291,6 +287,10 @@ TAG:=origin/2.x
 VERSION:=2.x
 $(eval $(chronos))
 
+TAG:=origin/3.x
+VERSION:=3.x
+$(eval $(chronos))
+
 # Generate build targets for elastic-search
 TAG:=origin/2.x
 VERSION:=2.x
@@ -300,9 +300,17 @@ TAG:=origin/3.x
 VERSION:=3.x
 $(eval $(elastic))
 
+TAG:=origin/4.x
+VERSION:=4.x
+$(eval $(elastic))
+
 # Generate build targets for queue
-TAG:=origin/master
-VERSION:=0.x
+TAG:=origin/1.x
+VERSION:=1.x
+$(eval $(queue))
+
+TAG:=origin/2.x
+VERSION:=2.x
 $(eval $(queue))
 
 # Generate build targets for authetication
@@ -310,7 +318,15 @@ TAG:=origin/2.x
 VERSION:=2.x
 $(eval $(authentication))
 
+TAG:=origin/3.x
+VERSION:=3.x
+$(eval $(authentication))
+
 # Generate build targets for authorization
 TAG:=origin/2.x
 VERSION:=2.x
+$(eval $(authorization))
+
+TAG:=origin/3.x
+VERSION:=3.x
 $(eval $(authorization))
