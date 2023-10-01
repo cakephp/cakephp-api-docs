@@ -93,12 +93,17 @@ RUN ls -lah \
   && make build-cakephp3-all PHP_COMPOSER=php7 CAKEPHP_SOURCE_DIR=/cakephp \
   && make build-cakephp4-all PHP_COMPOSER=php7 CAKEPHP_SOURCE_DIR=/cakephp \
   && make build-authentication2-all PHP_COMPOSER=php7 AUTHENTICATION_SOURCE_DIR=/authentication \
+  && make build-authentication3-all PHP_COMPOSER=php AUTHENTICATION_SOURCE_DIR=/authentication \
   && make build-authorization2-all PHP_COMPOSER=php7 AUTHORIZATION_SOURCE_DIR=/authorization \
+  && make build-authorization3-all PHP_COMPOSER=php AUTHORIZATION_SOURCE_DIR=/authorization \
   && make build-chronos1-all PHP_COMPOSER=php7 CHRONOS_SOURCE_DIR=/chronos \
   && make build-chronos2-all PHP_COMPOSER=php7 CHRONOS_SOURCE_DIR=/chronos \
+  && make build-chronos3-all PHP_COMPOSER=php CHRONOS_SOURCE_DIR=/chronos \
   && make build-elastic2-all PHP_COMPOSER=php7 ELASTIC_SOURCE_DIR=/elastic \
   && make build-elastic3-all PHP_COMPOSER=php7 ELASTIC_SOURCE_DIR=/elastic \
-  && make build-queue1-all PHP_COMPOSER=php7 QUEUE_SOURCE_DIR=/queue
+  && make build-elastic4-all PHP_COMPOSER=php ELASTIC_SOURCE_DIR=/elastic \
+  && make build-queue1-all PHP_COMPOSER=php7 QUEUE_SOURCE_DIR=/queue \
+  && make build-queue2-all PHP_COMPOSER=php QUEUE_SOURCE_DIR=/queue
 
 
 # nginx server
