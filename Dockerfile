@@ -1,5 +1,5 @@
 # Build api docs with php 8.1 requirements
-FROM alpine:3.16 as builder
+FROM alpine:3.19 as builder
 
 RUN apk add --no-cache \
     bash \
@@ -8,21 +8,21 @@ RUN apk add --no-cache \
     make \
     openssh-client \
     php81 \
-    php81-bz2 \
-    php81-curl \
-    php81-dom \
-    php81-intl \
-    php81-json \
-    php81-mbstring \
-    php81-openssl \
-    php81-phar \
-    php81-simplexml \
-    php81-tokenizer \
-    php81-xml \
-    php81-xmlwriter \
-    php81-zip
+    php82-bz2 \
+    php82-curl \
+    php82-dom \
+    php82-intl \
+    php82-json \
+    php82-mbstring \
+    php82-openssl \
+    php82-phar \
+    php82-simplexml \
+    php82-tokenizer \
+    php82-xml \
+    php82-xmlwriter \
+    php82-zip
 
-RUN ln -sf /usr/bin/php81 /usr/bin/php
+RUN ln -sf /usr/bin/php82 /usr/bin/php
 
 RUN mkdir /root/.ssh \
     && ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
@@ -48,7 +48,7 @@ RUN ls -lah \
   && make build-queue-all QUEUE_SOURCE_DIR=/queue
 
 # nginx server
-FROM alpine:3.16
+FROM alpine:3.19
 
 LABEL Description="CakePHP API Docs"
 
