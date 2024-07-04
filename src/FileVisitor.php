@@ -37,7 +37,7 @@ use PhpParser\NodeVisitorAbstract;
 
 class FileVisitor extends NodeVisitorAbstract
 {
-    protected Factory $factor;
+    protected Factory $factory;
 
     protected string $filePath;
 

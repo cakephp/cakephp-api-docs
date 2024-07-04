@@ -33,6 +33,8 @@ class Loader
 
     protected NodeTraverser $traverser;
 
+    protected array $cache = [];
+
     /**
      * @param string $projectPath Project path
      */

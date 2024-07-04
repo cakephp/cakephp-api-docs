@@ -42,6 +42,11 @@ class ProjectNamespace
     public array $defines = [];
 
     /**
+     * @var array<string, \Cake\ApiDocs\Reflection\ReflectedConstant>
+     */
+    public array $constants = [];
+
+    /**
      * @var array<string, \Cake\ApiDocs\Reflection\ReflectedFunction>
      */
     public array $functions = [];
