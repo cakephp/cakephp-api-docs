@@ -39,7 +39,7 @@ class Project
 
     protected Loader $loader;
 
-    protected ClassLoader $classLoder;
+    protected ?ClassLoader $classLoader;
 
     protected array $cache = [];
 
@@ -181,7 +181,9 @@ class Project
     protected function createClassLoader(string $projectPath): ?ClassLoader
     {
         // try to find vendor/ relative to sourceDir
-        $autoloadPath = $projectPath . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+        $vendorDir = $projectPath . DIRECTORY_SEPARATOR . 'vendor';
+
+        $autoloadPath = $vendorDir . DIRECTORY_SEPARATOR . 'autoload.php';
         if (!file_exists($autoloadPath)) {
             $this->log("Unable to find class loader at `$autoloadPath`", 'warning');
 
@@ -189,8 +191,27 @@ class Project
         }
 
         $this->log("Found class loader at `$autoloadPath`", 'info');
-        $loader = require $autoloadPath;
-        $loader->unregister();
+        $loader = new ClassLoader($vendorDir);
+
+        // Get geneated class name from autoload_static.php
+        $staticPath = $vendorDir . DIRECTORY_SEPARATOR . 'composer' . DIRECTORY_SEPARATOR . 'autoload_static.php';
+        $contents = file_get_contents($staticPath);
+        if ($contents === false) {
+            $this->log("Unable to load `$staticPath`", 'error');
+
+            return false;
+        }
+
+        if (preg_match('/class (.*)\n/', $contents, $matches) === false) {
+            $this->log("Unable to find class in `$staticPath`", 'error');
+
+            return false;
+        }
+
+        require $staticPath;
+
+        $staticClass = '\\Composer\\Autoload\\' . $matches[1];
+        call_user_func($staticClass::getInitializer($loader));
 
         return $loader;
     }
