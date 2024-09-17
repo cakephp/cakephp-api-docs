@@ -22,6 +22,7 @@ return [
             'project' => 'CakePHP',
             'release' => 'Strawberry',
             'versions' => [
+                '5.1' => '../5.1/',
                 '5.0' => '../5.0/',
                 '4.4' => '../4.4/',
                 '4.3' => '../4.3/',
