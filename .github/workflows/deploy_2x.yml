@@ -21,5 +21,6 @@ jobs:
       - name: Push to dokku
         uses: dokku/github-action@master
         with:
+          branch: 2.x
           git_remote_url: 'ssh://dokku@apps.cakephp.org:22/api-4'
           ssh_private_key: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
