@@ -23,7 +23,7 @@ COMPOSER=$(PWD)/composer.phar
 
 # Versions that can be built.
 CAKEPHP3_VERSIONS = 3.0 3.1 3.2 3.3 3.4 3.5 3.6 3.7 3.8 3.9 3.10
-CAKEPHP4_VERSIONS = 4.0 4.1 4.2 4.3 4.4 4.5
+CAKEPHP4_VERSIONS = 4.0 4.1 4.2 4.3 4.4 4.5 4.6
 CAKEPHP5_VERSIONS = 5.0 5.1
 
 CHRONOS_VERSIONS = 1.x 2.x 3.x
@@ -261,8 +261,12 @@ TAG:=4.4.18
 VERSION:=4.4
 $(eval $(cakephp4))
 
-TAG:=origin/4.x
+TAG:=4.5.10
 VERSION:=4.5
+$(eval $(cakephp4))
+
+TAG:=origin/4.x
+VERSION:=4.6
 $(eval $(cakephp4))
 
 TAG:=5.0.11
