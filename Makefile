@@ -24,7 +24,7 @@ COMPOSER=$(PWD)/composer.phar
 # Versions that can be built.
 CAKEPHP3_VERSIONS = 3.0 3.1 3.2 3.3 3.4 3.5 3.6 3.7 3.8 3.9 3.10
 CAKEPHP4_VERSIONS = 4.0 4.1 4.2 4.3 4.4 4.5 4.6
-CAKEPHP5_VERSIONS = 5.0 5.1
+CAKEPHP5_VERSIONS = 5.0 5.1 5.2
 
 CHRONOS_VERSIONS = 1.x 2.x 3.x
 
@@ -273,8 +273,12 @@ TAG:=5.0.11
 VERSION:=5.0
 $(eval $(cakephp5))
 
-TAG:=origin/5.x
+TAG:=5.1.6
 VERSION:=5.1
+$(eval $(cakephp5))
+
+TAG:=origin/5.x
+VERSION:=5.2
 $(eval $(cakephp5))
 
 # Generate build targets for chronos
