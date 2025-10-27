@@ -64,7 +64,7 @@ class ReflectionExtension extends AbstractExtension
                         '/, \(/',
                         '/^\((.*)\)$/',
                         '/(?<=[(<|&])\\\\/',
-                        '/^\\\\/'
+                        '/^\\\\/',
                     ],
                     ['${1}', '<', '>', ', ', ', ', '${1}', '', ''],
                     (string)$type
