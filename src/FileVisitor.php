@@ -121,7 +121,7 @@ class FileVisitor extends NodeVisitorAbstract
                 $const = new NodeConst_(
                     (string)$node->args[0]->value->value,
                     $node->args[1]->value,
-                    $node->getAttributes()
+                    $node->getAttributes(),
                 );
                 $source = new Source($this->filePath, $this->inProject, $const->getStartLine(), $const->getEndLine());
                 $this->nodes[] = $this->factory->createDefine($const, $this->context, $source);

@@ -24,6 +24,7 @@ use PHPStan\PhpDocParser\Parser\ConstExprParser;
 use PHPStan\PhpDocParser\Parser\PhpDocParser;
 use PHPStan\PhpDocParser\Parser\TokenIterator;
 use PHPStan\PhpDocParser\Parser\TypeParser;
+use PHPStan\PhpDocParser\ParserConfig;
 
 class DocUtil
 {
@@ -69,10 +70,11 @@ class DocUtil
     protected static function init(): void
     {
         if (!static::$initialized) {
-            $exprParser = new ConstExprParser();
-            static::$typeParser = new TypeParser($exprParser);
-            static::$docParser = new PhpDocParser(static::$typeParser, $exprParser);
-            static::$docLexer = new Lexer();
+            $parserConfig = new ParserConfig([]);
+            $exprParser = new ConstExprParser($parserConfig);
+            static::$typeParser = new TypeParser($parserConfig, $exprParser);
+            static::$docParser = new PhpDocParser($parserConfig, static::$typeParser, $exprParser);
+            static::$docLexer = new Lexer($parserConfig);
         }
     }
 }

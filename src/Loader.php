@@ -22,6 +22,7 @@ use FilesystemIterator;
 use PhpParser\NodeTraverser;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
+use PhpParser\PhpVersion;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
@@ -41,7 +42,7 @@ class Loader
     public function __construct(string $projectPath)
     {
         $this->projectPath = $projectPath;
-        $this->parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+        $this->parser = (new ParserFactory())->createForVersion(PhpVersion::fromString('8.1'));
     }
 
     /**
@@ -54,7 +55,7 @@ class Loader
         $nodes = [];
         $directoryIterator = new RecursiveDirectoryIterator(
             $path,
-            FilesystemIterator::SKIP_DOTS | FilesystemIterator::CURRENT_AS_PATHNAME
+            FilesystemIterator::SKIP_DOTS | FilesystemIterator::CURRENT_AS_PATHNAME,
         );
         foreach (new RecursiveIteratorIterator($directoryIterator) as $filePath) {
             if (preg_match('/\.php$/', $filePath)) {
