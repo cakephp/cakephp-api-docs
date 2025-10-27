@@ -52,6 +52,9 @@ class DocBlock
             }
         }
 
+        $tags = $node->getTagsByName('@template');
+        array_walk($tags, fn($tag) => $this->tags['template'][] = $tag->value);
+
         $tags = $node->getTagsByName('@var');
         if ($tags) {
             $this->tags['var'] = current($tags)->value;

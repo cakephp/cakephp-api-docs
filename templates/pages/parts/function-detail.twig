@@ -40,6 +40,20 @@
         {{ function.doc.summary|markdown_to_html }}
         {{ function.doc.description|markdown_to_html }}
 
+        {% if function.doc.tags.template is defined %}
+          <h6>Templates</h6>
+          <div class="list">
+            {% for tag in function.doc.tags.template %}
+              <code>
+              {{ tag.name }}
+              {% if tag.bound is not null %} of {tag.bound}{% endif %}
+              {% if tag.default is not null %} = {tag.default}{% endif %}
+              </code><br>
+              {{ tag.description }}{{ loop.last ? '' : '<br>' }}
+            {% endfor %}
+          </div>
+        {% endif %}
+
         {% if function.params %}
           <h6>Parameters</h6>
           <div class="parameter-list list">
