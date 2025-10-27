@@ -369,6 +369,7 @@ class Factory
             $func->nativeReturnType = DocUtil::parseType(PrintUtil::node($node->getReturnType()));
         }
         $func->returnType = $doc->tags['return']?->type ?? $func->nativeReturnType;
+        $func->returnDescription = $doc->tags['return']?->description ?? '';
     }
 
     /**

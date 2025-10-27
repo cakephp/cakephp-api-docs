@@ -30,6 +30,8 @@ class ReflectedFunction extends ReflectedNode
 
     public ?TypeNode $nativeReturnType = null;
 
+    public string $returnDescription = '';
+
     public bool $abstract = false;
 
     public bool $static = false;

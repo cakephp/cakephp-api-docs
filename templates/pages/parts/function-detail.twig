@@ -76,7 +76,9 @@
           <h6>Returns</h6>
           <div class="list">
             <code>{{ function.returnType|type }}</code><br>
-            {# {{ (return.description ?? '')|markdown_to_html }} #}
+            {% if function.returnDescription %}
+              {{ function.returnDescription|markdown_to_html }}
+            {% endif %}
           </div>
         {% endif %}
 
