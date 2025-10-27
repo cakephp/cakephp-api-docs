@@ -46,8 +46,8 @@
             {% for tag in function.doc.tags.template %}
               <code>
               {{ tag.name }}
-              {% if tag.bound is not null %} of {tag.bound}{% endif %}
-              {% if tag.default is not null %} = {tag.default}{% endif %}
+              {% if tag.bound is not null %} of {{tag.bound}}{% endif %}
+              {% if tag.default is not null %} = {{tag.default}}{% endif %}
               </code><br>
               {{ tag.description }}{{ loop.last ? '' : '<br>' }}
             {% endfor %}
