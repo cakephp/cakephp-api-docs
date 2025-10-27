@@ -100,7 +100,7 @@ class GenerateCommand extends BaseCommand
     {
         $twig = new Environment(
             new FilesystemLoader($templateDir),
-            ['strict_variables' => true]
+            ['strict_variables' => true],
         );
 
         $twig->addRuntimeLoader(new TwigRuntimeLoader());

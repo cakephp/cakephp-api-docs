@@ -150,21 +150,21 @@ class Factory
     protected function createConstant(
         ReflectedClassLike $classLike,
         ClassConst $classNode,
-        Const_ $constNode
+        Const_ $constNode,
     ): ReflectedConstant {
         $doc = new DocBlock($classNode->getDocComment()?->getText());
         $source = new Source(
             $classLike->source->path,
             $classLike->source->inProject,
             $classNode->getStartLine(),
-            $classNode->getEndLine()
+            $classNode->getEndLine(),
         );
 
         $const = new ReflectedConstant(
             $constNode->name->name,
             $doc,
             $classLike->context,
-            $source
+            $source,
         );
         $const->owner = $classLike;
 
@@ -187,14 +187,14 @@ class Factory
     protected function createProperty(
         ReflectedClassLike $classLike,
         Property $classNode,
-        PropertyProperty $propNode
+        PropertyProperty $propNode,
     ): ReflectedProperty {
         $doc = new DocBlock($classNode->getDocComment()?->getText());
         $source = new Source(
             $classLike->source->path,
             $classLike->source->inProject,
             $classNode->getStartLine(),
-            $classNode->getEndLine()
+            $classNode->getEndLine(),
         );
 
         $prop = new ReflectedProperty($propNode->name->name, $doc, $classLike->context, $source);
@@ -219,7 +219,7 @@ class Factory
     protected function createdAnnotatedProperty(
         ReflectedClassLike $classLike,
         string $tagName,
-        PropertyTagValueNode $tagValue
+        PropertyTagValueNode $tagValue,
     ): ReflectedProperty {
         $doc = new DocBlock(null);
         $doc->summary = $tagValue->description;
@@ -247,14 +247,14 @@ class Factory
             $classLike->source->path,
             $classLike->source->inProject,
             $node->getStartLine(),
-            $node->getEndLine()
+            $node->getEndLine(),
         );
 
         $func = new ReflectedMethod(
             $node->name->name,
             $doc,
             $classLike->context,
-            $source
+            $source,
         );
         $func->owner = $classLike;
 
@@ -275,7 +275,7 @@ class Factory
     protected function createdAnnotatedMethod(
         ReflectedClassLike $classLike,
         string $tagName,
-        MethodTagValueNode $tagValue
+        MethodTagValueNode $tagValue,
     ): ReflectedMethod {
         $doc = new DocBlock(null);
         $doc->summary = $tagValue->description;
@@ -359,7 +359,6 @@ class Factory
      */
     protected function reflectFuncLike(ReflectedFunction $func, FunctionLike $node, DocBlock $doc): void
     {
-        $params = [];
         foreach ($node->getParams() as $paramNode) {
             $param = $this->createParam($func, $paramNode);
             $func->params[$param->name] = $param;

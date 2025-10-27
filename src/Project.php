@@ -93,7 +93,7 @@ class Project
      */
     protected function mergeInherited(): void
     {
-        $classLikeMerger = function (ReflectedClassLike $ref) use (&$classLikeMerger) {
+        $classLikeMerger = function (ReflectedClassLike $ref) use (&$classLikeMerger): void {
             foreach ($ref->uses as $use) {
                 $trait = $this->findClassLike($ref->context->resolveClassLike($use));
                 if (!$trait) {
@@ -126,7 +126,7 @@ class Project
             }
         };
 
-        $namespaceMerger = function (ProjectNamespace $ns) use (&$namespaceMerger, $classLikeMerger) {
+        $namespaceMerger = function (ProjectNamespace $ns) use (&$namespaceMerger, $classLikeMerger): void {
             foreach ($ns->children as $child) {
                 $namespaceMerger($child);
             }
@@ -142,7 +142,7 @@ class Project
             }
         };
 
-        array_walk($this->namespaces, fn ($namespace) => $namespaceMerger($namespace));
+        array_walk($this->namespaces, fn($namespace) => $namespaceMerger($namespace));
     }
 
     /**
