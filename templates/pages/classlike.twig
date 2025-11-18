@@ -33,6 +33,29 @@
 
     <b>Namespace:</b> <a href="{{ ref.context.namespace|namespace_to_url }}">{{ ref.context.namespace }}</a><br>
 
+    {% if ref.extends %}
+      <b>Extends:</b> 
+      {% if ref.extends starts with 'Cake\\' %}
+        <a href="{{ ref.extends|classlike_to_url('class') }}">{{ ref.extends }}</a>
+      {% else %}
+        {{ ref.extends }}
+      {% endif %}
+      <br>
+    {% endif %}
+
+    {% if ref.implements %}
+      <b>Implements:</b> 
+      {% for interface in ref.implements %}
+        {% if interface starts with 'Cake\\' %}
+          <a href="{{ interface|classlike_to_url('interface') }}">{{ interface }}</a>
+        {% else %}
+          {{ interface }}
+        {% endif %}
+        {%- if not loop.last %}, {% endif %}
+      {% endfor %}
+      <br>
+    {% endif %}
+
     {% if ref.doc.tags.deprecated is defined %}
       <b style="color: #be0000">Deprecated:</b> {{ ref.doc.tags.deprecated }}<br>
     {% endif %}
