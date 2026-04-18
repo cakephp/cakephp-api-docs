@@ -32,7 +32,7 @@ ELASTIC_VERSIONS = 2.x 3.x 4.x
 
 QUEUE_VERSIONS = 1.x 2.x
 
-AUTHENTICATION_VERSIONS = 2.x 3.x
+AUTHENTICATION_VERSIONS = 2.x 3.x 4.x
 
 AUTHORIZATION_VERSIONS = 2.x 3.x
 
@@ -327,6 +327,10 @@ $(eval $(authentication))
 
 TAG:=origin/3.x
 VERSION:=3.x
+$(eval $(authentication))
+
+TAG:=origin/4.x
+VERSION:=4.x
 $(eval $(authentication))
 
 # Generate build targets for authorization
