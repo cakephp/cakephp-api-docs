@@ -100,7 +100,7 @@ endef
 define cakephp3
 build-cakephp-$(VERSION): install
 	cd $(CAKEPHP_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(CAKEPHP_SOURCE_DIR) && $(PHP) $(COMPOSER) update --no-plugins --ignore-platform-reqs
+	cd $(CAKEPHP_SOURCE_DIR) && $(PHP) $(COMPOSER) update --no-plugins --no-audit --no-security-blocking --ignore-platform-reqs
 	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
 
@@ -111,7 +111,7 @@ endef
 define cakephp4
 build-cakephp-$(VERSION): install
 	cd $(CAKEPHP_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(CAKEPHP_SOURCE_DIR) && $(PHP) $(COMPOSER) update --no-plugins --ignore-platform-reqs
+	cd $(CAKEPHP_SOURCE_DIR) && $(PHP) $(COMPOSER) update --no-plugins --no-audit --no-security-blocking --ignore-platform-reqs
 	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
 
@@ -122,7 +122,7 @@ endef
 define cakephp5
 build-cakephp-$(VERSION): install
 	cd $(CAKEPHP_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(CAKEPHP_SOURCE_DIR) && $(PHP) $(COMPOSER) update --no-plugins --ignore-platform-reqs
+	cd $(CAKEPHP_SOURCE_DIR) && $(PHP) $(COMPOSER) update --no-plugins --no-audit --no-security-blocking --ignore-platform-reqs
 	mkdir -p $(BUILD_DIR)/cakephp/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/cakephp/$(VERSION)
 
@@ -133,7 +133,7 @@ endef
 define chronos
 build-chronos-$(VERSION): install
 	cd $(CHRONOS_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(CHRONOS_SOURCE_DIR) && $(PHP) $(COMPOSER) update --no-plugins --ignore-platform-reqs
+	cd $(CHRONOS_SOURCE_DIR) && $(PHP) $(COMPOSER) update --no-plugins --no-audit --no-security-blocking --ignore-platform-reqs
 	mkdir -p $(BUILD_DIR)/chronos/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/chronos/$(VERSION)
 
@@ -144,7 +144,7 @@ endef
 define elastic
 build-elastic-$(VERSION): install
 	cd $(ELASTIC_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(ELASTIC_SOURCE_DIR) && $(PHP) $(COMPOSER) update --no-plugins --ignore-platform-reqs
+	cd $(ELASTIC_SOURCE_DIR) && $(PHP) $(COMPOSER) update --no-plugins --no-audit --no-security-blocking --ignore-platform-reqs
 	mkdir -p $(BUILD_DIR)/elastic-search/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/elastic-search/$(VERSION)
 
@@ -155,7 +155,7 @@ endef
 define queue
 build-queue-$(VERSION): install
 	cd $(QUEUE_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(QUEUE_SOURCE_DIR) && $(PHP) $(COMPOSER) update --no-plugins --ignore-platform-reqs
+	cd $(QUEUE_SOURCE_DIR) && $(PHP) $(COMPOSER) update --no-plugins --no-audit --no-security-blocking --ignore-platform-reqs
 	mkdir -p $(BUILD_DIR)/queue/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/queue/$(VERSION)
 
@@ -166,7 +166,7 @@ endef
 define authentication
 build-authentication-$(VERSION): install
 	cd $(AUTHENTICATION_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(AUTHENTICATION_SOURCE_DIR) && $(PHP) $(COMPOSER) update --no-plugins --ignore-platform-reqs
+	cd $(AUTHENTICATION_SOURCE_DIR) && $(PHP) $(COMPOSER) update --no-plugins --no-audit --no-security-blocking --ignore-platform-reqs
 	mkdir -p $(BUILD_DIR)/authentication/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/authentication/$(VERSION)
 
@@ -177,7 +177,7 @@ endef
 define authorization
 build-authorization-$(VERSION): install
 	cd $(AUTHORIZATION_SOURCE_DIR) && git checkout -f $(TAG)
-	cd $(AUTHORIZATION_SOURCE_DIR) && $(PHP) $(COMPOSER) update --no-plugins --ignore-platform-reqs
+	cd $(AUTHORIZATION_SOURCE_DIR) && $(PHP) $(COMPOSER) update --no-plugins --no-audit --no-security-blocking --ignore-platform-reqs
 	mkdir -p $(BUILD_DIR)/authorization/$(VERSION)
 	cp -r static/assets/* $(BUILD_DIR)/authorization/$(VERSION)
 
