@@ -29,7 +29,7 @@ abstract class ReflectedNode
         public string $name,
         public DocBlock $doc,
         public Context $context,
-        public Source $source
+        public Source $source,
     ) {
     }
 

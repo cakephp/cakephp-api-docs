@@ -1,4 +1,4 @@
-# Build api docs with php 8.1 requirements
+# Build api docs with php 8.2 requirements
 FROM alpine:3.19 as builder
 
 RUN apk add --no-cache \
@@ -7,11 +7,12 @@ RUN apk add --no-cache \
     git \
     make \
     openssh-client \
-    php81 \
+    php82 \
     php82-bz2 \
     php82-curl \
     php82-dom \
     php82-intl \
+    php82-iconv \
     php82-json \
     php82-mbstring \
     php82-openssl \
@@ -38,8 +39,8 @@ RUN git clone https://github.com/cakephp/cakephp.git /cakephp \
   && git clone https://github.com/cakephp/queue.git /queue
 
 RUN ls -lah \
-  && make build-cakephp3-all CAKEPHP_SOURCE_DIR=/cakephp \
-  && make build-cakephp4-all CAKEPHP_SOURCE_DIR=/cakephp \
+  # && make build-cakephp3-all CAKEPHP_SOURCE_DIR=/cakephp \
+  # && make build-cakephp4-all CAKEPHP_SOURCE_DIR=/cakephp \
   && make build-cakephp5-all CAKEPHP_SOURCE_DIR=/cakephp \
   && make build-authentication-all AUTHENTICATION_SOURCE_DIR=/authentication \
   && make build-authorization-all AUTHORIZATION_SOURCE_DIR=/authorization \
