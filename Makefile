@@ -38,9 +38,10 @@ CAKEPHP4_RELEASES := \
 
 CAKEPHP5_RELEASES := \
 	5.0|5.0.11|update \
-	5.1|5.1.6|update \
-	5.2|5.2.11|update \
-	5.3|origin/5.x|update
+	5.1|5.1.9|update \
+	5.2|5.2.15|update \
+	5.3|5.3.7|update
+	5.4|origin/5.x|update
 
 CHRONOS_RELEASES := \
 	1.x|origin/1.x|update \
