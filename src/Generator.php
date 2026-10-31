@@ -59,7 +59,7 @@ class Generator
         $this->renderOverview();
         $this->renderSearch($project->namespaces);
 
-        array_walk($project->namespaces, fn ($namespace) => $this->renderNamespace($namespace));
+        array_walk($project->namespaces, fn($namespace) => $this->renderNamespace($namespace));
     }
 
     /**
@@ -84,7 +84,7 @@ class Generator
             $this->renderTemplate(
                 'pages/namespace.twig',
                 sprintf('namespace-%s.html', str_replace('\\', '.', $ns->qualifiedName ?? $ns->name)),
-                ['namespace' => $ns, 'contextName' => $ns->name]
+                ['namespace' => $ns, 'contextName' => $ns->name],
             );
 
             array_map(fn($interface) => $this->renderClassLike($interface, 'interface'), $ns->interfaces);
@@ -112,7 +112,7 @@ class Generator
         $this->renderTemplate(
             'pages/classlike.twig',
             $filename,
-            ['ref' => $ref, 'type' => $type, 'contextName' => $ref->context->namespace]
+            ['ref' => $ref, 'type' => $type, 'contextName' => $ref->context->namespace],
         );
     }
 
@@ -126,7 +126,7 @@ class Generator
     {
         $entries = [];
 
-        $addClassLike = function (ReflectedClassLike $classLike) use (&$entries) {
+        $addClassLike = function (ReflectedClassLike $classLike) use (&$entries): void {
             $type = match (true) {
                 $classLike instanceof ReflectedInterface => 'i',
                 $classLike instanceof ReflectedTrait => 't',
@@ -166,11 +166,11 @@ class Generator
             }
         };
 
-        $addNamespace = function (ProjectNamespace $ns) use (&$addNamespace, $addClassLike) {
-            array_walk($ns->children, fn ($ns) => $addNamespace($ns));
-            array_walk($ns->interfaces, fn ($classLike) => $addClassLike($classLike));
-            array_walk($ns->traits, fn ($classLike) => $addClassLike($classLike));
-            array_walk($ns->classes, fn ($classLike) => $addClassLike($classLike));
+        $addNamespace = function (ProjectNamespace $ns) use (&$addNamespace, $addClassLike): void {
+            array_walk($ns->children, fn($ns) => $addNamespace($ns));
+            array_walk($ns->interfaces, fn($classLike) => $addClassLike($classLike));
+            array_walk($ns->traits, fn($classLike) => $addClassLike($classLike));
+            array_walk($ns->classes, fn($classLike) => $addClassLike($classLike));
         };
 
         array_walk($namespaces, $addNamespace);

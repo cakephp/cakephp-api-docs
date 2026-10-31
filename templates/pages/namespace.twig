@@ -27,7 +27,7 @@
     {{ include('pages/parts/constant-detail.twig', {constants: namespace.defines}) }}
   {% endif %}
 
-  {% macro showClassLikes(type, title, classLikes, type) %}
+  {% macro showClassLikes(title, classLikes, type) %}
     {% if classLikes is not empty %}
       <div class="section">
         <h3>{{ title }}</h3>
@@ -43,8 +43,8 @@
     {% endif %}
   {% endmacro %}
 
-  {{ _self.showClassLikes('interface', 'Interfaces', namespace.interfaces, 'interface') }}
-  {{ _self.showClassLikes('class', 'Classes', namespace.classes, 'class') }}
-  {{ _self.showClassLikes('trait', 'Traits', namespace.traits, 'trait') }}
+  {{ _self.showClassLikes('Interfaces', namespace.interfaces, 'interface') }}
+  {{ _self.showClassLikes('Classes', namespace.classes, 'class') }}
+  {{ _self.showClassLikes('Traits', namespace.traits, 'trait') }}
 </div>
 {% endblock %}

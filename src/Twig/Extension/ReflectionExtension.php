@@ -67,7 +67,7 @@ class ReflectionExtension extends AbstractExtension
                         '/^\\\\/',
                     ],
                     ['${1}', '<', '>', ', ', ', ', '${1}', '', ''],
-                    (string)$type
+                    (string)$type,
                 );
             }),
             new TwigFilter('node_to_repo_url', function (ReflectedNode $node) {
@@ -78,7 +78,7 @@ class ReflectionExtension extends AbstractExtension
                     $this->project->getConfig('repo'),
                     $matches[1],
                     $node->source->path,
-                    $node->source->startLine
+                    $node->source->startLine,
                 );
             }),
         ];

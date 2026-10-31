@@ -3,24 +3,27 @@
     "description": "API docs for CakePHP",
     "type": "application",
     "config": {
+        "platform": {
+            "php": "8.5.0"
+        },
         "sort-packages": true,
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
     "require": {
-        "php": ">=8.1",
-        "cakephp/collection": "^5.0",
-        "cakephp/console": "^5.0",
-        "composer/composer": "^2.0",
-        "erusev/parsedown": "^1.7",
-        "nikic/php-parser": "^4.13",
-        "phpstan/phpdoc-parser": "^1.29.1",
-        "twig/markdown-extra": "^3.0",
-        "twig/twig": "^3.0"
+        "php": ">=8.5",
+        "cakephp/collection": "^5.4",
+        "cakephp/console": "^5.4",
+        "composer/composer": "^2.11",
+        "erusev/parsedown": "^1.8",
+        "nikic/php-parser": "^5.9",
+        "phpstan/phpdoc-parser": "^2.4",
+        "twig/markdown-extra": "^3.29",
+        "twig/twig": "^3.30"
     },
     "require-dev": {
-        "cakephp/cakephp-codesniffer": "^4.0"
+        "cakephp/cakephp-codesniffer": "^5.3"
     },
     "autoload": {
         "psr-4": {

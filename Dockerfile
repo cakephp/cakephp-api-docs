@@ -1,5 +1,5 @@
-# Build api docs with php 8.1 requirements
-FROM alpine:3.19 AS builder
+# Build api docs with php 8.5 requirements
+FROM alpine:3.24 AS builder
 
 RUN apk add --no-cache \
     bash \
@@ -7,22 +7,22 @@ RUN apk add --no-cache \
     git \
     make \
     openssh-client \
-    php81 \
-    php82-bz2 \
-    php82-curl \
-    php82-dom \
-    php82-intl \
-    php82-json \
-    php82-mbstring \
-    php82-openssl \
-    php82-phar \
-    php82-simplexml \
-    php82-tokenizer \
-    php82-xml \
-    php82-xmlwriter \
-    php82-zip
+    php85 \
+    php85-bz2 \
+    php85-curl \
+    php85-dom \
+    php85-intl \
+    php85-iconv \
+    php85-mbstring \
+    php85-openssl \
+    php85-phar \
+    php85-simplexml \
+    php85-tokenizer \
+    php85-xml \
+    php85-xmlwriter \
+    php85-zip
 
-RUN ln -sf /usr/bin/php82 /usr/bin/php
+RUN ln -sf /usr/bin/php85 /usr/bin/php
 
 RUN mkdir /root/.ssh \
     && ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
@@ -38,8 +38,8 @@ RUN git clone https://github.com/cakephp/cakephp.git /cakephp \
   && git clone https://github.com/cakephp/queue.git /queue
 
 RUN ls -lah \
-  && make build-cakephp3-all CAKEPHP_SOURCE_DIR=/cakephp \
-  && make build-cakephp4-all CAKEPHP_SOURCE_DIR=/cakephp \
+  # && make build-cakephp3-all CAKEPHP_SOURCE_DIR=/cakephp \
+  # && make build-cakephp4-all CAKEPHP_SOURCE_DIR=/cakephp \
   && make build-cakephp5-all CAKEPHP_SOURCE_DIR=/cakephp \
   && make build-authentication-all AUTHENTICATION_SOURCE_DIR=/authentication \
   && make build-authorization-all AUTHORIZATION_SOURCE_DIR=/authorization \
@@ -48,7 +48,7 @@ RUN ls -lah \
   && make build-queue-all QUEUE_SOURCE_DIR=/queue
 
 # nginx server
-FROM alpine:3.19
+FROM alpine:3.24
 
 LABEL Description="CakePHP API Docs"
 
