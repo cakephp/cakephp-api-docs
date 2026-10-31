@@ -4,7 +4,7 @@
     "type": "application",
     "config": {
         "platform": {
-            "php": "8.2.29"
+            "php": "8.5.0"
         },
         "sort-packages": true,
         "allow-plugins": {
@@ -12,9 +12,9 @@
         }
     },
     "require": {
-        "php": ">=8.1",
-        "cakephp/collection": "^5.2",
-        "cakephp/console": "^5.2",
+        "php": ">=8.5",
+        "cakephp/collection": "^5.4",
+        "cakephp/console": "^5.4",
         "composer/composer": "^2.0",
         "erusev/parsedown": "^1.7",
         "nikic/php-parser": "^5.3",

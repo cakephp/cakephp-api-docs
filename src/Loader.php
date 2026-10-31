@@ -42,7 +42,7 @@ class Loader
     public function __construct(string $projectPath)
     {
         $this->projectPath = $projectPath;
-        $this->parser = (new ParserFactory())->createForVersion(PhpVersion::fromString('8.2'));
+        $this->parser = (new ParserFactory())->createForVersion(PhpVersion::fromString('8.5'));
     }
 
     /**
